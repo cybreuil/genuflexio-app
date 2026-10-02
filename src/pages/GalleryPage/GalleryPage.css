@@ -15,7 +15,7 @@
 .gallery-header {
 	width: min(760px, 100% - 3rem);
 	margin: 0 auto;
-	padding: clamp(1.5rem, 5vh, 3.5rem) 0 clamp(0.5rem, 2vh, 1.5rem);
+	padding: clamp(1.5rem, 5vh, 3.5rem) 0 clamp(1rem, 3vh, 2rem);
 	text-align: center;
 }
 
