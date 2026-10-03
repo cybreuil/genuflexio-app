@@ -1,8 +1,8 @@
 import "./GalleryPage.css";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { getImages } from "../../api/images";
+import { getWallImages } from "../../api/images";
 import type { Image } from "../../types/Image";
 import { Loader } from "../../components/Loader/Loader";
 import {
@@ -11,12 +11,7 @@ import {
 	type GalleryFiltersValue,
 } from "../../components/GalleryFilters/GalleryFilters";
 import { ArtworkLightbox } from "../../components/ArtworkLightbox/ArtworkLightbox";
-import {
-	buildFacet,
-	cartel,
-	periodLabel,
-	periodOf,
-} from "../../utils/artworkFormat";
+import { buildFacet, cartel } from "../../utils/artworkFormat";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -40,125 +35,189 @@ const tile = {
 	},
 };
 
-/** Mélange déterministe par seed pour un "accrochage libre" stable pendant la session */
-function seededShuffle<T>(arr: T[], seed: number): T[] {
-	const a = [...arr];
-	let s = seed;
-	for (let i = a.length - 1; i > 0; i--) {
-		s = (s * 9301 + 49297) % 233280;
-		const j = Math.floor((s / 233280) * (i + 1));
-		[a[i], a[j]] = [a[j], a[i]];
-	}
-	return a;
+const PAGE_SIZE = 40;
+
+// Helpers
+function getColumnCount() {
+	if (typeof window === "undefined") return 4;
+
+	if (window.innerWidth < 640) return 1;
+	if (window.innerWidth < 1024) return 2;
+	return 4;
 }
 
-function normalize(s: string) {
-	return s
-		.normalize("NFD")
-		.replace(/[\u0300-\u036f]/g, "")
-		.toLowerCase();
+function imageHeightScore(image: Image) {
+	if (!image.width || !image.height) return 1;
+
+	return image.height / image.width;
+}
+
+function distributeImages(images: Image[], columnCount: number): Image[][] {
+	const columns: Image[][] = Array.from({ length: columnCount }, () => []);
+
+	const heights = Array(columnCount).fill(0);
+
+	for (const image of images) {
+		const columnIndex = heights.indexOf(Math.min(...heights));
+
+		columns[columnIndex].push(image);
+		heights[columnIndex] += imageHeightScore(image);
+	}
+
+	return columns;
 }
 
 const GalleryPage = () => {
 	const [images, setImages] = useState<Image[]>([]);
 	const [loading, setLoading] = useState(true);
+	const [loadingMore, setLoadingMore] = useState(false);
 	const [error, setError] = useState<Error | null>(null);
+	const [hasMore, setHasMore] = useState(true);
+	const [total, setTotal] = useState(0);
+
 	const [filters, setFilters] = useState<GalleryFiltersValue>(
 		DEFAULT_GALLERY_FILTERS,
 	);
-	const [openIndex, setOpenIndex] = useState<number | null>(null);
-	const [seed] = useState(() => Math.floor(Math.random() * 100000));
 
+	const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+	// Un seed stable pour tout le mur.
+	const [seed] = useState(() => String(Math.floor(Math.random() * 100000)));
+
+	const offsetRef = useRef(0);
+	const loadingRef = useRef(false);
+	const requestIdRef = useRef(0);
+
+	const loadImages = useCallback(
+		async (reset = false) => {
+			if (loadingRef.current) return;
+
+			loadingRef.current = true;
+
+			if (reset) {
+				setLoading(true);
+				setError(null);
+			} else {
+				setLoadingMore(true);
+			}
+
+			const requestId = ++requestIdRef.current;
+
+			try {
+				const offset = reset ? 0 : offsetRef.current;
+
+				const result = await getWallImages({
+					limit: PAGE_SIZE,
+					offset,
+					seed,
+					q: filters.query.trim() || undefined,
+					saint_id: filters.saint ? Number(filters.saint) : undefined,
+					artist: filters.artist || undefined,
+					museum: filters.museum || undefined,
+					century: filters.century
+						? Number(filters.century)
+						: undefined,
+					sort:
+						filters.sort === "random"
+							? undefined
+							: filters.sort === "period_asc"
+								? "century_asc"
+								: filters.sort === "period_desc"
+									? "century_desc"
+									: filters.sort,
+				});
+
+				// Une requête précédente ne doit pas écraser le résultat
+				// d'une requête plus récente.
+				if (requestId !== requestIdRef.current) return;
+
+				setImages((current) =>
+					reset ? result.data : [...current, ...result.data],
+				);
+
+				setTotal(result.total);
+				setHasMore(result.has_more);
+
+				offsetRef.current = offset + result.data.length;
+			} catch (e) {
+				if (requestId !== requestIdRef.current) return;
+
+				setError(e instanceof Error ? e : new Error(String(e)));
+			} finally {
+				if (requestId === requestIdRef.current) {
+					setLoading(false);
+					setLoadingMore(false);
+					loadingRef.current = false;
+				}
+			}
+		},
+		[filters, seed],
+	);
+
+	// Nouveau filtre = nouveau chargement depuis offset 0.
 	useEffect(() => {
-		let cancelled = false;
-		getImages()
-			.then((data) => !cancelled && setImages(data.data))
-			.catch(
-				(e) =>
-					!cancelled &&
-					setError(e instanceof Error ? e : new Error(String(e))),
-			)
-			.finally(() => !cancelled && setLoading(false));
-		return () => {
-			cancelled = true;
-		};
-	}, []);
+		offsetRef.current = 0;
+		setImages([]);
+		setHasMore(true);
+		setOpenIndex(null);
+
+		loadImages(true);
+	}, [loadImages]);
+
+	/*
+	 * IntersectionObserver :
+	 * quand le sentinel arrive dans le viewport, on charge la page suivante.
+	 */
+	// const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+	// useEffect(() => {
+	// 	const target = loadMoreRef.current;
+
+	// 	if (!target || !hasMore) return;
+
+	// 	const observer = new IntersectionObserver(
+	// 		(entries) => {
+	// 			if (entries[0]?.isIntersecting) {
+	// 				loadImages(false);
+	// 			}
+	// 		},
+	// 		{
+	// 			rootMargin: "800px 0px",
+	// 		},
+	// 	);
+
+	// 	observer.observe(target);
+
+	// 	return () => observer.disconnect();
+	// }, [hasMore, loadImages]);
 
 	const facets = useMemo(
 		() => ({
 			saint: buildFacet(images, (i) => i.saint_name),
 			artist: buildFacet(images, (i) => i.creator),
-			period: buildFacet(images, periodOf, periodLabel).sort(
-				(a, b) => Number(a.value) - Number(b.value),
-			),
+			period: buildFacet(
+				images,
+				(i) => (i.century != null ? String(i.century) : null),
+				(i) => (i.century != null ? `${i.century}e siècle` : ""),
+			).sort((a, b) => Number(a.value) - Number(b.value)),
 			museum: buildFacet(images, (i) => i.repository),
 		}),
 		[images],
 	);
 
-	const results = useMemo(() => {
-		const q = normalize(filters.query.trim());
-		let list = images.filter((img) => {
-			if (filters.artist && img.creator !== filters.artist) return false;
-			if (filters.museum && img.repository !== filters.museum)
-				return false;
-			if (filters.saint && img.saint_name !== filters.saint) return false;
-			if (filters.period && periodOf(img) !== filters.period)
-				return false;
-			if (q) {
-				const hay = normalize(
-					[
-						img.title,
-						img.creator,
-						img.saint_name,
-						img.repository,
-						img.date_label,
-					]
-						.filter(Boolean)
-						.join(" "),
-				);
-				if (!hay.includes(q)) return false;
-			}
-			return true;
+	const results = images;
+
+	const wallKey = useMemo(() => JSON.stringify(filters), [filters]);
+
+	const columns = useMemo(() => {
+		const result: Image[][] = Array.from({ length: 4 }, () => []);
+
+		images.forEach((image, index) => {
+			result[index % 4].push(image);
 		});
 
-		const year = (i: Image) =>
-			i.year ?? Number(i.date_label?.match(/\d{3,4}/)?.[0] ?? NaN);
-		switch (filters.sort) {
-			case "title":
-				list = [...list].sort((a, b) =>
-					a.title.localeCompare(b.title, "fr"),
-				);
-				break;
-			case "artist":
-				list = [...list].sort((a, b) =>
-					(a.creator ?? "zzz").localeCompare(
-						b.creator ?? "zzz",
-						"fr",
-					),
-				);
-				break;
-			case "period_asc":
-				list = [...list].sort(
-					(a, b) => (year(a) || 9999) - (year(b) || 9999),
-				);
-				break;
-			case "period_desc":
-				list = [...list].sort(
-					(a, b) => (year(b) || 0) - (year(a) || 0),
-				);
-				break;
-			default:
-				list = seededShuffle(list, seed);
-		}
-		return list;
-	}, [images, filters, seed]);
-
-	// Clé pour relancer l'animation du mur quand le résultat change
-	const wallKey = useMemo(
-		() => JSON.stringify({ ...filters, n: results.length }),
-		[filters, results.length],
-	);
+		return result;
+	}, [images]);
 
 	return (
 		<div className="gallery-page">
@@ -169,9 +228,11 @@ const GalleryPage = () => {
 				animate="show"
 			>
 				<span className="gallery-header__eyebrow">─ Galerie</span>
+
 				<h1 className="gallery-header__title">
 					Les saints vus par les peintres
 				</h1>
+
 				<p className="gallery-header__text">
 					Un mur d'œuvres, du domaine public, à parcourir librement.
 					Filtrez par saint, artiste, période ou musée — puis entrez
@@ -190,8 +251,8 @@ const GalleryPage = () => {
 					value={filters}
 					onChange={setFilters}
 					facets={facets}
-					resultCount={results.length}
-					totalCount={images.length}
+					resultCount={images.length}
+					totalCount={total}
 				/>
 			</motion.div>
 
@@ -225,67 +286,104 @@ const GalleryPage = () => {
 						Aucune œuvre ne correspond à ces filtres.
 					</motion.div>
 				) : (
-					<motion.ul
-						key={wallKey}
-						className="gallery-wall"
-						variants={wallGroup}
-						initial="hidden"
-						animate="show"
-						exit={{ opacity: 0, transition: { duration: 0.2 } }}
-					>
-						{results.map((img, i) => {
-							const ratio =
-								img.width && img.height
-									? img.width / img.height
-									: undefined;
-							return (
-								<motion.li
-									key={img.id}
-									className="gallery-tile"
-									variants={tile}
-									style={
-										ratio
-											? { aspectRatio: String(ratio) }
-											: undefined
-									}
-								>
+					<>
+						<motion.ul
+							key={wallKey}
+							className="gallery-wall"
+							variants={wallGroup}
+							initial="hidden"
+							animate="show"
+							exit={{
+								opacity: 0,
+								transition: { duration: 0.2 },
+							}}
+						>
+							{results.map((img, i) => {
+								const ratio =
+									img.width && img.height
+										? img.width / img.height
+										: undefined;
+
+								return (
+									<motion.li
+										key={img.id}
+										className="gallery-tile"
+										variants={tile}
+										style={
+											ratio
+												? {
+														aspectRatio:
+															String(ratio),
+													}
+												: undefined
+										}
+									>
+										<button
+											type="button"
+											className="gallery-tile__button"
+											onClick={() => setOpenIndex(i)}
+											aria-label={`${img.title}${img.creator ? `, ${img.creator}` : ""}`}
+										>
+											<img
+												src={img.image_url}
+												alt=""
+												loading={
+													i < 6 ? "eager" : "lazy"
+												}
+												decoding="async"
+												draggable={false}
+											/>
+
+											<span
+												className="gallery-tile__frame"
+												aria-hidden="true"
+											/>
+
+											<span className="gallery-tile__cartel">
+												{img.saint_name && (
+													<span className="gallery-tile__saint">
+														{img.saint_name}
+													</span>
+												)}
+
+												<span className="gallery-tile__title">
+													{img.title}
+												</span>
+
+												{cartel(img) && (
+													<span className="gallery-tile__meta">
+														{cartel(img)}
+													</span>
+												)}
+											</span>
+										</button>
+									</motion.li>
+								);
+							})}
+						</motion.ul>
+						{/*<div
+							ref={loadMoreRef}
+							className="gallery-load-more"
+							aria-hidden="true"
+						>
+							{loadingMore && <Loader size={32} />}
+						</div>*/}
+						{hasMore && (
+							<div className="gallery-load-more">
+								{loadingMore ? (
+									<Loader size={32} />
+								) : (
 									<button
 										type="button"
-										className="gallery-tile__button"
-										onClick={() => setOpenIndex(i)}
-										aria-label={`${img.title}${img.creator ? `, ${img.creator}` : ""}`}
+										onClick={() => loadImages(false)}
+										className="gallery-load-more__button"
 									>
-										<img
-											src={img.image_url}
-											alt=""
-											loading={i < 6 ? "eager" : "lazy"}
-											decoding="async"
-											draggable={false}
-										/>
-										<span
-											className="gallery-tile__frame"
-											aria-hidden="true"
-										/>
-										<span className="gallery-tile__cartel">
-											{img.saint_name && (
-												<span className="gallery-tile__saint">
-													{img.saint_name}
-												</span>
-											)}
-											<span className="gallery-tile__title">
-												{img.title}
-											</span>
-											{cartel(img) && (
-												<span className="gallery-tile__meta">
-													{cartel(img)}
-												</span>
-											)}
-										</span>
+										Charger plus
 									</button>
-								</motion.li>
-							);
-						})}
-					</motion.ul>
+								)}
+							</div>
+						)}
+					</>
 				)}
 			</AnimatePresence>
 

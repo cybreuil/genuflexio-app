@@ -29,3 +29,21 @@ export type ImagesListApiResponse = {
 	total_pages: number;
 	data: Image[];
 };
+
+export type GetWallImagesParams = {
+	limit?: number;
+	offset?: number;
+	seed?: string;
+	q?: string;
+	saint_id?: number;
+	artist?: string;
+	museum?: string;
+	century?: number;
+	sort?: "title" | "artist" | "century_asc" | "century_desc";
+};
+
+export type ImagesListWallResponse = {
+	data: Image[];
+	total: number;
+	has_more: boolean;
+};

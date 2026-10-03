@@ -14,7 +14,7 @@ export type GalleryFiltersValue = {
 	query: string;
 	artist: string | null;
 	museum: string | null;
-	period: string | null;
+	century: number | null;
 	saint: string | null;
 	sort: GallerySort;
 };
@@ -23,7 +23,7 @@ export const DEFAULT_GALLERY_FILTERS: GalleryFiltersValue = {
 	query: "",
 	artist: null,
 	museum: null,
-	period: null,
+	century: null,
 	saint: null,
 	sort: "random",
 };
@@ -36,12 +36,12 @@ const SORT_OPTIONS: { value: GallerySort; label: string }[] = [
 	{ value: "title", label: "Par titre" },
 ];
 
-type FacetKey = "artist" | "museum" | "period" | "saint";
+type FacetKey = "artist" | "museum" | "century" | "saint";
 
 const FACET_LABELS: Record<FacetKey, string> = {
 	saint: "Saint",
 	artist: "Artiste",
-	period: "Période",
+	century: "Siècle",
 	museum: "Musée",
 };
 
@@ -140,7 +140,7 @@ const GalleryFilters = ({
 	const activeCount = [
 		value.artist,
 		value.museum,
-		value.period,
+		value.century,
 		value.saint,
 	].filter(Boolean).length;
 	const isDirty =
@@ -238,10 +238,10 @@ const GalleryFilters = ({
 								onSelect={(v) => set("artist", v)}
 							/>
 							<FacetRow
-								name="period"
-								items={facets.period}
-								selected={value.period}
-								onSelect={(v) => set("period", v)}
+								name="century"
+								items={facets.century}
+								selected={value.century}
+								onSelect={(v) => set("century", v)}
 							/>
 							<FacetRow
 								name="museum"
