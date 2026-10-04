@@ -5,6 +5,8 @@ import type { Image } from "../../types/Image";
 import "./ArtworkHero.css";
 import { motion, useScroll, useTransform } from "framer-motion";
 
+import { DesignedLogo } from "../../icons";
+
 const ROWS = 2;
 const TILES_PER_ROW = 10;
 
@@ -136,7 +138,8 @@ function ArtworkHero({
 					transition={{ duration: 0.5, delay: 0.2 }}
 					// layoutId="website-title"
 				>
-					{title}
+					<DesignedLogo title="Saints" width={200} height={200} />
+					enuflexio
 				</motion.h1>
 				{/*) : (*/}
 				{/*<h1

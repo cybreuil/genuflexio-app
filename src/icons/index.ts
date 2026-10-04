@@ -6,3 +6,5 @@ export * from "./GithubLogo";
 
 export * from "./DarkModeIcon";
 export * from "./LightModeIcon";
+
+export * from "./DesignedLogo";
