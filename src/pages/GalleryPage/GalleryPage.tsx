@@ -12,6 +12,7 @@ import {
 } from "../../components/GalleryFilters/GalleryFilters";
 import { ArtworkLightbox } from "../../components/ArtworkLightbox/ArtworkLightbox";
 import { buildFacet, cartel } from "../../utils/artworkFormat";
+import { use } from "framer-motion/m";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -52,22 +53,26 @@ function imageHeightScore(image: Image) {
 	return image.height / image.width;
 }
 
-function distributeImages(images: Image[], columnCount: number): Image[][] {
-	const columns: Image[][] = Array.from({ length: columnCount }, () => []);
+function useColumnCount() {
+	const [count, setCount] = useState(getColumnCount);
 
-	const heights = Array(columnCount).fill(0);
+	useEffect(() => {
+		const handleResize = () => {
+			setCount(getColumnCount());
+		};
 
-	for (const image of images) {
-		const columnIndex = heights.indexOf(Math.min(...heights));
+		window.addEventListener("resize", handleResize);
 
-		columns[columnIndex].push(image);
-		heights[columnIndex] += imageHeightScore(image);
-	}
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
 
-	return columns;
+	return count;
 }
 
 const GalleryPage = () => {
+	// states
 	const [images, setImages] = useState<Image[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [loadingMore, setLoadingMore] = useState(false);
@@ -81,12 +86,56 @@ const GalleryPage = () => {
 
 	const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-	// Un seed stable pour tout le mur.
 	const [seed] = useState(() => String(Math.floor(Math.random() * 100000)));
 
+	// refs
 	const offsetRef = useRef(0);
 	const loadingRef = useRef(false);
 	const requestIdRef = useRef(0);
+
+	// -------------------------
+	// MASONRY
+	// -------------------------
+
+	const columnCount = useColumnCount();
+
+	const [columns, setColumns] = useState<Image[][]>(() =>
+		Array.from({ length: columnCount }, () => []),
+	);
+
+	const columnsRef = useRef<Image[][]>(columns);
+
+	const columnHeightsRef = useRef<number[]>(Array(columnCount).fill(0));
+
+	const appendImagesToColumns = useCallback(
+		(newImages: Image[], reset = false) => {
+			const nextColumns = reset
+				? Array.from({ length: columnCount }, () => [])
+				: columnsRef.current.map((column) => [...column]);
+
+			const heights = reset
+				? Array(columnCount).fill(0)
+				: [...columnHeightsRef.current];
+
+			for (const image of newImages) {
+				const columnIndex = heights.indexOf(Math.min(...heights));
+
+				nextColumns[columnIndex].push(image);
+
+				heights[columnIndex] += imageHeightScore(image);
+			}
+
+			columnsRef.current = nextColumns;
+			columnHeightsRef.current = heights;
+
+			setColumns(nextColumns);
+		},
+		[columnCount],
+	);
+
+	// -------------------------
+	// API
+	// -------------------------
 
 	const loadImages = useCallback(
 		async (reset = false) => {
@@ -127,13 +176,14 @@ const GalleryPage = () => {
 									: filters.sort,
 				});
 
-				// Une requête précédente ne doit pas écraser le résultat
-				// d'une requête plus récente.
 				if (requestId !== requestIdRef.current) return;
 
 				setImages((current) =>
 					reset ? result.data : [...current, ...result.data],
 				);
+
+				// ⭐ C'est ici qu'on alimente le Masonry
+				appendImagesToColumns(result.data, reset);
 
 				setTotal(result.total);
 				setHasMore(result.has_more);
@@ -151,45 +201,28 @@ const GalleryPage = () => {
 				}
 			}
 		},
-		[filters, seed],
+		[filters, seed, appendImagesToColumns],
 	);
 
-	// Nouveau filtre = nouveau chargement depuis offset 0.
+	// -------------------------
+	// NOUVEAUX FILTRES
+	// -------------------------
+
 	useEffect(() => {
 		offsetRef.current = 0;
 		setImages([]);
 		setHasMore(true);
 		setOpenIndex(null);
 
+		// On remet aussi le Masonry à zéro
+		columnsRef.current = Array.from({ length: columnCount }, () => []);
+
+		columnHeightsRef.current = Array(columnCount).fill(0);
+
+		setColumns(Array.from({ length: columnCount }, () => []));
+
 		loadImages(true);
-	}, [loadImages]);
-
-	/*
-	 * IntersectionObserver :
-	 * quand le sentinel arrive dans le viewport, on charge la page suivante.
-	 */
-	// const loadMoreRef = useRef<HTMLDivElement | null>(null);
-
-	// useEffect(() => {
-	// 	const target = loadMoreRef.current;
-
-	// 	if (!target || !hasMore) return;
-
-	// 	const observer = new IntersectionObserver(
-	// 		(entries) => {
-	// 			if (entries[0]?.isIntersecting) {
-	// 				loadImages(false);
-	// 			}
-	// 		},
-	// 		{
-	// 			rootMargin: "800px 0px",
-	// 		},
-	// 	);
-
-	// 	observer.observe(target);
-
-	// 	return () => observer.disconnect();
-	// }, [hasMore, loadImages]);
+	}, [loadImages, columnCount]);
 
 	const facets = useMemo(
 		() => ({
@@ -208,16 +241,6 @@ const GalleryPage = () => {
 	const results = images;
 
 	const wallKey = useMemo(() => JSON.stringify(filters), [filters]);
-
-	const columns = useMemo(() => {
-		const result: Image[][] = Array.from({ length: 4 }, () => []);
-
-		images.forEach((image, index) => {
-			result[index % 4].push(image);
-		});
-
-		return result;
-	}, [images]);
 
 	return (
 		<div className="gallery-page">
@@ -287,7 +310,7 @@ const GalleryPage = () => {
 					</motion.div>
 				) : (
 					<>
-						<motion.ul
+						<motion.div
 							key={wallKey}
 							className="gallery-wall"
 							variants={wallGroup}
@@ -298,69 +321,84 @@ const GalleryPage = () => {
 								transition: { duration: 0.2 },
 							}}
 						>
-							{results.map((img, i) => {
-								const ratio =
-									img.width && img.height
-										? img.width / img.height
-										: undefined;
+							{columns.map((column, columnIndex) => (
+								<div
+									className="gallery-column"
+									key={columnIndex}
+								>
+									{column.map((img) => {
+										const ratio =
+											img.width && img.height
+												? img.width / img.height
+												: undefined;
 
-								return (
-									<motion.li
-										key={img.id}
-										className="gallery-tile"
-										variants={tile}
-										style={
-											ratio
-												? {
-														aspectRatio:
-															String(ratio),
-													}
-												: undefined
-										}
-									>
-										<button
-											type="button"
-											className="gallery-tile__button"
-											onClick={() => setOpenIndex(i)}
-											aria-label={`${img.title}${img.creator ? `, ${img.creator}` : ""}`}
-										>
-											<img
-												src={img.image_url}
-												alt=""
-												loading={
-													i < 6 ? "eager" : "lazy"
-												}
-												decoding="async"
-												draggable={false}
-											/>
+										return (
+											<motion.div
+												key={img.id}
+												className="gallery-tile"
+												variants={tile}
+											>
+												<button
+													type="button"
+													className="gallery-tile__button"
+													onClick={() => {
+														const globalIndex =
+															images.findIndex(
+																(item) =>
+																	item.id ===
+																	img.id,
+															);
 
-											<span
-												className="gallery-tile__frame"
-												aria-hidden="true"
-											/>
+														setOpenIndex(
+															globalIndex,
+														);
+													}}
+													aria-label={`${img.title}${
+														img.creator
+															? `, ${img.creator}`
+															: ""
+													}`}
+												>
+													<img
+														src={img.image_url}
+														alt=""
+														width={img.width}
+														height={img.height}
+														loading="lazy"
+														decoding="async"
+														draggable={false}
+													/>
 
-											<span className="gallery-tile__cartel">
-												{img.saint_name && (
-													<span className="gallery-tile__saint">
-														{img.saint_name}
+													<span
+														className="gallery-tile__frame"
+														aria-hidden="true"
+													/>
+
+													<span className="gallery-tile__cartel">
+														{img.saint_name && (
+															<span className="gallery-tile__saint">
+																{img.saint_name}
+															</span>
+														)}
+
+														<span className="gallery-tile__title">
+															{img.title}
+														</span>
+
+														{cartel(img) && (
+															<span className="gallery-tile__meta">
+																{cartel(img)}
+															</span>
+														)}
 													</span>
-												)}
+												</button>
+											</motion.div>
+										);
+									})}
+								</div>
+							))}
+						</motion.div>
 
-												<span className="gallery-tile__title">
-													{img.title}
-												</span>
-
-												{cartel(img) && (
-													<span className="gallery-tile__meta">
-														{cartel(img)}
-													</span>
-												)}
-											</span>
-										</button>
-									</motion.li>
-								);
-							})}
-						</motion.ul>
 						{/*<div
 							ref={loadMoreRef}
 							className="gallery-load-more"

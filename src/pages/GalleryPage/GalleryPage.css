@@ -56,12 +56,21 @@
 /* ===== Mur ===== */
 
 .gallery-wall {
-	columns: 4 260px;
+	/*columns: 4 260px;
 	column-gap: 1.25rem;
 	width: min(1400px, 100% - 3rem);
 	margin: 0 auto;
 	padding: 0;
-	list-style: none;
+	list-style: none;*/
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 24px;
+	align-items: start;
+}
+.gallery-column {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
 }
 
 .gallery-tile {
