@@ -227,6 +227,10 @@
 
 /* Lettrine sur le premier paragraphe */
 .celebration-prose > p:first-of-type::first-letter {
+	font-family:
+		Morris Less,
+		Source Serif,
+		serif;
 	float: left;
 	margin: 0.1em 0.12em 0 0;
 	color: var(--celebration-accent);

@@ -16,6 +16,14 @@
 	font-display: swap;
 }
 
+@font-face {
+	font-family: "Morris Less";
+	src: url("/fonts/MorrisLessRegular.ttf") format("truetype");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
 /* Enregistrée pour que la couleur liturgique puisse être interpolée
    quand on passe d'une fête à l'autre */
 @property --liturgical-color {
