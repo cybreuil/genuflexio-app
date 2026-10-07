@@ -16,6 +16,7 @@ import { useCalendar } from "../../hooks/useCalendar";
 import { useCelebration } from "../../hooks/useCelebration";
 import { useLanguage } from "../../hooks/useLanguage";
 import { RippleLink } from "../../components/RippleLink/RippleLink";
+import { useTheme } from "../../hooks/useTheme";
 
 /* ===== Animation presets ===== */
 
@@ -130,6 +131,15 @@ const CelebrationOfTheDay: React.FC = () => {
 	const isLoading = isCalendarLoading || isCelebrationLoading;
 	const error = calendarError ?? celebrationError;
 
+	// Fallback for white liturgical on light theme
+	const isWhite = liturgicalColor.toLowerCase() === "#ffffff";
+	const { theme } = useTheme();
+
+	const effectiveLiturgicalColor =
+		theme === "light" && isWhite
+			? "var(--color-text-primary)"
+			: liturgicalColor;
+
 	return (
 		<div className="celebration-page">
 			{/* ===== Left sidebar : date & liturgical facts ===== */}
@@ -206,7 +216,8 @@ const CelebrationOfTheDay: React.FC = () => {
 							exit={{ opacity: 0, transition: { duration: 0.2 } }}
 							style={
 								{
-									"--celebration-accent": liturgicalColor,
+									"--celebration-accent":
+										effectiveLiturgicalColor,
 								} as React.CSSProperties
 							}
 						>
