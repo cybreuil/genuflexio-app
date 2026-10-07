@@ -61,3 +61,5 @@ add switch on secondary celebration on click with just a state change + fix days
 - should fix dot layout since changing page means scrolling to top and dot animation bugs
 
 we need fix exit for backdrop modal
+
+FIX john henry newman gif photo not converted !
