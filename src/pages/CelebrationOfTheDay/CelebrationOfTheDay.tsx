@@ -1,6 +1,6 @@
 import "./CelebrationOfTheDay.css";
 import { useEffect, useMemo } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
@@ -131,14 +131,7 @@ const CelebrationOfTheDay: React.FC = () => {
 	const error = calendarError ?? celebrationError;
 
 	return (
-		<div
-			className="celebration-page"
-			style={
-				{
-					"--celebration-accent": liturgicalColor,
-				} as React.CSSProperties
-			}
-		>
+		<div className="celebration-page">
 			{/* ===== Left sidebar : date & liturgical facts ===== */}
 			<aside className="celebration-page__aside celebration-page__aside--left">
 				<motion.div
@@ -211,6 +204,11 @@ const CelebrationOfTheDay: React.FC = () => {
 							initial="hidden"
 							animate="show"
 							exit={{ opacity: 0, transition: { duration: 0.2 } }}
+							style={
+								{
+									"--celebration-accent": liturgicalColor,
+								} as React.CSSProperties
+							}
 						>
 							{/* --- Cover --- */}
 							<header
@@ -303,7 +301,11 @@ const CelebrationOfTheDay: React.FC = () => {
 
 							{/* --- Body --- */}
 							<motion.div
-								className="celebration-prose"
+								className={`celebration-prose ${
+									celebration.feast_description
+										? ""
+										: "celebration-prose--empty"
+								}`}
 								variants={rise}
 							>
 								{celebration.feast_description ? (
@@ -311,9 +313,7 @@ const CelebrationOfTheDay: React.FC = () => {
 										{celebration.feast_description}
 									</ReactMarkdown>
 								) : (
-									<p className="celebration-prose__empty">
-										{t("celebration.noDescription")}
-									</p>
+									<p>{t("celebration.noDescription")}</p>
 								)}
 							</motion.div>
 

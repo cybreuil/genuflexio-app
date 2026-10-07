@@ -226,7 +226,8 @@
 }
 
 /* Lettrine sur le premier paragraphe */
-.celebration-prose > p:first-of-type::first-letter {
+.celebration-prose:not(.celebration-prose--empty)
+	> p:first-of-type::first-letter {
 	font-family:
 		Morris Less,
 		Source Serif,
@@ -237,6 +238,10 @@
 	font-size: 4em;
 	font-weight: 500;
 	line-height: 0.8;
+}
+.celebration-prose--empty {
+	color: var(--color-text-tertiary);
+	font-style: italic;
 }
 
 .celebration-prose p {
@@ -285,11 +290,6 @@
 		transparent
 	);
 	text-underline-offset: 0.15em;
-}
-
-.celebration-prose__empty {
-	color: var(--color-text-tertiary);
-	font-style: italic;
 }
 
 /* ===== Linked saints ===== */
