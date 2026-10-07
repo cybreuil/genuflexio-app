@@ -59,8 +59,26 @@
 	},
 
 	"century": {
+		"century": "Century",
 		"centuryLabel": "{centuryEnglish} century",
 		"centuryLabelFirst": "1st century"
+	},
+
+	"saint": {
+		"birth": "Birth",
+		"death": "Death",
+		"activity": "Activity",
+		"burial": "Burial",
+		"backToList": "Back to the list of saints",
+		"loadingError": "Error loading the saint.",
+		"noBiography": "No biography available for this saint.",
+		"patronages": "Patronages",
+		"attributes": "Attributes",
+		"places": "Places",
+		"gallery": "Gallery",
+		"noPatronages": "No patronages available for this saint.",
+		"noAttributes": "No attributes available for this saint.",
+		"noPlaces": "No places available for this saint."
 	},
 
 	"credits": {

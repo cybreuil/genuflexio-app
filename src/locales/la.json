@@ -59,8 +59,26 @@
 	},
 
 	"century": {
+		"century": "Saeculum",
 		"centuryLabel": "saeculum {centuryRoman}",
 		"centuryLabelFirst": "saeculum I"
+	},
+
+	"saint": {
+		"birth": "Nativitas",
+		"death": "Obitus",
+		"activity": "Activitas",
+		"burial": "Sepultura",
+		"backToList": "Ad listam sanctorum",
+		"loadingError": "Error in sancto onerando.",
+		"noBiography": "Nulla biographia pro hoc sancto praesto est.",
+		"patronages": "Patronatus",
+		"attributes": "Attributa",
+		"places": "Loci",
+		"gallery": "Pinacotheca",
+		"noPatronages": "Nullus patronatus pro hoc sancto praesto est.",
+		"noAttributes": "Nulla attributa pro hoc sancto praesto sunt.",
+		"noPlaces": "Nulli loci pro hoc sancto praesto sunt."
 	},
 
 	"credits": {

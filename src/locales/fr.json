@@ -59,8 +59,26 @@
 	},
 
 	"century": {
+		"century": "Siècle",
 		"centuryLabel": "{centuryRoman}e siècle",
 		"centuryLabelFirst": "{centuryRoman}er siècle"
+	},
+
+	"saint": {
+		"birth": "Naissance",
+		"death": "Décès",
+		"activity": "Activité",
+		"burial": "Sépulture",
+		"backToList": "Retour à la liste des saints",
+		"loadingError": "Erreur lors du chargement du saint.",
+		"noBiography": "Aucune biographie disponible pour ce saint.",
+		"patronages": "Patronages",
+		"attributes": "Attributs",
+		"places": "Lieux",
+		"gallery": "Galerie",
+		"noPatronages": "Aucun patronage disponible pour ce saint.",
+		"noAttributes": "Aucun attribut disponible pour ce saint.",
+		"noPlaces": "Aucun lieu disponible pour ce saint."
 	},
 
 	"credits": {

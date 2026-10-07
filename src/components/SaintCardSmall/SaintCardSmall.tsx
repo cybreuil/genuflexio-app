@@ -11,9 +11,11 @@ const cardReveal = {
 	show: {
 		opacity: 1,
 		y: 0,
-		transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+		transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
 	},
 };
+
+const MotionLink = motion(Link);
 
 const SaintCardSmall = ({
 	saint,
@@ -36,24 +38,26 @@ const SaintCardSmall = ({
 	const initial = saint.name?.trim().charAt(0).toUpperCase() ?? "";
 
 	// Handle keyboard events for accessibility, triggering the onClick function when the Enter or Space key is pressed
-	const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
-		if (event.key === "Enter" || event.key === " ") {
-			event.preventDefault();
-			onClick();
-		}
-	};
+	// We don't use since now it's a link
+	//
+	// const handleKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
+	// 	if (event.key === "Enter" || event.key === " ") {
+	// 		event.preventDefault();
+	// 		onClick();
+	// 	}
+	// };
 
 	return (
-		<motion.article
+		<MotionLink
 			to={`/saints/${saint.slug}`}
 			className="saint-card"
 			// layoutId={`saint-card-${saint.id}`}
 			variants={cardReveal}
-			role="button"
-			tabIndex={0}
+			// role="button"
+			// tabIndex={0}
 			aria-label={saint.name}
 			// onClick={onClick}
-			onKeyDown={handleKeyDown}
+			// onKeyDown={handleKeyDown}
 			transition={TRANSITIONS.normal}
 		>
 			<div className="saint-card__artwork" aria-hidden="true">
@@ -86,7 +90,7 @@ const SaintCardSmall = ({
 				</motion.h3>
 				<span className="saint-card__cta">Découvrir →</span>
 			</div>
-		</motion.article>
+		</MotionLink>
 	);
 };
 

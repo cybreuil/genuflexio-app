@@ -29,13 +29,6 @@ const rise = {
 	show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
 
-const PLACE_ROLE_LABELS: Record<string, string> = {
-	birth: "Naissance",
-	death: "Mort",
-	activity: "Activité",
-	burial: "Sépulture",
-};
-
 function StateBlock({
 	tone = "neutral",
 	children,
@@ -89,11 +82,28 @@ const SaintPage = () => {
 		[saint?.images],
 	);
 
+	const { t } = useLanguage();
+
+	const getPlaceRoleLabel = (role: string) => {
+		switch (role) {
+			case "birth":
+				return t("saint.birth");
+			case "death":
+				return t("saint.death");
+			case "activity":
+				return t("saint.activity");
+			case "burial":
+				return t("saint.burial");
+			default:
+				return role;
+		}
+	};
+
 	return (
 		<div className="saint-page">
 			<nav className="saint-page__breadcrumb" aria-label="Fil d'Ariane">
 				<RippleLink to="/saints" className="saint-page__back">
-					← Tous les saints
+					← {t("saint.backToList")}
 				</RippleLink>
 			</nav>
 
@@ -104,7 +114,7 @@ const SaintPage = () => {
 					</StateBlock>
 				) : error || !saint ? (
 					<StateBlock key="error" tone="error">
-						Impossible de charger cette fiche.
+						{t("saint.loadingError")}
 						{error && (
 							<span className="saint-page__state-detail">
 								{error.message}
@@ -140,9 +150,9 @@ const SaintPage = () => {
 								className="saint-cover__text"
 								variants={rise}
 							>
-								{centuryLabel(saint.century) && (
+								{centuryLabel(saint.century, t) && (
 									<span className="saint-cover__eyebrow">
-										{centuryLabel(saint.century)}
+										{centuryLabel(saint.century, t)}
 									</span>
 								)}
 								<h1 className="saint-cover__title">{name}</h1>
@@ -160,7 +170,7 @@ const SaintPage = () => {
 						{/* ===== Facts ===== */}
 						<motion.dl className="saint-facts" variants={rise}>
 							<div className="saint-fact">
-								<dt>Naissance</dt>
+								<dt>{t("saint.birth")}</dt>
 								<dd>
 									{formatPartialDate(
 										{
@@ -184,7 +194,7 @@ const SaintPage = () => {
 								</dd>
 							</div>
 							<div className="saint-fact">
-								<dt>Mort</dt>
+								<dt>{t("saint.death")}</dt>
 								<dd>
 									{formatPartialDate(
 										{
@@ -208,7 +218,7 @@ const SaintPage = () => {
 								</dd>
 							</div>
 							<div className="saint-fact">
-								<dt>Siècle</dt>
+								<dt>{t("century.century")}</dt>
 								<dd>
 									{saint.century != null
 										? toRoman(saint.century)
@@ -232,7 +242,7 @@ const SaintPage = () => {
 								</div>
 							) : (
 								<p className="saint-prose__empty">
-									Aucune biographie disponible pour le moment.
+									{t("saint.noBiography")}
 								</p>
 							)}
 						</motion.div>
@@ -241,7 +251,7 @@ const SaintPage = () => {
 						<motion.section className="saint-meta" variants={rise}>
 							<div className="saint-meta__block">
 								<h2 className="saint-meta__title">
-									Patronages
+									{t("saint.patronages")}
 								</h2>
 								{saint.patronages?.length ? (
 									<ul className="saint-meta__tags">
@@ -257,13 +267,15 @@ const SaintPage = () => {
 									</ul>
 								) : (
 									<p className="saint-meta__empty">
-										Aucun patronage renseigné.
+										{t("saint.noPatronages")}
 									</p>
 								)}
 							</div>
 
 							<div className="saint-meta__block">
-								<h2 className="saint-meta__title">Attributs</h2>
+								<h2 className="saint-meta__title">
+									{t("saint.attributes")}
+								</h2>
 								{attributeGroups.length ? (
 									attributeGroups.map(([category, attrs]) => (
 										<div
@@ -288,7 +300,7 @@ const SaintPage = () => {
 									))
 								) : (
 									<p className="saint-meta__empty">
-										Aucun attribut renseigné.
+										{t("saint.noAttributes")}
 									</p>
 								)}
 							</div>
@@ -299,7 +311,9 @@ const SaintPage = () => {
 							className="saint-places"
 							variants={rise}
 						>
-							<h2 className="saint-section__title">Lieux</h2>
+							<h2 className="saint-section__title">
+								{t("saint.places")}
+							</h2>
 							{places.length ? (
 								<ul className="saint-places__list">
 									{places.map((place) => (
@@ -308,9 +322,7 @@ const SaintPage = () => {
 											className="saint-place"
 										>
 											<span className="saint-place__role">
-												{PLACE_ROLE_LABELS[
-													place.role
-												] ?? place.role}
+												{getPlaceRoleLabel(place.role)}
 											</span>
 											<span className="saint-place__name">
 												{place.name}
@@ -323,7 +335,7 @@ const SaintPage = () => {
 								</ul>
 							) : (
 								<p className="saint-meta__empty">
-									Aucun lieu renseigné.
+									{t("saint.noPlaces")}
 								</p>
 							)}
 							{/* Carte interactive */}
@@ -337,7 +349,7 @@ const SaintPage = () => {
 								variants={rise}
 							>
 								<h2 className="saint-section__title">
-									Galerie
+									{t("saint.gallery")}
 								</h2>
 								<ul className="saint-gallery__grid">
 									{gallery.map((img) => (
