@@ -52,9 +52,32 @@ const coverText = {
 };
 
 const header = {
-	hidden: { opacity: 0, y: 24 },
-	show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
-	exit: { opacity: 0, transition: { duration: 0.7 } },
+	hidden: {
+		opacity: 0,
+		y: 24,
+		padding: "clamp(1.5rem, 5vh, 3.5rem) 0 clamp(1rem, 3vh, 2rem)",
+		height: "auto",
+	},
+	show: {
+		opacity: 1,
+		y: 0,
+		margin: "clamp(1.5rem, 5vh, 3.5rem) 0 clamp(1rem, 3vh, 2rem)",
+		transition: {
+			opacity: { duration: 0.7, ease: EASE },
+			y: { duration: 0.7, ease: EASE },
+		},
+		height: "auto",
+	},
+	exit: {
+		opacity: 0,
+		margin: "0 0 0 0",
+		height: 0,
+		transition: {
+			opacity: { duration: 2, ease: EASE },
+			padding: { duration: 2, ease: EASE },
+			height: { duration: 2, ease: EASE },
+		},
+	},
 };
 
 // Inverse de `rise` : annule le déplacement du parent pour que l'image
@@ -184,7 +207,7 @@ const CelebrationOfTheDay: React.FC = () => {
 					</motion.header>
 				)}
 			</AnimatePresence>
-			<motion.div className="celebration-page" layout="position">
+			<div className="celebration-page">
 				{/* ===== Left sidebar : date & liturgical facts ===== */}
 				<aside className="celebration-page__aside celebration-page__aside--left">
 					<motion.div
@@ -452,7 +475,7 @@ const CelebrationOfTheDay: React.FC = () => {
 						</motion.div>
 					</motion.div>
 				</aside>
-			</motion.div>
+			</div>
 		</div>
 	);
 };
