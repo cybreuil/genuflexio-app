@@ -88,7 +88,7 @@ const SaintCardSmall = ({
 				>
 					{saint.name}
 				</motion.h3>
-				<span className="saint-card__cta">Découvrir →</span>
+				<span className="saint-card__cta">{t("saint.discover")} →</span>
 			</div>
 		</MotionLink>
 	);

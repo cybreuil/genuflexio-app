@@ -65,6 +65,7 @@
 	},
 
 	"saint": {
+		"discover": "Explorare",
 		"birth": "Nativitas",
 		"death": "Obitus",
 		"activity": "Activitas",

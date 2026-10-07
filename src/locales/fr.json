@@ -65,6 +65,7 @@
 	},
 
 	"saint": {
+		"discover": "Découvrir",
 		"birth": "Naissance",
 		"death": "Décès",
 		"activity": "Activité",
