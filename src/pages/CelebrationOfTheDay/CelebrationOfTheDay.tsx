@@ -1,9 +1,10 @@
 import "./CelebrationOfTheDay.css";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
+// Components
 import { CalendarSelector } from "../../components/CalendarSelector/CalendarSelector";
 // import { LiturgicalColor } from "../../components/LiturgicalColor/LiturgicalColor";
 import { MiniCalendar } from "../../components/MiniCalendar/MiniCalendar";
@@ -11,11 +12,12 @@ import { MiniCalendar } from "../../components/MiniCalendar/MiniCalendar";
 import { LiturgicalSeason } from "../../components/LiturgicalSeason/LiturgicalSeason";
 import { SecondaryCelebrations } from "../../components/SecondaryCelebrations/SecondaryCelebrations";
 import { Loader } from "../../components/Loader/Loader";
+import { RippleLink } from "../../components/RippleLink/RippleLink";
 
+// Hooks
 import { useCalendar } from "../../hooks/useCalendar";
 import { useCelebration } from "../../hooks/useCelebration";
 import { useLanguage } from "../../hooks/useLanguage";
-import { RippleLink } from "../../components/RippleLink/RippleLink";
 import { useTheme } from "../../hooks/useTheme";
 
 /* ===== Animation presets ===== */
@@ -47,6 +49,12 @@ const rise = {
 const coverText = {
 	hidden: {},
 	show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
+};
+
+const header = {
+	hidden: { opacity: 0, y: 24 },
+	show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+	exit: { opacity: 0, transition: { duration: 0.7 } },
 };
 
 // Inverse de `rise` : annule le déplacement du parent pour que l'image
@@ -82,6 +90,16 @@ const CelebrationOfTheDay: React.FC = () => {
 	const { date: dateParam } = useParams();
 	const date = dateParam ?? new Date().toISOString().split("T")[0];
 
+	// header visibility
+	const [showIntro, setShowIntro] = useState(true);
+
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			setShowIntro(false);
+		}, 3000);
+		return () => clearTimeout(timer);
+	}, []);
+
 	const { languageCode, t } = useLanguage();
 	const {
 		calendar,
@@ -103,6 +121,15 @@ const CelebrationOfTheDay: React.FC = () => {
 		celebration?.liturgical_color_hex ||
 		liturgicalSeason?.hex_color ||
 		"#8b7f73";
+
+	// Fallback for white liturgical on light theme
+	const isWhite = liturgicalColor.toLowerCase() === "#ffffff";
+	const { theme } = useTheme();
+
+	const effectiveLiturgicalColorForFirstLetter =
+		theme === "light" && isWhite
+			? "var(--color-text-primary)"
+			: liturgicalColor;
 
 	// Expose the liturgical colour to the whole page (body::before gradient, etc.)
 	useEffect(() => {
@@ -131,29 +158,45 @@ const CelebrationOfTheDay: React.FC = () => {
 	const isLoading = isCalendarLoading || isCelebrationLoading;
 	const error = calendarError ?? celebrationError;
 
-	// Fallback for white liturgical on light theme
-	const isWhite = liturgicalColor.toLowerCase() === "#ffffff";
-	const { theme } = useTheme();
-
-	const effectiveLiturgicalColor =
-		theme === "light" && isWhite
-			? "var(--color-text-primary)"
-			: liturgicalColor;
-
 	return (
-		<div className="celebration-page">
-			{/* ===== Left sidebar : date & liturgical facts ===== */}
-			<aside className="celebration-page__aside celebration-page__aside--left">
-				<motion.div
-					className="celebration-page__sticky"
-					variants={sidebarGroup}
-					initial="hidden"
-					animate="show"
-				>
-					<motion.div variants={sidebarItem(-32)}>
-						<MiniCalendar />
-					</motion.div>
-					{/*<motion.div variants={sidebarItem(-32)}>
+		<div className="celebration-page-container">
+			<AnimatePresence>
+				{showIntro && (
+					<motion.header
+						className="celebration-page-header"
+						variants={header}
+						initial="hidden"
+						animate="show"
+						exit="exit"
+					>
+						<span className="celebration-page-header__eyebrow">
+							─ Liturgie
+						</span>
+
+						<h1 className="celebration-page-header__title">
+							Célébration du jour
+						</h1>
+
+						<p className="celebration-page-header__text">
+							Discover the feast of the day, its liturgical color,
+							rank, and associated saints.
+						</p>
+					</motion.header>
+				)}
+			</AnimatePresence>
+			<motion.div className="celebration-page" layout="position">
+				{/* ===== Left sidebar : date & liturgical facts ===== */}
+				<aside className="celebration-page__aside celebration-page__aside--left">
+					<motion.div
+						className="celebration-page__sticky"
+						variants={sidebarGroup}
+						initial="hidden"
+						animate="show"
+					>
+						<motion.div variants={sidebarItem(-32)}>
+							<MiniCalendar />
+						</motion.div>
+						{/*<motion.div variants={sidebarItem(-32)}>
 						<LiturgicalColor
 							color={liturgicalColor}
 							colorName={
@@ -163,249 +206,253 @@ const CelebrationOfTheDay: React.FC = () => {
 							}
 						/>
 					</motion.div>*/}
-					{/*<motion.div variants={sidebarItem(-32)}>
+						{/*<motion.div variants={sidebarItem(-32)}>
 						<LiturgicalRank
 							rank={
 								celebration?.rank_label || t("common.unknown")
 							}
 						/>
 					</motion.div>*/}
-					<motion.div variants={sidebarItem(-32)}>
-						<LiturgicalSeason
-							season={liturgicalSeason}
-							date={date}
-						/>
+						<motion.div variants={sidebarItem(-32)}>
+							<LiturgicalSeason
+								season={liturgicalSeason}
+								date={date}
+							/>
+						</motion.div>
 					</motion.div>
-				</motion.div>
-			</aside>
+				</aside>
 
-			{/* ===== Main article ===== */}
-			<main className="celebration-article">
-				<AnimatePresence mode="wait">
-					{invalidDate ? (
-						<StateBlock key="invalid">
-							{t("celebration.invalidDate")}
-						</StateBlock>
-					) : isLoading ? (
-						<StateBlock key="loading">
-							<Loader size={56} />
-						</StateBlock>
-					) : error ? (
-						<StateBlock key="error" tone="error">
-							{calendarError
-								? t("calendar.loadingError")
-								: t("celebration.loadingError")}
-							<span className="celebration-state__detail">
-								{error.message}
-							</span>
-						</StateBlock>
-					) : !celebration ? (
-						<StateBlock key="empty">
-							<span className="celebration-state__date">
-								{formattedDate}
-							</span>
-							{t("celebration.noCelebration")}
-						</StateBlock>
-					) : (
-						<motion.article
-							key={celebration.id}
-							className="celebration-article__inner"
-							variants={articleGroup}
-							initial="hidden"
-							animate="show"
-							exit={{ opacity: 0, transition: { duration: 0.2 } }}
-							style={
-								{
-									"--celebration-accent":
-										effectiveLiturgicalColor,
-								} as React.CSSProperties
-							}
-						>
-							{/* --- Cover --- */}
-							<header
-								className={`celebration-cover${
-									coverSaint?.saint_image_url
-										? ""
-										: " celebration-cover--no-image"
-								}`}
+				{/* ===== Main article ===== */}
+				<main className="celebration-article">
+					<AnimatePresence mode="wait">
+						{invalidDate ? (
+							<StateBlock key="invalid">
+								{t("celebration.invalidDate")}
+							</StateBlock>
+						) : isLoading ? (
+							<StateBlock key="loading">
+								<Loader size={56} />
+							</StateBlock>
+						) : error ? (
+							<StateBlock key="error" tone="error">
+								{calendarError
+									? t("calendar.loadingError")
+									: t("celebration.loadingError")}
+								<span className="celebration-state__detail">
+									{error.message}
+								</span>
+							</StateBlock>
+						) : !celebration ? (
+							<StateBlock key="empty">
+								<span className="celebration-state__date">
+									{formattedDate}
+								</span>
+								{t("celebration.noCelebration")}
+							</StateBlock>
+						) : (
+							<motion.article
+								key={celebration.id}
+								className="celebration-article__inner"
+								variants={articleGroup}
+								initial="hidden"
+								animate="show"
+								exit={{
+									opacity: 0,
+									transition: { duration: 0.2 },
+								}}
+								style={
+									{
+										"--celebration-accent":
+											effectiveLiturgicalColorForFirstLetter,
+									} as React.CSSProperties
+								}
 							>
-								{coverSaint?.saint_image_url && (
-									<motion.img
-										className="celebration-cover__image"
-										src={coverSaint.saint_image_url}
-										alt={coverSaint.saint_name}
-										decoding="async"
-										variants={rise}
-									/>
-								)}
-								<div
-									className="celebration-cover__shade"
-									aria-hidden="true"
-								/>
-
-								<motion.div
-									className="celebration-cover__text"
-									variants={coverText}
+								{/* --- Cover --- */}
+								<header
+									className={`celebration-cover${
+										coverSaint?.saint_image_url
+											? ""
+											: " celebration-cover--no-image"
+									}`}
 								>
-									<motion.span
-										className="celebration-cover__eyebrow"
-										variants={rise}
+									{coverSaint?.saint_image_url && (
+										<motion.img
+											className="celebration-cover__image"
+											src={coverSaint.saint_image_url}
+											alt={coverSaint.saint_name}
+											decoding="async"
+											variants={rise}
+										/>
+									)}
+									<div
+										className="celebration-cover__shade"
+										aria-hidden="true"
+									/>
+
+									<motion.div
+										className="celebration-cover__text"
+										variants={coverText}
 									>
-										<time dateTime={date}>
-											{formattedDate}
-										</time>
-										{/*{celebration.rank_label && (
+										<motion.span
+											className="celebration-cover__eyebrow"
+											variants={rise}
+										>
+											<time dateTime={date}>
+												{formattedDate}
+											</time>
+											{/*{celebration.rank_label && (
 											<>
 												<span className="celebration-cover__dot" />
 												{celebration.rank_label}
 											</>
 										)}*/}
-									</motion.span>
-									<motion.h1
-										className="celebration-cover__title"
-										variants={rise}
-									>
-										{celebration.feast_name}
-									</motion.h1>
-								</motion.div>
-							</header>
+										</motion.span>
+										<motion.h1
+											className="celebration-cover__title"
+											variants={rise}
+										>
+											{celebration.feast_name}
+										</motion.h1>
+									</motion.div>
+								</header>
 
-							{/* --- Meta chips --- */}
-							<motion.dl
-								className="celebration-facts"
-								variants={rise}
-							>
-								<div className="celebration-fact">
-									<dt>{t("liturgical.color")}</dt>
-									<dd>
-										<span
-											className="celebration-fact__swatch"
-											style={{
-												background: liturgicalColor,
-											}}
-										/>
-										{celebration.liturgical_color_name ||
-											liturgicalSeason?.color_label ||
-											t("common.unknown")}
-									</dd>
-								</div>
-								<div className="celebration-fact">
-									<dt>{t("liturgical.rank")}</dt>
-									<dd>
-										{celebration.rank_label ||
-											t("common.unknown")}
-										{/*{celebration.is_optional && (
+								{/* --- Meta chips --- */}
+								<motion.dl
+									className="celebration-facts"
+									variants={rise}
+								>
+									<div className="celebration-fact">
+										<dt>{t("liturgical.color")}</dt>
+										<dd>
+											<span
+												className="celebration-fact__swatch"
+												style={{
+													background: liturgicalColor,
+												}}
+											/>
+											{celebration.liturgical_color_name ||
+												liturgicalSeason?.color_label ||
+												t("common.unknown")}
+										</dd>
+									</div>
+									<div className="celebration-fact">
+										<dt>{t("liturgical.rank")}</dt>
+										<dd>
+											{celebration.rank_label ||
+												t("common.unknown")}
+											{/*{celebration.is_optional && (
 											<span className="celebration-fact__note">
 												{t("celebration.optional")}
 											</span>
 										)}*/}
-									</dd>
-								</div>
-								<div className="celebration-fact">
-									<dt>{t("liturgical.season")}</dt>
-									<dd>
-										{liturgicalSeason?.label ||
-											t("common.unknown")}
-									</dd>
-								</div>
-							</motion.dl>
+										</dd>
+									</div>
+									<div className="celebration-fact">
+										<dt>{t("liturgical.season")}</dt>
+										<dd>
+											{liturgicalSeason?.label ||
+												t("common.unknown")}
+										</dd>
+									</div>
+								</motion.dl>
 
-							{/* --- Body --- */}
-							<motion.div
-								className={`celebration-prose ${
-									celebration.feast_description
-										? ""
-										: "celebration-prose--empty"
-								}`}
-								variants={rise}
-							>
-								{celebration.feast_description ? (
-									<ReactMarkdown>
-										{celebration.feast_description}
-									</ReactMarkdown>
-								) : (
-									<p>{t("celebration.noDescription")}</p>
-								)}
-							</motion.div>
+								{/* --- Body --- */}
+								<motion.div
+									className={`celebration-prose ${
+										celebration.feast_description
+											? ""
+											: "celebration-prose--empty"
+									}`}
+									variants={rise}
+								>
+									{celebration.feast_description ? (
+										<ReactMarkdown>
+											{celebration.feast_description}
+										</ReactMarkdown>
+									) : (
+										<p>{t("celebration.noDescription")}</p>
+									)}
+								</motion.div>
 
-							{/* --- Linked saints --- */}
-							<motion.section
-								className="celebration-saints"
-								variants={rise}
-							>
-								<h2 className="celebration-saints__title">
-									{t("celebration.saints")}
-								</h2>
+								{/* --- Linked saints --- */}
+								<motion.section
+									className="celebration-saints"
+									variants={rise}
+								>
+									<h2 className="celebration-saints__title">
+										{t("celebration.saints")}
+									</h2>
 
-								{saints && saints.length > 0 ? (
-									<ul className="celebration-saints__list">
-										{saints.map((saint) => (
-											<RippleLink
-												className="saint-chip"
-												key={saint.saint_id}
-												to={`/saints/${saint.saint_slug}`}
-											>
-												<span className="saint-chip__thumb">
-													{saint.saint_image_url && (
-														<img
-															src={
-																saint.saint_image_url
-															}
-															alt=""
-															loading="lazy"
-															decoding="async"
-														/>
-													)}
-												</span>
-												<span className="saint-chip__body">
-													<span className="saint-chip__name">
-														{saint.saint_name}
+									{saints && saints.length > 0 ? (
+										<ul className="celebration-saints__list">
+											{saints.map((saint) => (
+												<RippleLink
+													className="saint-chip"
+													key={saint.saint_id}
+													to={`/saints/${saint.saint_slug}`}
+												>
+													<span className="saint-chip__thumb">
+														{saint.saint_image_url && (
+															<img
+																src={
+																	saint.saint_image_url
+																}
+																alt=""
+																loading="lazy"
+																decoding="async"
+															/>
+														)}
 													</span>
-													{saint.saint_life_label && (
-														<span className="saint-chip__life-label">
-															{
-																saint.saint_life_label
-															}
+													<span className="saint-chip__body">
+														<span className="saint-chip__name">
+															{saint.saint_name}
 														</span>
-													)}
-												</span>
-											</RippleLink>
-										))}
-									</ul>
-								) : (
-									<p className="celebration-saints__empty">
-										{t("celebration.noSaint")}
-									</p>
-								)}
-							</motion.section>
-						</motion.article>
-					)}
-				</AnimatePresence>
-			</main>
+														{saint.saint_life_label && (
+															<span className="saint-chip__life-label">
+																{
+																	saint.saint_life_label
+																}
+															</span>
+														)}
+													</span>
+												</RippleLink>
+											))}
+										</ul>
+									) : (
+										<p className="celebration-saints__empty">
+											{t("celebration.noSaint")}
+										</p>
+									)}
+								</motion.section>
+							</motion.article>
+						)}
+					</AnimatePresence>
+				</main>
 
-			{/* ===== Right sidebar : calendar choice & context ===== */}
-			<aside className="celebration-page__aside celebration-page__aside--right">
-				<motion.div
-					className="celebration-page__sticky"
-					variants={sidebarGroup}
-					initial="hidden"
-					animate="show"
-				>
-					<motion.div variants={sidebarItem(32)}>
-						<CalendarSelector />
+				{/* ===== Right sidebar : calendar choice & context ===== */}
+				<aside className="celebration-page__aside celebration-page__aside--right">
+					<motion.div
+						className="celebration-page__sticky"
+						variants={sidebarGroup}
+						initial="hidden"
+						animate="show"
+					>
+						<motion.div variants={sidebarItem(32)}>
+							<CalendarSelector />
+						</motion.div>
+						<motion.div variants={sidebarItem(32)}>
+							<SecondaryCelebrations
+								secondaryCelebrations={secondaryCelebrations}
+								isLoading={isCelebrationLoading}
+								error={calendarError ?? celebrationError}
+								fallbackColor={
+									liturgicalSeason?.hex_color || "#8b7f73"
+								}
+							/>
+						</motion.div>
 					</motion.div>
-					<motion.div variants={sidebarItem(32)}>
-						<SecondaryCelebrations
-							secondaryCelebrations={secondaryCelebrations}
-							isLoading={isCelebrationLoading}
-							error={calendarError ?? celebrationError}
-							fallbackColor={
-								liturgicalSeason?.hex_color || "#8b7f73"
-							}
-						/>
-					</motion.div>
-				</motion.div>
-			</aside>
+				</aside>
+			</motion.div>
 		</div>
 	);
 };
