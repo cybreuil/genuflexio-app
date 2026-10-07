@@ -58,6 +58,11 @@
 		"daysLeft_other": "{count} dies reliqui"
 	},
 
+	"century": {
+		"centuryLabel": "saeculum {centuryRoman}",
+		"centuryLabelFirst": "saeculum I"
+	},
+
 	"credits": {
 		"title": "Credita",
 		"description": "Haec app a Sanctis App Team evoluta est. Gratias agimus omnibus contributoribus et fautoribus.",

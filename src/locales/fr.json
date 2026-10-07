@@ -58,6 +58,11 @@
 		"daysLeft_other": "{count} jours restants"
 	},
 
+	"century": {
+		"centuryLabel": "{centuryRoman}e siècle",
+		"centuryLabelFirst": "{centuryRoman}er siècle"
+	},
+
 	"credits": {
 		"title": "Crédits",
 		"description": "Cette application a été développée par l'équipe de Saints App. Nous tenons à remercier tous les contributeurs et supporters.",

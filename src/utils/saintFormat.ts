@@ -29,11 +29,43 @@ export function toRoman(value: number): string {
 	return out;
 }
 
+export function toEnglishOrdinal(value: number): string {
+	const mod100 = value % 100;
+
+	if (mod100 >= 11 && mod100 <= 13) {
+		return `${value}th`;
+	}
+
+	switch (value % 10) {
+		case 1:
+			return `${value}st`;
+		case 2:
+			return `${value}nd`;
+		case 3:
+			return `${value}rd`;
+		default:
+			return `${value}th`;
+	}
+}
+
+type Translate = (
+	key: string,
+	options?: Record<string, string | number>,
+) => string;
+
 export function centuryLabel(
 	century: number | null | undefined,
+	t: Translate,
 ): string | null {
 	if (century == null) return null;
-	return `${toRoman(century)}${century === 1 ? "er" : "e"} siècle`;
+
+	return t(
+		century === 1 ? "century.centuryLabelFirst" : "century.centuryLabel",
+		{
+			centuryRoman: toRoman(century),
+			centuryEnglish: toEnglishOrdinal(century),
+		},
+	);
 }
 
 export type PartialDate = {

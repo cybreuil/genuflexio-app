@@ -1,7 +1,8 @@
 import "./SaintsPage.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+// Components
 import { SaintCardSmall } from "../../components/SaintCardSmall/SaintCardSmall.tsx";
 import { SaintModal } from "../../components/SaintModal/SaintModal.tsx";
 import { Pagination } from "../../components/Pagination/Pagination.tsx";
@@ -12,8 +13,11 @@ import {
 	type SaintsFiltersValue,
 } from "../../components/SaintsFilters/SaintsFilters.tsx";
 
+// Hooks
 import { useSaints } from "../../hooks/useSaints.ts";
 import { useLanguage } from "../../hooks/useLanguage.ts";
+
+// Types
 import type { SaintApi } from "../../types/Saint.ts";
 
 /* ===== Animation presets ===== */
@@ -172,7 +176,7 @@ export const SaintsPage = () => {
 								key={saint.id}
 								// enableLayoutId={!isNewGrid}
 								saint={saint}
-								onClick={() => setSelectedSaint(saint)}
+								// onClick={() => setSelectedSaint(saint)}
 								index={index}
 							/>
 						))}
