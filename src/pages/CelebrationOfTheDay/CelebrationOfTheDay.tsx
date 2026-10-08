@@ -1,7 +1,7 @@
 import "./CelebrationOfTheDay.css";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, easeIn } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
 // Components
@@ -20,6 +20,7 @@ import { useCelebration } from "../../hooks/useCelebration";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useTheme } from "../../hooks/useTheme";
 import { MarkerDragEvent } from "maplibre-gl";
+import { track } from "framer-motion/m";
 
 /* ===== Animation presets ===== */
 
@@ -61,13 +62,11 @@ const header = {
 	show: {
 		opacity: 1,
 		y: 0,
-		height: "300px",
-		transition: { duration: 0.7, ease: EASE },
+		transition: { duration: 0.6, ease: EASE },
 	},
 	exit: {
 		opacity: 0,
-		height: "0",
-		transition: { duration: 2, ease: EASE },
+		transition: { duration: 0.6, ease: EASE },
 	},
 };
 
@@ -166,8 +165,8 @@ const CelebrationOfTheDay: React.FC = () => {
 	const error = calendarError ?? celebrationError;
 
 	return (
-		<div className="celebration-page-container">
-			<AnimatePresence>
+		<motion.div className="celebration-page-container">
+			<AnimatePresence mode="popLayout">
 				{showIntro && (
 					<motion.header
 						className="celebration-page-header"
@@ -191,11 +190,7 @@ const CelebrationOfTheDay: React.FC = () => {
 					</motion.header>
 				)}
 			</AnimatePresence>
-			<motion.div
-				className="celebration-page"
-				layout
-				transition={{ duration: 0.3, ease: EASE }}
-			>
+			<motion.div className="celebration-page" layout="position">
 				{/* ===== Left sidebar : date & liturgical facts ===== */}
 				<aside className="celebration-page__aside celebration-page__aside--left">
 					<motion.div
@@ -464,7 +459,7 @@ const CelebrationOfTheDay: React.FC = () => {
 					</motion.div>
 				</aside>
 			</motion.div>
-		</div>
+		</motion.div>
 	);
 };
 
