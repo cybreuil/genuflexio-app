@@ -12,7 +12,6 @@ import {
 } from "../../components/GalleryFilters/GalleryFilters";
 import { ArtworkLightbox } from "../../components/ArtworkLightbox/ArtworkLightbox";
 import { buildFacet, cartel } from "../../utils/artworkFormat";
-import { use } from "framer-motion/m";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 

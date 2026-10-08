@@ -19,6 +19,7 @@ import { useCalendar } from "../../hooks/useCalendar";
 import { useCelebration } from "../../hooks/useCelebration";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useTheme } from "../../hooks/useTheme";
+import { MarkerDragEvent } from "maplibre-gl";
 
 /* ===== Animation presets ===== */
 
@@ -40,8 +41,9 @@ const articleGroup = {
 };
 
 const rise = {
-	// We use inset of 18px in css to avoid clipping the text when it moves up
-	// So if we change this value, we must also change the inset in CelebrationOfTheDay.css
+	// We use inset of 18px in css to avoid clipping the text when it moves up for the images
+	// So if we change this value, we must also change the inset in CelebrationOfTheDay.css !!
+	// inset is situated in .celebration-cover__image
 	hidden: { opacity: 0, y: 18 },
 	show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
@@ -55,37 +57,19 @@ const header = {
 	hidden: {
 		opacity: 0,
 		y: 24,
-		padding: "clamp(1.5rem, 5vh, 3.5rem) 0 clamp(1rem, 3vh, 2rem)",
-		height: "auto",
 	},
 	show: {
 		opacity: 1,
 		y: 0,
-		margin: "clamp(1.5rem, 5vh, 3.5rem) 0 clamp(1rem, 3vh, 2rem)",
-		transition: {
-			opacity: { duration: 0.7, ease: EASE },
-			y: { duration: 0.7, ease: EASE },
-		},
-		height: "auto",
+		height: "300px",
+		transition: { duration: 0.7, ease: EASE },
 	},
 	exit: {
 		opacity: 0,
-		margin: "0 0 0 0",
-		height: 0,
-		transition: {
-			opacity: { duration: 2, ease: EASE },
-			padding: { duration: 2, ease: EASE },
-			height: { duration: 2, ease: EASE },
-		},
+		height: "0",
+		transition: { duration: 2, ease: EASE },
 	},
 };
-
-// Inverse de `rise` : annule le déplacement du parent pour que l'image
-// reste fixe pendant que le cadre glisse par-dessus
-// const counterRise = {
-// 	hidden: { y: -18 },
-// 	show: { y: 0, transition: { duration: 0.6, ease: EASE } },
-// };
 
 /* ===== Small presentational pieces ===== */
 
@@ -207,7 +191,11 @@ const CelebrationOfTheDay: React.FC = () => {
 					</motion.header>
 				)}
 			</AnimatePresence>
-			<div className="celebration-page">
+			<motion.div
+				className="celebration-page"
+				layout
+				transition={{ duration: 0.3, ease: EASE }}
+			>
 				{/* ===== Left sidebar : date & liturgical facts ===== */}
 				<aside className="celebration-page__aside celebration-page__aside--left">
 					<motion.div
@@ -274,7 +262,7 @@ const CelebrationOfTheDay: React.FC = () => {
 							</StateBlock>
 						) : (
 							<motion.article
-								key={celebration.id}
+								key={(celebration.id, date)}
 								className="celebration-article__inner"
 								variants={articleGroup}
 								initial="hidden"
@@ -475,7 +463,7 @@ const CelebrationOfTheDay: React.FC = () => {
 						</motion.div>
 					</motion.div>
 				</aside>
-			</div>
+			</motion.div>
 		</div>
 	);
 };
