@@ -55,6 +55,7 @@
 	--sticky-top: calc(var(--header-height) + 2rem);
 
 	flex: 1;
+	flex-grow: 1;
 	display: grid;
 	grid-template-columns:
 		minmax(0, var(--aside-width))

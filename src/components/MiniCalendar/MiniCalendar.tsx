@@ -169,7 +169,7 @@ const MiniCalendar = () => {
 							return (
 								<motion.button
 									key={dateStr}
-									layout="x"
+									layout="position"
 									layoutId={`mini-calendar-day-${dateStr}`}
 									className={`mini-calendar-day${isSelected ? " selected" : ""}${isToday ? " today" : ""}`}
 									onClick={() => handleDayClick(dateStr)}
@@ -182,11 +182,20 @@ const MiniCalendar = () => {
 									}}
 									animate={
 										isToday && !isSelected
-											? { opacity: 0.5, x: 0 }
-											: { opacity: 1, x: 0 }
+											? {
+													opacity: 0.5,
+													x: 0,
+													transition:
+														TRANSITIONS.normal,
+												}
+											: {
+													opacity: 1,
+													x: 0,
+													transition:
+														TRANSITIONS.normal,
+												}
 									}
 									// exit={{ opacity: 0, x: slideX }}
-									transition={TRANSITIONS.normal}
 								>
 									<span className="mini-calendar-day-label">
 										{d.toLocaleDateString(
@@ -225,7 +234,10 @@ const MiniCalendar = () => {
 					{selectedMonthLabel}
 				</motion.p>
 
-				<motion.div className="mini-calendar-date-picker" layout="x">
+				<motion.div
+					className="mini-calendar-date-picker"
+					layout="position"
+				>
 					<button
 						type="button"
 						className="calendar-emoji-btn"

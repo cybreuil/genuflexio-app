@@ -2,7 +2,8 @@ import "./SecondaryCelebrations.css";
 import type { Celebration } from "../../types/Celebration";
 import { Loader } from "../Loader/Loader";
 import { useLanguage } from "../../hooks/useLanguage";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
+import { TRANSITIONS } from "../../styles/theme";
 
 type SecondaryCelebrationsProps = {
 	secondaryCelebrations: Celebration[] | null;
@@ -20,8 +21,8 @@ const SecondaryCelebrations = ({
 	const { t } = useLanguage();
 
 	return (
-		<motion.section className="panel secondary-celebrations">
-			<motion.h3 className="panel__title" layout="preserve-aspect">
+		<motion.section className="panel secondary-celebrations" layout>
+			<motion.h3 className="panel__title" layout="position">
 				{t("celebration.otherCelebrations")}
 			</motion.h3>
 
@@ -32,53 +33,44 @@ const SecondaryCelebrations = ({
 			) : !secondaryCelebrations?.length ? (
 				<motion.p
 					className="panel__empty"
-					layout="preserve-aspect"
+					layout="position"
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 				>
 					{t("celebration.noOtherCelebrations")}
 				</motion.p>
 			) : (
-				<AnimatePresence>
-					<motion.ul
-						className="secondary-celebrations__list"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{
-							duration: 0.6,
-						}}
-						layout="preserve-aspect"
-					>
-						{secondaryCelebrations.map((c) => (
-							<li
-								key={c.id}
-								className="secondary-celebrations__item"
-							>
-								<button className="secondary-celebrations__button">
-									<span
-										className="secondary-celebrations__dot"
-										style={{
-											background:
-												c.liturgical_color_hex ||
-												fallbackColor,
-										}}
-									/>
-									<span className="secondary-celebrations__body">
-										<span className="secondary-celebrations__name">
-											{c.feast_name}
-										</span>
-										{c.rank_label && (
-											<span className="secondary-celebrations__rank">
-												{c.rank_label}
-											</span>
-										)}
+				<motion.ul
+					className="secondary-celebrations__list"
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1, transition: TRANSITIONS.slower }}
+					layout="position"
+				>
+					{secondaryCelebrations.map((c) => (
+						<li key={c.id} className="secondary-celebrations__item">
+							<button className="secondary-celebrations__button">
+								<span
+									className="secondary-celebrations__dot"
+									style={{
+										background:
+											c.liturgical_color_hex ||
+											fallbackColor,
+									}}
+								/>
+								<span className="secondary-celebrations__body">
+									<span className="secondary-celebrations__name">
+										{c.feast_name}
 									</span>
-								</button>
-							</li>
-						))}
-					</motion.ul>
-				</AnimatePresence>
+									{c.rank_label && (
+										<span className="secondary-celebrations__rank">
+											{c.rank_label}
+										</span>
+									)}
+								</span>
+							</button>
+						</li>
+					))}
+				</motion.ul>
 			)}
 		</motion.section>
 	);
