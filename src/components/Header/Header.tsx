@@ -176,24 +176,35 @@ const Header = () => {
 						<span className="header__logo" aria-hidden="true">
 							<Logo color="currentColor" />
 						</span>
-						{showWordmark && (
-							<motion.span
-								className="header__wordmark"
-								// Not using layout Animation anymore
-								// layoutId="website-title"
-								initial={{ opacity: 0, x: -10 }}
-								animate={{ opacity: 1, x: 0 }}
-								transition={{
-									duration: 0.5,
-									delay: 0.2,
-									ease: EASINGS.out,
-								}}
-								// WIP
-								// transition={{TRANSITIONS.normal}}
-							>
-								Genuflexio
-							</motion.span>
-						)}
+						<AnimatePresence>
+							{showWordmark && (
+								<motion.span
+									className="header__wordmark"
+									// Not using layout Animation anymore
+									// layoutId="website-title"
+									initial={{ opacity: 0, x: -10 }}
+									animate={{ opacity: 1, x: 0 }}
+									exit={{
+										opacity: 0,
+										x: -10,
+										transition: {
+											duration: 0.5,
+											delay: 0,
+											ease: EASINGS.out,
+										},
+									}}
+									transition={{
+										duration: 0.5,
+										delay: 0.2,
+										ease: EASINGS.out,
+									}}
+									// WIP
+									// transition={{TRANSITIONS.normal}}
+								>
+									Genuflexio
+								</motion.span>
+							)}
+						</AnimatePresence>
 					</Link>
 
 					<nav className="header__nav" aria-label={t("nav.main")}>

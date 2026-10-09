@@ -94,31 +94,30 @@ const CelebrationOfTheDay: React.FC = () => {
 	const { date: dateParam } = useParams();
 	const date = dateParam ?? new Date().toISOString().split("T")[0];
 
-	// header visibility
+	// Header visibility
 	const [showIntro, setShowIntro] = useState(true);
 	const pageRef = useRef<HTMLDivElement>(null);
 
-	// useEffect for header visibility
+	//useEffect for header visibility
 	useEffect(() => {
-		const checkPosition = () => {
-			const page = pageRef.current;
-			if (!page) return;
+		const page = pageRef.current;
+		if (!page) return;
 
-			if (page.getBoundingClientRect().top <= 0) {
-				setShowIntro(false);
-				window.removeEventListener("scroll", checkPosition);
-			}
-		};
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.boundingClientRect.top <= 0) {
+					setShowIntro(false);
+					observer.disconnect();
+				}
+			},
+			{
+				threshold: 0,
+			},
+		);
 
-		window.addEventListener("scroll", checkPosition, {
-			passive: true,
-		});
+		observer.observe(page);
 
-		checkPosition();
-
-		return () => {
-			window.removeEventListener("scroll", checkPosition);
-		};
+		return () => observer.disconnect();
 	}, []);
 
 	const { languageCode, t } = useLanguage();
@@ -187,7 +186,7 @@ const CelebrationOfTheDay: React.FC = () => {
 					variants={header}
 					initial="hidden"
 					animate="show"
-					exit="exit"
+					// exit="exit"
 				>
 					<span className="celebration-page-header__eyebrow">
 						─ Liturgie
