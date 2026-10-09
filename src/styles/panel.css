@@ -12,6 +12,7 @@
 	transition:
 		background var(--transition-normal),
 		border-color var(--transition-normal);
+	overflow: hidden;
 }
 
 .panel__title {

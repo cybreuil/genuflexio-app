@@ -103,21 +103,33 @@ const CelebrationOfTheDay: React.FC = () => {
 		const page = pageRef.current;
 		if (!page) return;
 
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				if (entry.boundingClientRect.top <= 0) {
+		let ticking = false;
+
+		const checkPosition = () => {
+			if (ticking) return;
+
+			ticking = true;
+
+			requestAnimationFrame(() => {
+				ticking = false;
+
+				if (page.getBoundingClientRect().top <= 0) {
 					setShowIntro(false);
-					observer.disconnect();
+					window.removeEventListener("scroll", checkPosition);
 				}
-			},
-			{
-				threshold: 0,
-			},
-		);
+			});
+		};
 
-		observer.observe(page);
+		window.addEventListener("scroll", checkPosition, {
+			passive: true,
+		});
 
-		return () => observer.disconnect();
+		// Vérification initiale
+		checkPosition();
+
+		return () => {
+			window.removeEventListener("scroll", checkPosition);
+		};
 	}, []);
 
 	const { languageCode, t } = useLanguage();
@@ -269,7 +281,7 @@ const CelebrationOfTheDay: React.FC = () => {
 							</StateBlock>
 						) : (
 							<motion.article
-								key={(celebration.id, date)}
+								key={`${calendar?.code}-${celebration.id}-${date}`}
 								className="celebration-article__inner"
 								variants={articleGroup}
 								initial="hidden"
