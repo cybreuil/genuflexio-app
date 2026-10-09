@@ -82,6 +82,7 @@
 
 .celebration-article {
 	min-width: 0;
+	height: 100%;
 }
 
 .celebration-article__inner {

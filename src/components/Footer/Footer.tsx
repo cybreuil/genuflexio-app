@@ -26,6 +26,7 @@ const Footer = () => {
 			initial="hidden"
 			whileInView="show"
 			viewport={{ once: true, amount: 0.3 }}
+			layout="position"
 		>
 			<div className="footer__top">
 				<div className="footer__brand">

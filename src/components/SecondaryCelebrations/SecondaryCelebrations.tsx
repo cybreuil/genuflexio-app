@@ -20,7 +20,7 @@ const SecondaryCelebrations = ({
 	const { t } = useLanguage();
 
 	return (
-		<motion.section className="panel secondary-celebrations" layout="size">
+		<motion.section className="panel secondary-celebrations">
 			<motion.h3 className="panel__title" layout="preserve-aspect">
 				{t("celebration.otherCelebrations")}
 			</motion.h3>

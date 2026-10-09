@@ -191,30 +191,32 @@ const CelebrationOfTheDay: React.FC = () => {
 	const error = calendarError ?? celebrationError;
 
 	return (
-		<motion.div className="celebration-page-container">
-			{showIntro && (
-				<motion.header
-					className="celebration-page-header"
-					variants={header}
-					initial="hidden"
-					animate="show"
-					// exit="exit"
-				>
-					<span className="celebration-page-header__eyebrow">
-						─ Liturgie
-					</span>
+		<div className="celebration-page-container">
+			<AnimatePresence mode="popLayout">
+				{showIntro && (
+					<motion.header
+						className="celebration-page-header"
+						variants={header}
+						initial="hidden"
+						animate="show"
+						exit="exit"
+					>
+						<span className="celebration-page-header__eyebrow">
+							─ Liturgie
+						</span>
 
-					<h1 className="celebration-page-header__title">
-						Célébration du jour
-					</h1>
+						<h1 className="celebration-page-header__title">
+							Célébration du jour
+						</h1>
 
-					<p className="celebration-page-header__text">
-						Discover the feast of the day, its liturgical color,
-						rank, and associated saints.
-					</p>
-				</motion.header>
-			)}
-			<div className="celebration-page">
+						<p className="celebration-page-header__text">
+							Discover the feast of the day, its liturgical color,
+							rank, and associated saints.
+						</p>
+					</motion.header>
+				)}
+			</AnimatePresence>
+			<motion.div className="celebration-page" layout>
 				{/* ===== Left sidebar : date & liturgical facts ===== */}
 				<aside className="celebration-page__aside celebration-page__aside--left">
 					<motion.div
@@ -479,11 +481,21 @@ const CelebrationOfTheDay: React.FC = () => {
 									liturgicalSeason?.hex_color || "#8b7f73"
 								}
 							/>
+							<button
+								className="celebration-page__toggle-button"
+								onClick={() =>
+									showIntro
+										? setShowIntro(false)
+										: setShowIntro(true)
+								}
+							>
+								toggle
+							</button>
 						</motion.div>
 					</motion.div>
 				</aside>
-			</div>
-		</motion.div>
+			</motion.div>
+		</div>
 	);
 };
 
