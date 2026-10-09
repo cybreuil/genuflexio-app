@@ -1,7 +1,7 @@
 import "./CelebrationOfTheDay.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { motion, AnimatePresence, easeIn } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
 // Components
@@ -19,8 +19,6 @@ import { useCalendar } from "../../hooks/useCalendar";
 import { useCelebration } from "../../hooks/useCelebration";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useTheme } from "../../hooks/useTheme";
-import { MarkerDragEvent } from "maplibre-gl";
-import { track } from "framer-motion/m";
 
 /* ===== Animation presets ===== */
 
@@ -98,12 +96,29 @@ const CelebrationOfTheDay: React.FC = () => {
 
 	// header visibility
 	const [showIntro, setShowIntro] = useState(true);
+	const pageRef = useRef<HTMLDivElement>(null);
 
+	// useEffect for header visibility
 	useEffect(() => {
-		const timer = setTimeout(() => {
-			setShowIntro(false);
-		}, 3000);
-		return () => clearTimeout(timer);
+		const checkPosition = () => {
+			const page = pageRef.current;
+			if (!page) return;
+
+			if (page.getBoundingClientRect().top <= 0) {
+				setShowIntro(false);
+				window.removeEventListener("scroll", checkPosition);
+			}
+		};
+
+		window.addEventListener("scroll", checkPosition, {
+			passive: true,
+		});
+
+		checkPosition();
+
+		return () => {
+			window.removeEventListener("scroll", checkPosition);
+		};
 	}, []);
 
 	const { languageCode, t } = useLanguage();
@@ -166,31 +181,29 @@ const CelebrationOfTheDay: React.FC = () => {
 
 	return (
 		<motion.div className="celebration-page-container">
-			<AnimatePresence mode="popLayout">
-				{showIntro && (
-					<motion.header
-						className="celebration-page-header"
-						variants={header}
-						initial="hidden"
-						animate="show"
-						exit="exit"
-					>
-						<span className="celebration-page-header__eyebrow">
-							─ Liturgie
-						</span>
+			{showIntro && (
+				<motion.header
+					className="celebration-page-header"
+					variants={header}
+					initial="hidden"
+					animate="show"
+					exit="exit"
+				>
+					<span className="celebration-page-header__eyebrow">
+						─ Liturgie
+					</span>
 
-						<h1 className="celebration-page-header__title">
-							Célébration du jour
-						</h1>
+					<h1 className="celebration-page-header__title">
+						Célébration du jour
+					</h1>
 
-						<p className="celebration-page-header__text">
-							Discover the feast of the day, its liturgical color,
-							rank, and associated saints.
-						</p>
-					</motion.header>
-				)}
-			</AnimatePresence>
-			<motion.div className="celebration-page" layout="position">
+					<p className="celebration-page-header__text">
+						Discover the feast of the day, its liturgical color,
+						rank, and associated saints.
+					</p>
+				</motion.header>
+			)}
+			<div className="celebration-page">
 				{/* ===== Left sidebar : date & liturgical facts ===== */}
 				<aside className="celebration-page__aside celebration-page__aside--left">
 					<motion.div
@@ -229,7 +242,7 @@ const CelebrationOfTheDay: React.FC = () => {
 				</aside>
 
 				{/* ===== Main article ===== */}
-				<main className="celebration-article">
+				<main className="celebration-article" ref={pageRef}>
 					<AnimatePresence mode="wait">
 						{invalidDate ? (
 							<StateBlock key="invalid">
@@ -458,7 +471,7 @@ const CelebrationOfTheDay: React.FC = () => {
 						</motion.div>
 					</motion.div>
 				</aside>
-			</motion.div>
+			</div>
 		</motion.div>
 	);
 };

@@ -64,8 +64,6 @@
 	align-items: start;
 	width: min(90%, 1440px);
 	margin: 0 auto;
-
-	overflow-anchor: none;
 }
 
 /* ===== Sidebars ===== */

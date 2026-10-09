@@ -169,6 +169,7 @@ const MiniCalendar = () => {
 							return (
 								<motion.button
 									key={dateStr}
+									layout="x"
 									layoutId={`mini-calendar-day-${dateStr}`}
 									className={`mini-calendar-day${isSelected ? " selected" : ""}${isToday ? " today" : ""}`}
 									onClick={() => handleDayClick(dateStr)}
@@ -224,7 +225,7 @@ const MiniCalendar = () => {
 					{selectedMonthLabel}
 				</motion.p>
 
-				<motion.div className="mini-calendar-date-picker" layout>
+				<motion.div className="mini-calendar-date-picker" layout="x">
 					<button
 						type="button"
 						className="calendar-emoji-btn"
