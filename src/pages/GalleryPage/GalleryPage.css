@@ -55,28 +55,31 @@
 
 /* ===== Mur ===== */
 
-.gallery-wall {
-	/*columns: 4 260px;
-	column-gap: 1.25rem;
+.gallery-wall-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
 	width: min(1400px, 100% - 3rem);
 	margin: 0 auto;
-	padding: 0;
-	list-style: none;*/
+}
+
+.gallery-wall {
+	--gap: 1.5rem;
 	display: grid;
-	grid-template-columns: repeat(4, minmax(0, 1fr));
-	gap: 24px;
+	grid-template-columns: repeat(var(--columns, 4), minmax(0, 1fr));
+	gap: var(--gap);
 	align-items: start;
 }
+
 .gallery-column {
 	display: flex;
 	flex-direction: column;
-	gap: 24px;
+	gap: var(--gap);
+	min-width: 0;
 }
 
 .gallery-tile {
 	position: relative;
-	break-inside: avoid;
-	margin: 0 0 1.25rem;
 	overflow: hidden;
 	border-radius: 0.75rem;
 	background: linear-gradient(
@@ -89,6 +92,7 @@
 .gallery-tile__button {
 	display: block;
 	width: 100%;
+	height: 100%;
 	padding: 0;
 	border: 0;
 	background: none;
@@ -193,6 +197,19 @@
 	border-radius: 0.75rem;
 }
 
+.gallery-load-more {
+	display: flex;
+	justify-content: center;
+	min-height: 3rem;
+}
+
+.gallery-load-more__end {
+	color: var(--color-text-tertiary);
+	font-size: 0.75rem;
+	letter-spacing: 0.3em;
+	text-transform: uppercase;
+}
+
 /* ===== States ===== */
 
 .gallery-state {
@@ -235,13 +252,11 @@
 		width: calc(100% - 2rem);
 	}
 
-	.gallery-wall {
-		columns: 2 140px;
-		column-gap: 0.75rem;
+	.gallery-wall-wrapper {
+		width: calc(100% - 2rem);
 	}
-
-	.gallery-tile {
-		margin-bottom: 0.75rem;
+	.gallery-wall {
+		--gap: 0.75rem;
 	}
 
 	/* sur mobile, cartel toujours visible mais discret */

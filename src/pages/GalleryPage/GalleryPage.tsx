@@ -1,3 +1,4 @@
+// NEED SEED RATIO IN IMAGE TABLE
 import "./GalleryPage.css";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -12,6 +13,8 @@ import {
 } from "../../components/GalleryFilters/GalleryFilters";
 import { ArtworkLightbox } from "../../components/ArtworkLightbox/ArtworkLightbox";
 import { buildFacet, cartel } from "../../utils/artworkFormat";
+
+/* ===== Animation presets ===== */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -35,101 +38,95 @@ const tile = {
 	},
 };
 
+/* ===== Masonry ===== */
+
 const PAGE_SIZE = 40;
 
-// Helpers
-function getColumnCount() {
-	if (typeof window === "undefined") return 4;
+// Typical devotional painting is a portrait; used when the API has no dimensions.
+const FALLBACK_RATIO = 1.3;
+// Vertical gap expressed as a fraction of the column width (24px / ~320px).
+const GAP_SCORE = 0.08;
 
-	if (window.innerWidth < 640) return 1;
-	if (window.innerWidth < 1024) return 2;
+function getColumnCount(width: number) {
+	if (width < 640) return 1;
+	if (width < 1024) return 2;
+	if (width < 1400) return 3;
 	return 4;
 }
 
-function imageHeightScore(image: Image) {
-	if (!image.width || !image.height) return 1;
-
-	return image.height / image.width;
-}
-
 function useColumnCount() {
-	const [count, setCount] = useState(getColumnCount);
+	const [count, setCount] = useState(() =>
+		typeof window === "undefined" ? 4 : getColumnCount(window.innerWidth),
+	);
 
 	useEffect(() => {
-		const handleResize = () => {
-			setCount(getColumnCount());
-		};
-
-		window.addEventListener("resize", handleResize);
-
-		return () => {
-			window.removeEventListener("resize", handleResize);
-		};
+		const onResize = () => setCount(getColumnCount(window.innerWidth));
+		window.addEventListener("resize", onResize);
+		return () => window.removeEventListener("resize", onResize);
 	}, []);
 
 	return count;
 }
 
+function heightRatio(image: Image) {
+	return image.width && image.height
+		? image.height / image.width
+		: FALLBACK_RATIO;
+}
+
+/**
+ * Greedy "shortest column first" distribution.
+ * Deterministic: for a given prefix of `images`, placement is identical,
+ * so appending a page never moves tiles that are already on screen.
+ */
+function distribute(images: Image[], columnCount: number): Image[][] {
+	const columns: Image[][] = Array.from({ length: columnCount }, () => []);
+	const heights = new Array<number>(columnCount).fill(0);
+
+	for (const image of images) {
+		let shortest = 0;
+		for (let i = 1; i < columnCount; i++) {
+			if (heights[i] < heights[shortest]) shortest = i;
+		}
+		columns[shortest].push(image);
+		heights[shortest] += heightRatio(image) + GAP_SCORE;
+	}
+
+	return columns;
+}
+
+function mergeUnique(current: Image[], incoming: Image[]) {
+	const seen = new Set(current.map((i) => i.id));
+	const fresh = incoming.filter((i) => !seen.has(i.id));
+	return fresh.length ? [...current, ...fresh] : current;
+}
+
+/* ===== Page ===== */
+
 const GalleryPage = () => {
-	// states
 	const [images, setImages] = useState<Image[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [loadingMore, setLoadingMore] = useState(false);
 	const [error, setError] = useState<Error | null>(null);
 	const [hasMore, setHasMore] = useState(true);
 	const [total, setTotal] = useState(0);
-
 	const [filters, setFilters] = useState<GalleryFiltersValue>(
 		DEFAULT_GALLERY_FILTERS,
 	);
-
 	const [openIndex, setOpenIndex] = useState<number | null>(null);
-
 	const [seed] = useState(() => String(Math.floor(Math.random() * 100000)));
 
-	// refs
 	const offsetRef = useRef(0);
-	const loadingRef = useRef(false);
+	const inFlightRef = useRef(false);
 	const requestIdRef = useRef(0);
-
-	// -------------------------
-	// MASONRY
-	// -------------------------
+	const sentinelRef = useRef<HTMLDivElement>(null);
 
 	const columnCount = useColumnCount();
 
-	const [columns, setColumns] = useState<Image[][]>(() =>
-		Array.from({ length: columnCount }, () => []),
-	);
-
-	const columnsRef = useRef<Image[][]>(columns);
-
-	const columnHeightsRef = useRef<number[]>(Array(columnCount).fill(0));
-
-	const appendImagesToColumns = useCallback(
-		(newImages: Image[], reset = false) => {
-			const nextColumns = reset
-				? Array.from({ length: columnCount }, () => [])
-				: columnsRef.current.map((column) => [...column]);
-
-			const heights = reset
-				? Array(columnCount).fill(0)
-				: [...columnHeightsRef.current];
-
-			for (const image of newImages) {
-				const columnIndex = heights.indexOf(Math.min(...heights));
-
-				nextColumns[columnIndex].push(image);
-
-				heights[columnIndex] += imageHeightScore(image);
-			}
-
-			columnsRef.current = nextColumns;
-			columnHeightsRef.current = heights;
-
-			setColumns(nextColumns);
-		},
-		[columnCount],
+	// Derived, not stored: single source of truth is `images`.
+	const columns = useMemo(
+		() => distribute(images, columnCount),
+		[images, columnCount],
 	);
 
 	// -------------------------
@@ -138,9 +135,8 @@ const GalleryPage = () => {
 
 	const loadImages = useCallback(
 		async (reset = false) => {
-			if (loadingRef.current) return;
-
-			loadingRef.current = true;
+			if (inFlightRef.current) return;
+			inFlightRef.current = true;
 
 			if (reset) {
 				setLoading(true);
@@ -150,10 +146,9 @@ const GalleryPage = () => {
 			}
 
 			const requestId = ++requestIdRef.current;
+			const offset = reset ? 0 : offsetRef.current;
 
 			try {
-				const offset = reset ? 0 : offsetRef.current;
-
 				const result = await getWallImages({
 					limit: PAGE_SIZE,
 					offset,
@@ -178,50 +173,55 @@ const GalleryPage = () => {
 				if (requestId !== requestIdRef.current) return;
 
 				setImages((current) =>
-					reset ? result.data : [...current, ...result.data],
+					reset ? result.data : mergeUnique(current, result.data),
 				);
-
-				// ⭐ C'est ici qu'on alimente le Masonry
-				appendImagesToColumns(result.data, reset);
-
 				setTotal(result.total);
 				setHasMore(result.has_more);
-
 				offsetRef.current = offset + result.data.length;
 			} catch (e) {
 				if (requestId !== requestIdRef.current) return;
-
 				setError(e instanceof Error ? e : new Error(String(e)));
 			} finally {
 				if (requestId === requestIdRef.current) {
 					setLoading(false);
 					setLoadingMore(false);
-					loadingRef.current = false;
+					inFlightRef.current = false;
 				}
 			}
 		},
-		[filters, seed, appendImagesToColumns],
+		[filters, seed],
 	);
 
-	// -------------------------
-	// NOUVEAUX FILTRES
-	// -------------------------
-
+	// Filters changed → start over. (Not tied to columnCount: resizing
+	// must never refetch, the memo above re-distributes for free.)
 	useEffect(() => {
 		offsetRef.current = 0;
+		inFlightRef.current = false;
 		setImages([]);
 		setHasMore(true);
 		setOpenIndex(null);
-
-		// On remet aussi le Masonry à zéro
-		columnsRef.current = Array.from({ length: columnCount }, () => []);
-
-		columnHeightsRef.current = Array(columnCount).fill(0);
-
-		setColumns(Array.from({ length: columnCount }, () => []));
-
 		loadImages(true);
-	}, [loadImages, columnCount]);
+	}, [loadImages]);
+
+	// Infinite scroll: load the next page when the sentinel approaches.
+	useEffect(() => {
+		const sentinel = sentinelRef.current;
+		if (!sentinel || !hasMore || loading) return;
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) loadImages(false);
+			},
+			{ rootMargin: "800px 0px" },
+		);
+
+		observer.observe(sentinel);
+		return () => observer.disconnect();
+	}, [hasMore, loading, loadImages]);
+
+	// -------------------------
+	// Derived
+	// -------------------------
 
 	const facets = useMemo(
 		() => ({
@@ -237,7 +237,10 @@ const GalleryPage = () => {
 		[images],
 	);
 
-	const results = images;
+	const indexById = useMemo(
+		() => new Map(images.map((img, i) => [img.id, i])),
+		[images],
+	);
 
 	const wallKey = useMemo(() => JSON.stringify(filters), [filters]);
 
@@ -250,11 +253,9 @@ const GalleryPage = () => {
 				animate="show"
 			>
 				<span className="gallery-header__eyebrow">─ Galerie</span>
-
 				<h1 className="gallery-header__title">
 					Les saints vus par les peintres
 				</h1>
-
 				<p className="gallery-header__text">
 					Un mur d'œuvres, du domaine public, à parcourir librement.
 					Filtrez par saint, artiste, période ou musée — puis entrez
@@ -297,7 +298,7 @@ const GalleryPage = () => {
 							{error.message}
 						</span>
 					</motion.div>
-				) : results.length === 0 ? (
+				) : images.length === 0 ? (
 					<motion.div
 						key="empty"
 						className="gallery-state"
@@ -308,126 +309,119 @@ const GalleryPage = () => {
 						Aucune œuvre ne correspond à ces filtres.
 					</motion.div>
 				) : (
-					<>
+					<motion.div
+						key={wallKey}
+						className="gallery-wall-wrapper"
+						exit={{ opacity: 0, transition: { duration: 0.2 } }}
+					>
 						<motion.div
-							key={wallKey}
 							className="gallery-wall"
+							style={
+								{
+									"--columns": columnCount,
+								} as React.CSSProperties
+							}
 							variants={wallGroup}
 							initial="hidden"
 							animate="show"
-							exit={{
-								opacity: 0,
-								transition: { duration: 0.2 },
-							}}
 						>
 							{columns.map((column, columnIndex) => (
 								<div
 									className="gallery-column"
 									key={columnIndex}
 								>
-									{column.map((img) => {
-										const ratio =
-											img.width && img.height
-												? img.width / img.height
-												: undefined;
-
-										return (
-											<motion.div
-												key={img.id}
-												className="gallery-tile"
-												variants={tile}
+									{column.map((img) => (
+										<motion.div
+											key={img.id}
+											className="gallery-tile"
+											variants={tile}
+											style={
+												img.width && img.height
+													? {
+															aspectRatio: `${img.width} / ${img.height}`,
+														}
+													: undefined
+											}
+										>
+											<button
+												type="button"
+												className="gallery-tile__button"
+												onClick={() =>
+													setOpenIndex(
+														indexById.get(img.id) ??
+															null,
+													)
+												}
+												aria-label={`${img.title}${
+													img.creator
+														? `, ${img.creator}`
+														: ""
+												}`}
 											>
-												<button
-													type="button"
-													className="gallery-tile__button"
-													onClick={() => {
-														const globalIndex =
-															images.findIndex(
-																(item) =>
-																	item.id ===
-																	img.id,
-															);
-
-														setOpenIndex(
-															globalIndex,
-														);
-													}}
-													aria-label={`${img.title}${
-														img.creator
-															? `, ${img.creator}`
-															: ""
-													}`}
-												>
-													<img
-														src={img.image_url}
-														alt=""
-														width={img.width}
-														height={img.height}
-														loading="lazy"
-														decoding="async"
-														draggable={false}
-													/>
-
-													<span
-														className="gallery-tile__frame"
-														aria-hidden="true"
-													/>
-
-													<span className="gallery-tile__cartel">
-														{img.saint_name && (
-															<span className="gallery-tile__saint">
-																{img.saint_name}
-															</span>
-														)}
-
-														<span className="gallery-tile__title">
-															{img.title}
+												<img
+													src={img.image_url}
+													alt=""
+													width={
+														img.width ?? undefined
+													}
+													height={
+														img.height ?? undefined
+													}
+													loading="lazy"
+													decoding="async"
+													draggable={false}
+												/>
+												<span
+													className="gallery-tile__frame"
+													aria-hidden="true"
+												/>
+												<span className="gallery-tile__cartel">
+													{img.saint_name && (
+														<span className="gallery-tile__saint">
+															{img.saint_name}
 														</span>
-
-														{cartel(img) && (
-															<span className="gallery-tile__meta">
-																{cartel(img)}
-															</span>
-														)}
+													)}
+													<span className="gallery-tile__title">
+														{img.title}
 													</span>
-												</button>
-											</motion.div>
-										);
-									})}
+													{cartel(img) && (
+														<span className="gallery-tile__meta">
+															{cartel(img)}
+														</span>
+													)}
+												</span>
+											</button>
+										</motion.div>
+									))}
 								</div>
 							))}
 						</motion.div>
 
-						{/*<div
-							ref={loadMoreRef}
-							className="gallery-load-more"
-							aria-hidden="true"
-						>
-							{loadingMore && <Loader size={32} />}
-						</div>*/}
-						{hasMore && (
-							<div className="gallery-load-more">
-								{loadingMore ? (
-									<Loader size={32} />
-								) : (
-									<button
-										type="button"
-										onClick={() => loadImages(false)}
-										className="gallery-load-more__button"
-									>
-										Charger plus
-									</button>
-								)}
-							</div>
-						)}
-					</>
+						<div ref={sentinelRef} className="gallery-load-more">
+							{loadingMore ? (
+								<Loader size={32} />
+							) : hasMore ? (
+								<button
+									type="button"
+									onClick={() => loadImages(false)}
+									className="gallery-load-more__button"
+								>
+									Charger plus
+								</button>
+							) : (
+								<span className="gallery-load-more__end">
+									─ Fin de la salle ─
+								</span>
+							)}
+						</div>
+					</motion.div>
 				)}
 			</AnimatePresence>
 
 			<AnimatePresence>
-				{openIndex !== null && results[openIndex] && (
+				{openIndex !== null && images[openIndex] && (
 					<ArtworkLightbox
-						items={results}
+						items={images}
 						index={openIndex}
 						onIndexChange={setOpenIndex}
 						onClose={() => setOpenIndex(null)}
