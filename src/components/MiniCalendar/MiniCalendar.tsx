@@ -1,12 +1,6 @@
 import "./MiniCalendar.css";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import {
-	AnimatePresence,
-	animate,
-	motion,
-	useMotionValue,
-	useReducedMotion,
-} from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 import { FullCalendarModal } from "../FullCalendarModal/FullCalendarModal";
 import { CalendarLogo, ResetLogo } from "../../icons";
@@ -16,20 +10,40 @@ import { useCalendar } from "../../hooks/useCalendar";
 import { useSelectedDate } from "../../hooks/useSelectedDate";
 import { addDays, daysBetweenYMD, formatYMD, parseYMD } from "../../utils/date";
 
-/* The strip is always rendered centred on the selected day. Cells are keyed by
- * date, so on a change React keeps the shared ones and mounts the new edge
- * ones under the mask. We then FLIP the track: it jumps by the distance the
- * cells moved in the DOM (so nothing moves on screen) and springs back to 0.
- * Beyond RENDER_AROUND days, the strip is replaced with a directional fade. */
+/* One strip per selected date, swapped through AnimatePresence.
+ *
+ * Short move (|delta| ≤ MAX_SLIDE days): the new strip enters offset by
+ * `delta` slots, which puts every shared date exactly where it was in the
+ * old strip; the old one exits by the same amount. Both move together, so
+ * the eye sees a single strip scrolling.
+ *
+ * Long jump: offset is capped to JUMP_SLOTS and the strips crossfade, which
+ * still reads as "coming from the future / the past". */
 
 const VISIBLE = 5;
-const RENDER_AROUND = 7; // > floor(VISIBLE / 2) + 1 so edges stay covered
+const RENDER_AROUND = 7; // days on each side of the selection
+const MAX_SLIDE = 5; // beyond this many days we crossfade instead
+const JUMP_SLOTS = 1.5;
 const SPRING = {
 	type: "spring",
 	stiffness: 260,
 	damping: 32,
 	mass: 0.9,
 } as const;
+
+type Motion = { delta: number; step: number };
+
+function offsetFor({ delta, step }: Motion) {
+	const slots =
+		Math.abs(delta) <= MAX_SLIDE ? delta : Math.sign(delta) * JUMP_SLOTS;
+	return slots * step;
+}
+
+const strip = {
+	enter: (m: Motion) => ({ x: offsetFor(m), opacity: 0 }),
+	center: { x: 0, opacity: 1 },
+	exit: (m: Motion) => ({ x: -offsetFor(m), opacity: 0 }),
+};
 
 const MiniCalendar = () => {
 	const { languageCode, t } = useLanguage();
@@ -48,15 +62,15 @@ const MiniCalendar = () => {
 	const viewportRef = useRef<HTMLDivElement>(null);
 
 	// Slot step (cell width + gap) measured from the DOM; CSS owns sizing.
-	const stepRef = useRef(0);
+	const [step, setStep] = useState(0);
 	useLayoutEffect(() => {
 		const el = viewportRef.current;
 		if (!el) return;
 		const measure = () => {
-			const styles = getComputedStyle(el);
-			const gap = parseFloat(styles.getPropertyValue("--gap")) || 0;
-			const inner = el.clientWidth - 2 * parseFloat(styles.paddingLeft);
-			stepRef.current = (inner - (VISIBLE - 1) * gap) / VISIBLE + gap;
+			const s = getComputedStyle(el);
+			const gap = parseFloat(s.getPropertyValue("--gap")) || 0;
+			const inner = el.clientWidth - 2 * parseFloat(s.paddingLeft);
+			setStep((inner - (VISIBLE - 1) * gap) / VISIBLE + gap);
 		};
 		measure();
 		const ro = new ResizeObserver(measure);
@@ -64,54 +78,20 @@ const MiniCalendar = () => {
 		return () => ro.disconnect();
 	}, []);
 
+	// Travel since the previous render: read during render, committed after.
+	const prevRef = useRef(selected);
+	const delta = daysBetweenYMD(prevRef.current, selected);
+	useEffect(() => {
+		prevRef.current = selected;
+	}, [selected]);
+	const motionInfo: Motion = { delta, step };
+
 	const days = useMemo(() => {
 		const base = parseYMD(selected);
 		return Array.from({ length: RENDER_AROUND * 2 + 1 }, (_, i) =>
 			addDays(base, i - RENDER_AROUND),
 		);
 	}, [selected]);
-
-	// FLIP on selection change. `prev` is read during the layout phase, before
-	// the browser paints the recentred strip.
-	const x = useMotionValue(0);
-	const prevRef = useRef(selected);
-	// Direction of the last long jump, drives the strip swap animation.
-	const [jump, setJump] = useState<{ key: string; dir: number }>({
-		key: selected,
-		dir: 0,
-	});
-
-	useLayoutEffect(() => {
-		const delta = daysBetweenYMD(prevRef.current, selected);
-		prevRef.current = selected;
-		if (delta === 0) return;
-
-		if (Math.abs(delta) > RENDER_AROUND - 2) {
-			// Too far: swap the whole strip with a directional fade.
-			setJump({ key: selected, dir: Math.sign(delta) });
-			x.jump(0);
-			return;
-		}
-
-		if (reduceMotion) return;
-		// Cells moved -delta slots in the DOM; offset the track so they appear
-		// where they were, then spring to the new resting position.
-		x.jump(delta * stepRef.current);
-		const controls = animate(x, 0, SPRING);
-		return () => controls.stop();
-	}, [selected, reduceMotion, x]);
-
-	const stripSwap = {
-		enter: (dir: number) => ({
-			x: dir * 1.5 * stepRef.current,
-			opacity: 0,
-		}),
-		center: { x: 0, opacity: 1 },
-		exit: (dir: number) => ({
-			x: -dir * 1.5 * stepRef.current,
-			opacity: 0,
-		}),
-	};
 
 	const formats = useMemo(
 		() => ({
@@ -130,13 +110,12 @@ const MiniCalendar = () => {
 	// Keyboard: ← → one day, Home = today. Focus follows the selection.
 	const refocus = useRef(false);
 	const onKeyDown = (e: React.KeyboardEvent) => {
-		const delta =
-			e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : 0;
-		if (!delta && e.key !== "Home") return;
+		const d = e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : 0;
+		if (!d && e.key !== "Home") return;
 		e.preventDefault();
 		refocus.current = true;
 		if (e.key === "Home") goToday();
-		else select(formatYMD(addDays(parseYMD(selected), delta)));
+		else select(formatYMD(addDays(parseYMD(selected), d)));
 	};
 	useEffect(() => {
 		if (!refocus.current) return;
@@ -173,51 +152,44 @@ const MiniCalendar = () => {
 				<AnimatePresence
 					initial={false}
 					mode="popLayout"
-					custom={jump.dir}
+					custom={motionInfo}
 				>
-					{/* Outer layer: swapped on long jumps (directional fade) */}
 					<motion.div
-						key={jump.key}
-						className="mini-calendar__strip"
-						custom={jump.dir}
-						variants={reduceMotion ? undefined : stripSwap}
+						key={selected}
+						className="mini-calendar__track"
+						custom={motionInfo}
+						variants={strip}
 						initial="enter"
 						animate="center"
 						exit="exit"
 						transition={reduceMotion ? { duration: 0 } : SPRING}
 					>
-						{/* Inner layer: FLIP-translated on short moves */}
-						<motion.div
-							className="mini-calendar__track"
-							style={{ x }}
-						>
-							{days.map((d) => {
-								const dateStr = formatYMD(d);
-								const isSelected = dateStr === selected;
-								const isTodayCell = dateStr === today;
-								return (
-									<button
-										key={dateStr}
-										type="button"
-										className={`mini-calendar__day${isSelected ? " is-selected" : ""}${isTodayCell ? " is-today" : ""}`}
-										onClick={() => select(dateStr)}
-										aria-pressed={isSelected}
-										aria-current={
-											isTodayCell ? "date" : undefined
-										}
-										aria-label={formats.full.format(d)}
-										tabIndex={isSelected ? 0 : -1}
-									>
-										<span className="mini-calendar__weekday">
-											{formats.weekday.format(d)}
-										</span>
-										<span className="mini-calendar__num">
-											{d.getDate()}
-										</span>
-									</button>
-								);
-							})}
-						</motion.div>
+						{days.map((d) => {
+							const dateStr = formatYMD(d);
+							const isSelected = dateStr === selected;
+							const isTodayCell = dateStr === today;
+							return (
+								<button
+									key={dateStr}
+									type="button"
+									className={`mini-calendar__day${isSelected ? " is-selected" : ""}${isTodayCell ? " is-today" : ""}`}
+									onClick={() => select(dateStr)}
+									aria-pressed={isSelected}
+									aria-current={
+										isTodayCell ? "date" : undefined
+									}
+									aria-label={formats.full.format(d)}
+									tabIndex={isSelected ? 0 : -1}
+								>
+									<span className="mini-calendar__weekday">
+										{formats.weekday.format(d)}
+									</span>
+									<span className="mini-calendar__num">
+										{d.getDate()}
+									</span>
+								</button>
+							);
+						})}
 					</motion.div>
 				</AnimatePresence>
 			</div>

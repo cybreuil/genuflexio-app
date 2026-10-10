@@ -28,17 +28,9 @@
 	);
 }
 
-/* Outer layer, swapped on long jumps. popLayout positions the exiting one
-   absolutely: keep its geometry. */
-.mini-calendar__strip {
-	left: 1.25rem;
-	right: 1.25rem;
-	width: auto;
-	will-change: transform, opacity;
-}
-
-/* Inner layer, FLIP-translated on short moves.
-   Slot width = (viewport inner − 4 gaps) / 5, centred on the middle slot. */
+/* One strip per selected date. Slot = (viewport inner − 4 gaps) / 5, the
+   middle slot is centred. popLayout positions the exiting strip absolutely,
+   so left/right keep its geometry. */
 .mini-calendar__track {
 	--slot: calc((100% - 4 * var(--gap)) / 5);
 	display: grid;
@@ -46,7 +38,10 @@
 	grid-auto-columns: var(--slot);
 	gap: var(--gap);
 	justify-content: center;
-	will-change: transform;
+	left: 1.25rem;
+	right: 1.25rem;
+	width: auto;
+	will-change: transform, opacity;
 }
 
 /* ===== Day cell ===== */
