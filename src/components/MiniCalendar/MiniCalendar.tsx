@@ -1,271 +1,285 @@
-import { useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { FullCalendarModal } from "../FullCalendarModal/FullCalendarModal";
-import { motion } from "framer-motion";
-import { TRANSITIONS } from "../../styles/theme";
 import "./MiniCalendar.css";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
-	formatYMD,
-	parseYMD,
-	getTodayStr,
-	daysBetweenYMD,
-} from "../../utils/date";
+	AnimatePresence,
+	animate,
+	motion,
+	useMotionValue,
+	useReducedMotion,
+} from "framer-motion";
+
+import { FullCalendarModal } from "../FullCalendarModal/FullCalendarModal";
 import { CalendarLogo, ResetLogo } from "../../icons";
+import { TRANSITIONS } from "../../styles/theme";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useCalendar } from "../../hooks/useCalendar";
+import { useSelectedDate } from "../../hooks/useSelectedDate";
+import { addDays, daysBetweenYMD, formatYMD, parseYMD } from "../../utils/date";
 
-// Version 5 jours (autour de la date sélectionnée)
-// const get5WeekDays = (date = new Date()) => {
-// 	const start = new Date(date);
-// 	start.setDate(date.getDate() - 2); // 2 jours avant
-// 	return Array.from({ length: 5 }, (_, i) => {
-// 		const d = new Date(start);
-// 		d.setDate(start.getDate() + i);
-// 		return d;
-// 	});
-// };
+/* The strip is always rendered centred on the selected day. Cells are keyed by
+ * date, so on a change React keeps the shared ones and mounts the new edge
+ * ones under the mask. We then FLIP the track: it jumps by the distance the
+ * cells moved in the DOM (so nothing moves on screen) and springs back to 0.
+ * Beyond RENDER_AROUND days, the strip is replaced with a directional fade. */
 
-// On prend finalement 9 jours (5 +4 buffers - 2 de chaque coté pour garder une bonne visibilité du contexte)
-// Version 9 jours
-const get9DaysWithBuffer = (date = new Date()) => {
-	const start = new Date(date);
-	start.setDate(date.getDate() - 4); // 4 jours avant
-	return Array.from({ length: 9 }, (_, i) => {
-		const d = new Date(start);
-		d.setDate(start.getDate() + i);
-		return d;
-	});
-};
+const VISIBLE = 5;
+const RENDER_AROUND = 7; // > floor(VISIBLE / 2) + 1 so edges stay covered
+const SPRING = {
+	type: "spring",
+	stiffness: 260,
+	damping: 32,
+	mass: 0.9,
+} as const;
 
 const MiniCalendar = () => {
-	const navigate = useNavigate();
-	const [isAnimating, setIsAnimating] = useState(false);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-
-	// On recupere la langue du context pour l'affichage des jours de la semaine et du mois
-	const { languageCode } = useLanguage();
-
+	const { languageCode, t } = useLanguage();
 	const { error } = useCalendar();
+	const {
+		safeDate: selected,
+		today,
+		isToday,
+		select,
+		goToday,
+	} = useSelectedDate();
+	const reduceMotion = useReducedMotion();
 
-	// Récupère la date sélectionnée depuis la query string (?date=YYYY-MM-DD)
-	// const params = new URLSearchParams(location.search);
-	// const selectedDate = params.get("date") || getTodayStr();
+	const [modalOpen, setModalOpen] = useState(false);
+	const nativeInputRef = useRef<HTMLInputElement>(null);
+	const viewportRef = useRef<HTMLDivElement>(null);
 
-	// On recupere la date depuis le param finalement !
-	const { date } = useParams<{ date: string }>();
-	const todayStr = getTodayStr();
-	let selectedDate = "";
-	if (
-		date &&
-		!/^\d{4}-\d{2}-\d{2}$/.test(date) &&
-		isNaN(parseYMD(date).getTime())
-	) {
-		// Si la date n'est pas au format YYYY-MM-DD ou n'est pas une date valide, on ignore et on utilise aujourd'hui
-		console.warn(
-			"Date invalide dans l'URL, utilisation de la date du jour",
+	// Slot step (cell width + gap) measured from the DOM; CSS owns sizing.
+	const stepRef = useRef(0);
+	useLayoutEffect(() => {
+		const el = viewportRef.current;
+		if (!el) return;
+		const measure = () => {
+			const styles = getComputedStyle(el);
+			const gap = parseFloat(styles.getPropertyValue("--gap")) || 0;
+			const inner = el.clientWidth - 2 * parseFloat(styles.paddingLeft);
+			stepRef.current = (inner - (VISIBLE - 1) * gap) / VISIBLE + gap;
+		};
+		measure();
+		const ro = new ResizeObserver(measure);
+		ro.observe(el);
+		return () => ro.disconnect();
+	}, []);
+
+	const days = useMemo(() => {
+		const base = parseYMD(selected);
+		return Array.from({ length: RENDER_AROUND * 2 + 1 }, (_, i) =>
+			addDays(base, i - RENDER_AROUND),
 		);
-		selectedDate = todayStr;
-	} else {
-		selectedDate = date || todayStr;
-	}
+	}, [selected]);
 
-	// const weekDays = useMemo(
-	// 	() => getWeekDays(new Date(selectedDate)),
-	// 	[selectedDate],
-	// );
+	// FLIP on selection change. `prev` is read during the layout phase, before
+	// the browser paints the recentred strip.
+	const x = useMotionValue(0);
+	const prevRef = useRef(selected);
+	// Direction of the last long jump, drives the strip swap animation.
+	const [jump, setJump] = useState<{ key: string; dir: number }>({
+		key: selected,
+		dir: 0,
+	});
 
-	// 9 jours avec buffer
-	const bufferedDays = useMemo(
-		() => get9DaysWithBuffer(parseYMD(selectedDate)),
-		[selectedDate],
-	);
+	useLayoutEffect(() => {
+		const delta = daysBetweenYMD(prevRef.current, selected);
+		prevRef.current = selected;
+		if (delta === 0) return;
 
-	// Month for minicalendar
-	const selectedMonthLabel = useMemo(() => {
-		try {
-			const d = parseYMD(selectedDate); // parseYMD est déjà importé
-			const locale = languageCode || "en - US";
-			return d.toLocaleDateString(locale, {
+		if (Math.abs(delta) > RENDER_AROUND - 2) {
+			// Too far: swap the whole strip with a directional fade.
+			setJump({ key: selected, dir: Math.sign(delta) });
+			x.jump(0);
+			return;
+		}
+
+		if (reduceMotion) return;
+		// Cells moved -delta slots in the DOM; offset the track so they appear
+		// where they were, then spring to the new resting position.
+		x.jump(delta * stepRef.current);
+		const controls = animate(x, 0, SPRING);
+		return () => controls.stop();
+	}, [selected, reduceMotion, x]);
+
+	const stripSwap = {
+		enter: (dir: number) => ({
+			x: dir * 1.5 * stepRef.current,
+			opacity: 0,
+		}),
+		center: { x: 0, opacity: 1 },
+		exit: (dir: number) => ({
+			x: -dir * 1.5 * stepRef.current,
+			opacity: 0,
+		}),
+	};
+
+	const formats = useMemo(
+		() => ({
+			weekday: new Intl.DateTimeFormat(languageCode, {
+				weekday: "short",
+			}),
+			month: new Intl.DateTimeFormat(languageCode, {
 				month: "long",
 				year: "numeric",
-			});
-		} catch {
-			return "";
-		}
-	}, [selectedDate, languageCode]);
+			}),
+			full: new Intl.DateTimeFormat(languageCode, { dateStyle: "full" }),
+		}),
+		[languageCode],
+	);
 
-	// On gere le calendrier date picker
-	const inputRef = useRef<HTMLInputElement>(null);
-	const handleIconClick = () => {
-		// prefer native picker on small screens
-		if (
-			window.matchMedia &&
-			window.matchMedia("(max-width: 720px)").matches
-		) {
-			if (inputRef.current) {
-				inputRef.current.showPicker
-					? inputRef.current.showPicker()
-					: inputRef.current.focus();
+	// Keyboard: ← → one day, Home = today. Focus follows the selection.
+	const refocus = useRef(false);
+	const onKeyDown = (e: React.KeyboardEvent) => {
+		const delta =
+			e.key === "ArrowLeft" ? -1 : e.key === "ArrowRight" ? 1 : 0;
+		if (!delta && e.key !== "Home") return;
+		e.preventDefault();
+		refocus.current = true;
+		if (e.key === "Home") goToday();
+		else select(formatYMD(addDays(parseYMD(selected), delta)));
+	};
+	useEffect(() => {
+		if (!refocus.current) return;
+		refocus.current = false;
+		viewportRef.current
+			?.querySelector<HTMLButtonElement>('[aria-pressed="true"]')
+			?.focus();
+	}, [selected]);
+
+	const openPicker = () => {
+		const input = nativeInputRef.current;
+		if (window.matchMedia("(max-width: 720px)").matches && input) {
+			input.value = selected;
+			try {
+				input.showPicker();
+			} catch {
+				input.focus();
+				input.click();
 			}
 			return;
 		}
-		setIsModalOpen(true);
+		setModalOpen(true);
 	};
-
-	//Definition de l'ordre de defilement
-	const [prevDate, setPrevDate] = useState(selectedDate);
-
-	const direction = useMemo(() => {
-		if (!prevDate) return 0;
-		const diffDays = daysBetweenYMD(prevDate, selectedDate);
-		// diffDays > 0 : glisse vers la droite, < 0 : vers la gauche
-		return diffDays;
-	}, [selectedDate, prevDate]);
-
-	const handleDayClick = (dateStr: string) => {
-		if (isAnimating) return;
-
-		setIsAnimating(true);
-		setPrevDate(selectedDate);
-		navigate(`/celebration/${dateStr}`);
-
-		setTimeout(() => {
-			setIsAnimating(false);
-		}, 10); // Durée du délai pour éviter les clics rapides
-	};
-
-	const handleCalendarModalDayClick = (dateStr: string) => {
-		setIsModalOpen(false);
-		setPrevDate(selectedDate);
-		navigate(`/celebration/${dateStr}`);
-	};
-
-	// Previous weekDays
-	// const [prevWeekDays, setPrevWeekDays] = useState<string[]>(
-	// 	weekDays.map((d) => formatDate(d)),
-	// );
-	// useEffect(() => {
-	// 	setPrevWeekDays(weekDays.map((d) => formatDate(d)));
-	// }, [selectedDate]);
 
 	return (
 		<div
-			className={`panel mini-calendar-container ${error ? "panel__error mini-calendar-container__disabled" : ""}`}
+			className={`panel mini-calendar${error ? " mini-calendar--disabled" : ""}`}
 		>
-			<div className="mini-calendar-viewport">
-				<div className="mini-calendar-wrapper">
-					<motion.div
-						className="mini-calendar-track"
-						// J'ai l'impression qu'on peut s'en passer
-						// layout
-					>
-						{bufferedDays.map((d) => {
-							const dateStr = formatYMD(d);
-							const isSelected = dateStr === selectedDate;
-							const isToday = dateStr === todayStr;
-							const slideX =
-								direction > 0 ? 50 : direction < 0 ? -50 : 0;
-
-							return (
-								<motion.button
-									key={dateStr}
-									layout="position"
-									layoutId={`mini-calendar-day-${dateStr}`}
-									className={`mini-calendar-day${isSelected ? " selected" : ""}${isToday ? " today" : ""}`}
-									onClick={() => handleDayClick(dateStr)}
-									aria-current={
-										isSelected ? "date" : undefined
-									}
-									initial={{
-										opacity: 0,
-										x: slideX,
-									}}
-									animate={
-										isToday && !isSelected
-											? {
-													opacity: 0.5,
-													x: 0,
-													transition:
-														TRANSITIONS.normal,
-												}
-											: {
-													opacity: 1,
-													x: 0,
-													transition:
-														TRANSITIONS.normal,
-												}
-									}
-									// exit={{ opacity: 0, x: slideX }}
-								>
-									<span className="mini-calendar-day-label">
-										{d.toLocaleDateString(
-											languageCode || "en-US",
-											{
-												weekday: "short",
-											},
-										)}
-									</span>
-									<span className="mini-calendar-day-num">
-										{d.getDate()}
-									</span>
-								</motion.button>
-							);
-						})}
-					</motion.div>
-				</div>
-			</div>
-			<motion.div className="mini-calendar-controls">
-				{selectedDate !== todayStr && (
-					<motion.button
-						className="calendar-reset-button"
-						onClick={() => handleDayClick(todayStr)}
-						initial={{ opacity: 0, x: -10 }}
-						animate={{ opacity: 1, x: 0 }}
-						exit={{ opacity: 0, x: -10 }}
-						transition={TRANSITIONS.normal}
-						aria-label="Revenir à aujourd'hui"
-						title="Revenir à aujourd'hui"
-					>
-						<ResetLogo fill="var(--color-text-secondary)" />
-					</motion.button>
-				)}
-
-				<motion.p className="mini-calendar-month-label">
-					{selectedMonthLabel}
-				</motion.p>
-
-				<motion.div
-					className="mini-calendar-date-picker"
-					layout="position"
+			<div
+				ref={viewportRef}
+				className="mini-calendar__viewport"
+				onKeyDown={onKeyDown}
+			>
+				<AnimatePresence
+					initial={false}
+					mode="popLayout"
+					custom={jump.dir}
 				>
+					{/* Outer layer: swapped on long jumps (directional fade) */}
+					<motion.div
+						key={jump.key}
+						className="mini-calendar__strip"
+						custom={jump.dir}
+						variants={reduceMotion ? undefined : stripSwap}
+						initial="enter"
+						animate="center"
+						exit="exit"
+						transition={reduceMotion ? { duration: 0 } : SPRING}
+					>
+						{/* Inner layer: FLIP-translated on short moves */}
+						<motion.div
+							className="mini-calendar__track"
+							style={{ x }}
+						>
+							{days.map((d) => {
+								const dateStr = formatYMD(d);
+								const isSelected = dateStr === selected;
+								const isTodayCell = dateStr === today;
+								return (
+									<button
+										key={dateStr}
+										type="button"
+										className={`mini-calendar__day${isSelected ? " is-selected" : ""}${isTodayCell ? " is-today" : ""}`}
+										onClick={() => select(dateStr)}
+										aria-pressed={isSelected}
+										aria-current={
+											isTodayCell ? "date" : undefined
+										}
+										aria-label={formats.full.format(d)}
+										tabIndex={isSelected ? 0 : -1}
+									>
+										<span className="mini-calendar__weekday">
+											{formats.weekday.format(d)}
+										</span>
+										<span className="mini-calendar__num">
+											{d.getDate()}
+										</span>
+									</button>
+								);
+							})}
+						</motion.div>
+					</motion.div>
+				</AnimatePresence>
+			</div>
+
+			<div className="mini-calendar__controls">
+				<div className="mini-calendar__slot">
+					<AnimatePresence initial={false}>
+						{!isToday && (
+							<motion.button
+								key="reset"
+								type="button"
+								className="mini-calendar__icon-btn"
+								onClick={goToday}
+								initial={{ opacity: 0, x: -8 }}
+								animate={{ opacity: 1, x: 0 }}
+								exit={{ opacity: 0, x: -8 }}
+								transition={TRANSITIONS.fast}
+								aria-label={t("calendar.backToToday")}
+								title={t("calendar.backToToday")}
+							>
+								<ResetLogo fill="currentColor" />
+							</motion.button>
+						)}
+					</AnimatePresence>
+				</div>
+
+				<p className="mini-calendar__month" aria-live="polite">
+					{formats.month.format(parseYMD(selected))}
+				</p>
+
+				<div className="mini-calendar__slot">
 					<button
 						type="button"
-						className="calendar-emoji-btn"
-						onClick={handleIconClick}
-						aria-label="Choisir une date"
-						title="Choisir une date"
+						className="mini-calendar__icon-btn"
+						onClick={openPicker}
+						aria-label={t("calendar.pickDate")}
+						aria-haspopup="dialog"
+						aria-expanded={modalOpen}
+						title={t("calendar.pickDate")}
 					>
-						<CalendarLogo fill="var(--color-text-secondary)" />
+						<CalendarLogo fill="currentColor" />
 					</button>
-					<input
-						ref={inputRef}
-						type="date"
-						style={{
-							display: "none",
-						}}
-						onChange={(e) => {
-							if (e.target.value) {
-								handleDayClick(e.target.value);
-							}
-						}}
-					/>
-				</motion.div>
-			</motion.div>
+				</div>
+
+				<input
+					ref={nativeInputRef}
+					type="date"
+					className="mini-calendar__native"
+					tabIndex={-1}
+					aria-hidden="true"
+					onChange={(e) => e.target.value && select(e.target.value)}
+				/>
+			</div>
+
 			<FullCalendarModal
-				initialDate={selectedDate}
-				open={isModalOpen}
-				onClose={() => setIsModalOpen(false)}
-				onSelect={(dateStr) => handleCalendarModalDayClick(dateStr)}
+				open={modalOpen}
+				date={selected}
+				onClose={() => setModalOpen(false)}
+				onSelect={(d) => {
+					setModalOpen(false);
+					select(d);
+				}}
 			/>
 		</div>
 	);

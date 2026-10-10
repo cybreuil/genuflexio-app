@@ -1,109 +1,188 @@
-/* Overlay */
-.fc-overlay {
+/* =========================================================
+   CALENDAR MODAL — date picker, themed through design tokens
+   ========================================================= */
+
+.calendar-modal__overlay {
 	position: fixed;
 	inset: 0;
-	background: rgba(0, 0, 0, 0.35);
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	z-index: 1200;
+	display: grid;
+	place-items: center;
+	padding: 1rem;
+	background: rgb(10 8 6 / 0.45);
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
 }
 
-/* Modal shell */
-.fc-modal {
-	background: var(--color-background, #fff);
-	border-radius: 12px;
-	padding: 1rem;
-	width: min(520px, calc(100% - 2rem));
-	box-shadow: 0 6px 30px rgba(0, 0, 0, 0.18);
-	outline: none;
+.calendar-modal {
 	display: flex;
 	flex-direction: column;
-	gap: 0.75rem;
+	gap: 0.9rem;
+	width: min(400px, 100%);
+	padding: 1.1rem 1.25rem 1.25rem;
+	border: 1px solid var(--color-border-light);
+	border-radius: 1.25rem;
+	background: var(--color-bg-component);
+	color: var(--color-text-primary);
+	box-shadow: 0 24px 60px rgb(0 0 0 / 0.25);
+	outline: none;
 }
 
-/* Header */
-.fc-header {
+/* ===== Header ===== */
+
+.calendar-modal__header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-}
-.fc-title {
-	font-weight: 600;
-	text-transform: capitalize;
-}
-.fc-nav-btn {
-	background: none;
-	border: none;
-	font-size: 1.2rem;
-	cursor: pointer;
+	gap: 0.5rem;
 }
 
-/* Weekdays */
-.fc-weekdays {
+.calendar-modal__title {
+	margin: 0;
+	font-size: 1rem;
+	font-weight: 500;
+	letter-spacing: 0.01em;
+	text-align: center;
+	font-variant-numeric: tabular-nums;
+}
+.calendar-modal__title::first-letter {
+	text-transform: uppercase;
+}
+
+.calendar-modal__nav {
 	display: grid;
-	grid-template-columns: repeat(7, 1fr);
-	gap: 0.35rem;
-	color: var(--muted, #666);
-	font-size: 0.85rem;
-}
-
-/* Grid */
-.fc-grid {
-	display: grid;
-	grid-template-columns: repeat(7, 1fr);
-	gap: 0.4rem;
-}
-
-/* Reuse your mini calendar styles for the day buttons */
-.fc-modal .mini-calendar-day {
-	background: var(--color-background-tertiary, #f5f5f5);
-	border: none;
-	border-radius: 8px;
-	padding: 0.5rem 0.3rem;
+	place-items: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	padding: 0;
+	border: 1px solid var(--color-border-light);
+	border-radius: 50%;
+	background: var(--color-bg-secondary);
+	color: var(--color-text-secondary);
 	cursor: pointer;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 	transition:
-		background 0.18s,
-		color 0.18s,
-		transform 0.12s;
-	font-size: 0.9rem;
-	min-height: 56px;
+		background var(--transition-fast),
+		color var(--transition-fast),
+		border-color var(--transition-fast);
+}
+.calendar-modal__nav:hover {
+	background: var(--color-bg-tertiary);
+	color: var(--color-text-primary);
+	border-color: var(--color-border-medium);
 }
 
-/* Outside month */
-.fc-day-outside {
-	opacity: 0.45;
+/* ===== Weekdays & grid ===== */
+
+.calendar-modal__weekdays,
+.calendar-modal__grid {
+	display: grid;
+	grid-template-columns: repeat(7, minmax(0, 1fr));
+	gap: 0.3rem;
 }
 
-/* Today & selected */
-.fc-modal .mini-calendar-day.today {
+.calendar-modal__weekdays span {
+	color: var(--color-text-tertiary);
+	font-size: 0.68rem;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	text-align: center;
+	text-transform: uppercase;
+}
+
+/* Fixed height so month changes never resize the dialog */
+.calendar-modal__stage {
+	position: relative;
+	overflow: hidden;
+}
+
+.calendar-modal__day {
+	aspect-ratio: 1;
+	display: grid;
+	place-items: center;
+	padding: 0;
+	border: 1px solid transparent;
+	border-radius: 0.6rem;
+	background: var(--color-bg-tertiary);
+	color: var(--color-text-primary);
+	font: inherit;
+	font-size: 0.92rem;
+	font-variant-numeric: tabular-nums;
+	cursor: pointer;
+	transition:
+		background var(--transition-fast),
+		color var(--transition-fast),
+		border-color var(--transition-fast),
+		opacity var(--transition-fast);
+}
+.calendar-modal__day:hover {
+	background: var(--color-bg-quaternary);
+}
+.calendar-modal__day.is-outside {
+	background: transparent;
+	color: var(--color-text-tertiary);
+}
+.calendar-modal__day.is-today {
+	border-color: var(--color-secondary);
+}
+.calendar-modal__day.is-selected {
 	background: var(--color-accent);
+	border-color: var(--color-accent);
 	color: #fff;
-	opacity: 0.85;
+	font-weight: 600;
 }
-.fc-modal .mini-calendar-day.selected {
-	background: var(--color-accent, #b22222);
-	color: #fff;
-	font-weight: 700;
+.calendar-modal__day:focus-visible,
+.calendar-modal__nav:focus-visible,
+.calendar-modal__btn:focus-visible {
+	outline: 2px solid var(--color-secondary);
+	outline-offset: 2px;
 }
 
-/* Footer */
-.fc-footer {
+/* ===== Footer ===== */
+
+.calendar-modal__footer {
 	display: flex;
 	justify-content: flex-end;
 	gap: 0.5rem;
+	padding-top: 0.25rem;
+	border-top: 1px solid var(--color-border-light);
+	margin-top: 0.25rem;
+	padding-top: 0.9rem;
 }
-.fc-btn {
-	border: none;
-	background: var(--color-background-tertiary, #f3f3f3);
-	padding: 0.45rem 0.75rem;
-	border-radius: 8px;
+
+.calendar-modal__btn {
+	padding: 0.5rem 0.9rem;
+	border: 1px solid var(--color-border-light);
+	border-radius: 0.6rem;
+	background: var(--color-bg-secondary);
+	color: var(--color-text-primary);
+	font: inherit;
+	font-size: 0.9rem;
 	cursor: pointer;
+	transition:
+		background var(--transition-fast),
+		border-color var(--transition-fast),
+		opacity var(--transition-fast);
 }
-.fc-btn-today {
+.calendar-modal__btn:hover {
+	background: var(--color-bg-tertiary);
+}
+.calendar-modal__btn--primary {
 	background: var(--color-accent);
-	color: white;
+	border-color: var(--color-accent);
+	color: #fff;
+}
+.calendar-modal__btn--primary:hover {
+	background: var(--color-accent-dark);
+	border-color: var(--color-accent-dark);
+}
+.calendar-modal__btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.calendar-modal__overlay {
+		backdrop-filter: none;
+		-webkit-backdrop-filter: none;
+	}
 }

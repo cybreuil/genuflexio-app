@@ -7,7 +7,6 @@ import {
 	useLayoutEffect,
 	useCallback,
 } from "react";
-import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
@@ -26,6 +25,7 @@ import { useCalendar } from "../../hooks/useCalendar";
 import { useCelebration } from "../../hooks/useCelebration";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useTheme } from "../../hooks/useTheme";
+import { useSelectedDate } from "../../hooks/useSelectedDate";
 
 /* ===== Animation presets ===== */
 
@@ -104,8 +104,7 @@ function StateBlock({
 }
 
 const CelebrationOfTheDay: React.FC = () => {
-	const { date: dateParam } = useParams();
-	const date = dateParam ?? new Date().toISOString().split("T")[0];
+	const { date } = useSelectedDate();
 
 	/* ===== Intro visibility =====
 	 * - "visible":    intro shown.
@@ -294,7 +293,7 @@ const CelebrationOfTheDay: React.FC = () => {
 				</aside>
 
 				{/* ===== Main article ===== */}
-				<main className="celebration-article" ref={pageRef}>
+				<main className="celebration-article">
 					<AnimatePresence mode="wait">
 						{invalidDate ? (
 							<StateBlock key="invalid">

@@ -37,3 +37,31 @@ function dayIndexUTC(d: Date): number {
 export function daysBetweenYMD(a: string, b: string): number {
 	return dayIndexUTC(parseYMD(b)) - dayIndexUTC(parseYMD(a));
 }
+
+// Strict validation: format AND real calendar date ("2024-02-31" is rejected
+// because parse → format does not round-trip).
+export function isValidYMD(s: string): boolean {
+	return /^\d{4}-\d{2}-\d{2}$/.test(s) && formatYMD(parseYMD(s)) === s;
+}
+
+export function addDays(d: Date, n: number): Date {
+	const r = new Date(d);
+	r.setDate(r.getDate() + n);
+	return r;
+}
+
+export function startOfMonth(d: Date): Date {
+	return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+
+export function addMonths(d: Date, n: number): Date {
+	return new Date(d.getFullYear(), d.getMonth() + n, 1);
+}
+
+// 6 × 7 grid, weeks start on Monday (liturgical convention, matches MiniCalendar).
+export function getMonthGrid(month: Date): Date[] {
+	const first = startOfMonth(month);
+	const shift = (first.getDay() + 6) % 7; // Monday = 0
+	const gridStart = addDays(first, -shift);
+	return Array.from({ length: 42 }, (_, i) => addDays(gridStart, i));
+}

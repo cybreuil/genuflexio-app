@@ -1,228 +1,318 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import "./FullCalendarModal.css";
-import { formatYMD, parseYMD, getToday, getTodayStr } from "../../utils/date";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+
 import { TRANSITIONS } from "../../styles/theme";
+import { useLanguage } from "../../hooks/useLanguage";
+import {
+	addDays,
+	addMonths,
+	formatYMD,
+	getMonthGrid,
+	getTodayStr,
+	parseYMD,
+	startOfMonth,
+} from "../../utils/date";
 
 type Props = {
-	initialDate?: string; // YYYY-MM-DD
+	open: boolean;
+	date: string; // YYYY-MM-DD, currently selected
 	onClose: () => void;
-	onSelect: (dateStr: string) => void;
-	open?: boolean;
+	onSelect: (date: string) => void;
 };
 
-function startOfMonth(d: Date) {
-	return new Date(d.getFullYear(), d.getMonth(), 1);
-}
+const gridVariants = {
+	enter: (dir: number) => ({ opacity: 0, x: dir * 32 }),
+	center: { opacity: 1, x: 0 },
+	exit: (dir: number) => ({ opacity: 0, x: dir * -32 }),
+};
 
-function endOfMonth(d: Date) {
-	return new Date(d.getFullYear(), d.getMonth() + 1, 0);
-}
+// Any Monday; used only to render localized weekday headers.
+const A_MONDAY = new Date(2024, 0, 1);
 
-function addMonths(d: Date, delta: number) {
-	return new Date(d.getFullYear(), d.getMonth() + delta, 1);
-}
+const FOCUSABLE = 'button:not([disabled]):not([tabindex="-1"]), [tabindex="0"]';
 
-function getMonthGrid(forDate: Date) {
-	// returns array of Date objects covering the 6x7 calendar grid
-	const start = startOfMonth(forDate);
-	const end = endOfMonth(forDate);
-	const startWeekday = start.getDay(); // 0 = Sun, 1 = Mon...
-	// We'll display weeks starting on Monday for consistency with mini-calendar:
-	const shift = (startWeekday + 6) % 7; // Monday=0
-	const gridStart = new Date(start);
-	gridStart.setDate(start.getDate() - shift);
-
-	const cells: Date[] = [];
-	for (let i = 0; i < 42; i++) {
-		const d = new Date(gridStart);
-		d.setDate(gridStart.getDate() + i);
-		cells.push(d);
-	}
-	return cells;
-}
-
-const FullCalendarModal: React.FC<Props> = ({
-	initialDate,
-	onClose,
-	onSelect,
-	open = false,
-}) => {
-	const today = getToday();
-	const todayStr = getTodayStr();
-	const init = initialDate ? initialDate : todayStr;
-	const initDate = parseYMD(init);
-	const [viewMonth, setViewMonth] = useState<Date>(startOfMonth(initDate));
-	const [selectedDate, setSelectedDate] = useState<string>(
-		initialDate ? initialDate : todayStr,
+function Chevron({ dir }: { dir: -1 | 1 }) {
+	return (
+		<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+			<path
+				d={dir < 0 ? "M10 3 5 8l5 5" : "M6 3l5 5-5 5"}
+				fill="none"
+				stroke="currentColor"
+				strokeWidth="1.6"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+			/>
+		</svg>
 	);
+}
 
-	useEffect(() => {
-		// keep viewMonth in sync if initialDate prop changes
-		if (initialDate) {
-			const d = parseYMD(initialDate);
-			setViewMonth(startOfMonth(d));
-			setSelectedDate(initialDate);
-		}
-	}, [initialDate]);
+const FullCalendarModal = ({ open, date, onClose, onSelect }: Props) => {
+	const { languageCode, t } = useLanguage();
 
-	// focus management
-	const modalRef = useRef<HTMLDivElement | null>(null);
+	const reduceMotion = useReducedMotion();
+	const titleId = useId();
+	const today = getTodayStr();
+
+	const [viewMonth, setViewMonth] = useState(() =>
+		startOfMonth(parseYMD(date)),
+	);
+	const [direction, setDirection] = useState(0);
+	// Roving tabindex target inside the grid
+	const [focused, setFocused] = useState(date);
+	// Only steal focus when the change came from the keyboard
+	const focusFromKeyboard = useRef(false);
+
+	const dialogRef = useRef<HTMLDivElement>(null);
+	const openerRef = useRef<HTMLElement | null>(null);
+
+	// On open: snapshot the opener, reset the view, lock scroll.
+	// On close: restore scroll and focus.
 	useEffect(() => {
-		if (open) {
-			// focus the modal container for keyboard listeners
-			modalRef.current?.focus();
-			document.body.style.overflow = "hidden";
-		} else {
-			document.body.style.overflow = "";
-		}
+		if (!open) return;
+		openerRef.current = document.activeElement as HTMLElement | null;
+		setViewMonth(startOfMonth(parseYMD(date)));
+		setFocused(date);
+		setDirection(0);
+		focusFromKeyboard.current = true;
+		document.body.style.overflow = "hidden";
 		return () => {
 			document.body.style.overflow = "";
+			openerRef.current?.focus();
 		};
-	}, [open]);
+	}, [open, date]);
 
-	const handleKeyDown = (e: React.KeyboardEvent) => {
-		if (e.key === "Escape") onClose();
+	useEffect(() => {
+		if (!open || !focusFromKeyboard.current) return;
+		focusFromKeyboard.current = false;
+		dialogRef.current
+			?.querySelector<HTMLButtonElement>(`[data-date="${focused}"]`)
+			?.focus();
+	}, [open, focused, viewMonth]);
+
+	const formats = useMemo(
+		() => ({
+			month: new Intl.DateTimeFormat(languageCode, {
+				month: "long",
+				year: "numeric",
+			}),
+			weekday: new Intl.DateTimeFormat(languageCode, {
+				weekday: "short",
+			}),
+			full: new Intl.DateTimeFormat(languageCode, { dateStyle: "full" }),
+		}),
+		[languageCode],
+	);
+
+	const weekdays = useMemo(
+		() =>
+			Array.from({ length: 7 }, (_, i) =>
+				formats.weekday.format(addDays(A_MONDAY, i)),
+			),
+		[formats],
+	);
+
+	const cells = useMemo(() => getMonthGrid(viewMonth), [viewMonth]);
+	const monthKey = formatYMD(viewMonth);
+
+	// If the roving target isn't in the visible grid (after month nav),
+	// fall back to the 1st of the month so the grid stays reachable by Tab.
+	const tabStop = cells.some((c) => formatYMD(c) === focused)
+		? focused
+		: monthKey;
+
+	const goMonth = (delta: number) => {
+		setDirection(delta);
+		setViewMonth((m) => addMonths(m, delta));
 	};
 
-	const cells = getMonthGrid(viewMonth);
-	const monthLabel = viewMonth.toLocaleDateString("fr-FR", {
-		month: "long",
-		year: "numeric",
-	});
+	const moveFocus = (target: Date) => {
+		const targetMonth = startOfMonth(target);
+		if (targetMonth.getTime() !== viewMonth.getTime()) {
+			setDirection(targetMonth > viewMonth ? 1 : -1);
+			setViewMonth(targetMonth);
+		}
+		focusFromKeyboard.current = true;
+		setFocused(formatYMD(target));
+	};
+
+	const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+		if (e.key === "Escape") {
+			e.preventDefault();
+			onClose();
+			return;
+		}
+
+		// Focus trap
+		if (e.key === "Tab" && dialogRef.current) {
+			const items = Array.from(
+				dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE),
+			);
+			const first = items[0];
+			const last = items[items.length - 1];
+			if (e.shiftKey && document.activeElement === first) {
+				e.preventDefault();
+				last.focus();
+			} else if (!e.shiftKey && document.activeElement === last) {
+				e.preventDefault();
+				first.focus();
+			}
+			return;
+		}
+
+		// Grid navigation only when a day cell has focus
+		const cell = (e.target as HTMLElement).dataset.date;
+		if (!cell) return;
+		const current = parseYMD(cell);
+
+		const byDays: Record<string, number> = {
+			ArrowLeft: -1,
+			ArrowRight: 1,
+			ArrowUp: -7,
+			ArrowDown: 7,
+		};
+		if (e.key in byDays) {
+			e.preventDefault();
+			moveFocus(addDays(current, byDays[e.key]));
+		} else if (e.key === "PageUp" || e.key === "PageDown") {
+			e.preventDefault();
+			const delta = e.key === "PageUp" ? -1 : 1;
+			const m = addMonths(current, delta);
+			const day = Math.min(
+				current.getDate(),
+				new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate(),
+			);
+			moveFocus(new Date(m.getFullYear(), m.getMonth(), day));
+		} else if (e.key === "Home") {
+			e.preventDefault();
+			moveFocus(parseYMD(today));
+		}
+	};
 
 	return createPortal(
 		<AnimatePresence>
 			{open && (
 				<motion.div
-					className="fc-overlay"
+					className="calendar-modal__overlay"
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}
-					style={{ pointerEvents: open ? "auto" : "none" }}
-					onClick={(e) => {
-						if (e.target === e.currentTarget) onClose();
-					}}
+					transition={TRANSITIONS.fast}
+					onClick={onClose}
 				>
 					<motion.div
-						layoutId="calendar-container"
-						className="fc-modal"
+						ref={dialogRef}
+						className="calendar-modal"
 						role="dialog"
 						aria-modal="true"
-						aria-label="Sélectionner une date"
-						tabIndex={-1}
-						ref={modalRef}
-						onKeyDown={handleKeyDown}
-						initial={{ y: 20, opacity: 0, scale: 0.98 }}
-						animate={{ y: 0, opacity: 1, scale: 1 }}
-						exit={{ y: 20, opacity: 0, scale: 0.98 }}
-						transition={TRANSITIONS.normal}
+						aria-labelledby={titleId}
+						onKeyDown={onKeyDown}
 						onClick={(e) => e.stopPropagation()}
+						initial={{ opacity: 0, y: 16, scale: 0.98 }}
+						animate={{ opacity: 1, y: 0, scale: 1 }}
+						exit={{ opacity: 0, y: 16, scale: 0.98 }}
+						transition={TRANSITIONS.normal}
 					>
-						<header className="fc-header">
+						<header className="calendar-modal__header">
 							<button
 								type="button"
-								className="fc-nav-btn"
+								className="calendar-modal__nav"
+								onClick={() => goMonth(-1)}
 								aria-label="Mois précédent"
-								onClick={() =>
-									setViewMonth((m) => addMonths(m, -1))
-								}
 							>
-								‹
+								<Chevron dir={-1} />
 							</button>
-							<div className="fc-title">{monthLabel}</div>
+							<h2 id={titleId} className="calendar-modal__title">
+								{formats.month.format(viewMonth)}
+							</h2>
 							<button
 								type="button"
-								className="fc-nav-btn"
+								className="calendar-modal__nav"
+								onClick={() => goMonth(1)}
 								aria-label="Mois suivant"
-								onClick={() =>
-									setViewMonth((m) => addMonths(m, 1))
-								}
 							>
-								›
+								<Chevron dir={1} />
 							</button>
 						</header>
 
-						<div className="fc-weekdays">
-							{[
-								"Lun",
-								"Mar",
-								"Mer",
-								"Jeu",
-								"Ven",
-								"Sam",
-								"Dim",
-							].map((w) => (
-								<div key={w} className="fc-weekday">
-									{w}
-								</div>
+						<div
+							className="calendar-modal__weekdays"
+							aria-hidden="true"
+						>
+							{weekdays.map((w) => (
+								<span key={w}>{w}</span>
 							))}
 						</div>
 
-						<div className="fc-grid">
-							{cells.map((d) => {
-								const dateStr = formatYMD(d);
-								const inCurrentMonth =
-									d.getMonth() === viewMonth.getMonth();
-								const isToday = dateStr === todayStr;
-								const isSelected = dateStr === selectedDate;
-								return (
-									<button
-										key={dateStr}
-										className={`mini-calendar-day fc-day ${inCurrentMonth ? "" : "fc-day-outside"}${isSelected ? " selected" : ""}${isToday ? " today" : ""}`}
-										onClick={() => {
-											setSelectedDate(dateStr);
-											onSelect(dateStr);
-											onClose();
-										}}
-										aria-current={
-											isSelected ? "date" : undefined
-										}
-										tabIndex={open ? 0 : -1}
-									>
-										<span className="mini-calendar-day-label">
-											{d.toLocaleDateString("fr-FR", {
-												weekday: "short",
-											})}
-										</span>
-										<span className="mini-calendar-day-num">
-											{d.getDate()}
-										</span>
-									</button>
-								);
-							})}
+						<div className="calendar-modal__stage">
+							<AnimatePresence
+								initial={false}
+								mode="popLayout"
+								custom={direction}
+							>
+								<motion.div
+									key={monthKey}
+									className="calendar-modal__grid"
+									custom={direction}
+									variants={
+										reduceMotion ? undefined : gridVariants
+									}
+									initial="enter"
+									animate="center"
+									exit="exit"
+									transition={TRANSITIONS.normal}
+								>
+									{cells.map((d) => {
+										const dateStr = formatYMD(d);
+										const outside =
+											d.getMonth() !==
+											viewMonth.getMonth();
+										const isSelected = dateStr === date;
+										const isToday = dateStr === today;
+										return (
+											<button
+												key={dateStr}
+												type="button"
+												data-date={dateStr}
+												className={`calendar-modal__day${outside ? " is-outside" : ""}${isSelected ? " is-selected" : ""}${isToday ? " is-today" : ""}`}
+												onClick={() =>
+													onSelect(dateStr)
+												}
+												aria-label={formats.full.format(
+													d,
+												)}
+												aria-pressed={isSelected}
+												aria-current={
+													isToday ? "date" : undefined
+												}
+												tabIndex={
+													dateStr === tabStop ? 0 : -1
+												}
+											>
+												{d.getDate()}
+											</button>
+										);
+									})}
+								</motion.div>
+							</AnimatePresence>
 						</div>
 
-						<footer className="fc-footer">
+						<footer className="calendar-modal__footer">
 							<button
 								type="button"
-								className="fc-btn fc-btn-cancel"
+								className="calendar-modal__btn"
 								onClick={onClose}
 							>
-								Annuler
+								{t("calendar.close")}
 							</button>
 							<button
 								type="button"
-								className="fc-btn fc-btn-today"
-								onClick={() => {
-									setViewMonth(startOfMonth(today));
-									setSelectedDate(todayStr);
-									onSelect(todayStr);
-									onClose();
-								}}
-								style={{
-									cursor:
-										selectedDate === todayStr
-											? "not-allowed"
-											: "pointer",
-									opacity:
-										selectedDate === todayStr ? 0.5 : 1,
-								}}
-								disabled={selectedDate === todayStr}
-								aria-disabled={selectedDate === todayStr}
+								className="calendar-modal__btn calendar-modal__btn--primary"
+								onClick={() => onSelect(today)}
+								disabled={date === today}
 							>
-								Aujourd'hui
+								{t("calendar.today")}
 							</button>
 						</footer>
 					</motion.div>
