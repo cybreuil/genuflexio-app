@@ -284,6 +284,8 @@ const GalleryPage = () => {
 					<motion.div
 						key="loading"
 						className="gallery-state"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
 					>
 						<Loader size={56} />
@@ -292,6 +294,9 @@ const GalleryPage = () => {
 					<motion.div
 						key="error"
 						className="gallery-state gallery-state--error"
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
 					>
 						Impossible de charger la galerie.
 						<span className="gallery-state__detail">
