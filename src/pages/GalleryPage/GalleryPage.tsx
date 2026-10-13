@@ -23,7 +23,7 @@ const reveal = {
 	show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
 };
 
-const wallGroup = {
+const columnGroup = {
 	hidden: {},
 	show: { transition: { staggerChildren: 0.035 } },
 };
@@ -319,21 +319,21 @@ const GalleryPage = () => {
 						className="gallery-wall-wrapper"
 						exit={{ opacity: 0, transition: { duration: 0.2 } }}
 					>
-						<motion.div
+						<div
 							className="gallery-wall"
 							style={
 								{
 									"--columns": columnCount,
 								} as React.CSSProperties
 							}
-							variants={wallGroup}
-							initial="hidden"
-							animate="show"
 						>
 							{columns.map((column, columnIndex) => (
-								<div
+								<motion.div
 									className="gallery-column"
 									key={columnIndex}
+									variants={columnGroup}
+									initial="hidden"
+									animate="show"
 								>
 									{column.map((img) => (
 										<motion.div
@@ -399,9 +399,9 @@ const GalleryPage = () => {
 											</button>
 										</motion.div>
 									))}
-								</div>
+								</motion.div>
 							))}
-						</motion.div>
+						</div>
 
 						<div ref={sentinelRef} className="gallery-load-more">
 							{loadingMore ? (
