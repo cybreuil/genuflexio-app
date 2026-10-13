@@ -18,7 +18,7 @@ export type Image = {
 	// Enrichissement galerie — à exposer côté API sur GET /images
 	saint_name?: string | null;
 	saint_slug?: string | null;
-	year?: number | null; // année (approx.) pour le tri / filtre période
+	century: number | null;
 	width?: number | null; // dimensions natives pour la masonry sans reflow
 	height?: number | null;
 };

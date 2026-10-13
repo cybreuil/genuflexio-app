@@ -366,6 +366,7 @@ const GalleryPage = () => {
 												<img
 													src={img.image_url}
 													alt=""
+													// Need double check, maybe only aspectratio for thumb
 													width={
 														img.width ?? undefined
 													}
