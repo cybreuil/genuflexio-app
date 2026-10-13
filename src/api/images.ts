@@ -42,7 +42,12 @@ function toQueryParams(
 export function getWallImages(
 	params: GetWallImagesParams = {},
 ): Promise<ImagesListWallResponse> {
-	const query = toQueryParams(params);
+	const { languageCode, ...rest } = params;
+
+	const query = toQueryParams({
+		...rest,
+		language_code: languageCode,
+	});
 
 	return fetchApi<ImagesListWallResponse>(
 		`/images/wall${query ? `?${query}` : ""}`,

@@ -46,6 +46,7 @@ export type GetWallImagesParams = {
 	museum?: string;
 	century?: number;
 	sort?: "title" | "artist" | "century_asc" | "century_desc";
+	languageCode?: string;
 };
 
 export type ImagesListWallResponse = {

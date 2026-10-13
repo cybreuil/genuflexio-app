@@ -14,6 +14,8 @@ import {
 import { ArtworkLightbox } from "../../components/ArtworkLightbox/ArtworkLightbox";
 import { buildFacet, cartel } from "../../utils/artworkFormat";
 
+import { useLanguage } from "../../hooks/useLanguage";
+
 /* ===== Animation presets ===== */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -104,6 +106,7 @@ function mergeUnique(current: Image[], incoming: Image[]) {
 /* ===== Page ===== */
 
 const GalleryPage = () => {
+	const { languageCode } = useLanguage();
 	const [images, setImages] = useState<Image[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [loadingMore, setLoadingMore] = useState(false);
@@ -153,6 +156,7 @@ const GalleryPage = () => {
 					limit: PAGE_SIZE,
 					offset,
 					seed,
+					languageCode,
 					q: filters.query.trim() || undefined,
 					saint_id: filters.saint ? Number(filters.saint) : undefined,
 					artist: filters.artist || undefined,
@@ -189,7 +193,7 @@ const GalleryPage = () => {
 				}
 			}
 		},
-		[filters, seed],
+		[filters, seed, languageCode],
 	);
 
 	// Filters changed → start over. (Not tied to columnCount: resizing
