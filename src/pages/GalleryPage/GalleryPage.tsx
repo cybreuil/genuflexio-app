@@ -210,16 +210,20 @@ const GalleryPage = () => {
 	// Infinite scroll: load the next page when the sentinel approaches.
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
+
 		if (!sentinel || !hasMore || loading) return;
 
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				if (entry.isIntersecting) loadImages(false);
+				if (entry.isIntersecting && !inFlightRef.current) {
+					loadImages(false);
+				}
 			},
-			{ rootMargin: "800px 0px" },
+			{ rootMargin: "300px 0px" },
 		);
 
 		observer.observe(sentinel);
+
 		return () => observer.disconnect();
 	}, [hasMore, loading, loadImages]);
 
@@ -319,7 +323,7 @@ const GalleryPage = () => {
 					</motion.div>
 				) : (
 					<motion.div
-						key={wallKey}
+						key={`${languageCode}-${wallKey}`}
 						className="gallery-wall-wrapper"
 						exit={{ opacity: 0, transition: { duration: 0.2 } }}
 					>
@@ -414,17 +418,17 @@ const GalleryPage = () => {
 						</div>
 
 						<div ref={sentinelRef} className="gallery-load-more">
-							{loadingMore ? (
-								<Loader size={32} />
-							) : hasMore ? (
-								<button
-									type="button"
-									onClick={() => loadImages(false)}
-									className="gallery-load-more__button"
-								>
-									Charger plus
-								</button>
+							{loadingMore || hasMore ? (
+								<Loader size={56} />
 							) : (
+								// ) : hasMore ? (
+								// 	<button
+								// 		type="button"
+								// 		onClick={() => loadImages(false)}
+								// 		className="gallery-load-more__button"
+								// 	>
+								// 		Charger plus
+								// 	</button>
 								<span className="gallery-load-more__end">
 									─ Fin de la salle ─
 								</span>
