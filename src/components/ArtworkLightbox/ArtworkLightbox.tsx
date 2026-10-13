@@ -220,20 +220,24 @@ export function ArtworkLightbox({
 						exit={{ opacity: 0, x: 24 }}
 						transition={{ duration: 0.4, ease: EASE }}
 					>
-						{image.saint_name && (
-							<span className="lightbox__eyebrow">
-								{image.saint_slug ? (
+						{image.saints?.map((saint, index) => (
+							<span
+								className="lightbox__eyebrow"
+								key={`${saint.slug}-${index}`}
+							>
+								{saint.slug ? (
 									<Link
-										to={`/saints/${image.saint_slug}`}
+										to={`/saints/${saint.slug}`}
 										onClick={onClose}
 									>
-										{image.saint_name} →
+										{saint.name} →
 									</Link>
 								) : (
-									image.saint_name
+									saint.name
 								)}
 							</span>
-						)}
+						))}
+
 						<h2 className="lightbox__title">{image.title}</h2>
 						{image.creator && (
 							<p className="lightbox__artist">{image.creator}</p>

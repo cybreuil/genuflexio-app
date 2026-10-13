@@ -382,10 +382,16 @@ const GalleryPage = () => {
 													aria-hidden="true"
 												/>
 												<span className="gallery-tile__cartel">
-													{img.saint_name && (
-														<span className="gallery-tile__saint">
-															{img.saint_name}
-														</span>
+													{img.saints?.map(
+														(saint, index) =>
+															saint.name && (
+																<span
+																	className="gallery-tile__saint"
+																	key={`${saint.name}-${index}`}
+																>
+																	{saint.name}
+																</span>
+															),
 													)}
 													<span className="gallery-tile__title">
 														{img.title}

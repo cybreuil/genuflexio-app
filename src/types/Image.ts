@@ -1,3 +1,9 @@
+export type ImageSaint = {
+	id: number;
+	slug: string;
+	name: string;
+};
+
 export type Image = {
 	id: number;
 	saint_id: number;
@@ -16,11 +22,11 @@ export type Image = {
 	is_primary: boolean;
 
 	// Enrichissement galerie — à exposer côté API sur GET /images
-	saint_name?: string | null;
-	saint_slug?: string | null;
+
 	century: number | null;
 	width?: number | null; // dimensions natives pour la masonry sans reflow
 	height?: number | null;
+	saints: ImageSaint[];
 };
 
 export type ImagesListApiResponse = {
