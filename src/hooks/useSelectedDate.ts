@@ -11,6 +11,7 @@ export function useSelectedDate() {
 	const navigate = useNavigate();
 
 	const today = getTodayStr();
+	const hasDateParam = param !== undefined;
 	const isValid = param === undefined || isValidYMD(param);
 	// Raw value is kept so the page can show an "invalid date" state;
 	// consumers that need a safe date use `safeDate`.
@@ -30,6 +31,7 @@ export function useSelectedDate() {
 		today,
 		isValid,
 		isToday: safeDate === today,
+		hasDateParam,
 		select,
 		goToday: () => select(today),
 	};

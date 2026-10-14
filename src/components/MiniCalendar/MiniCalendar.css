@@ -17,8 +17,8 @@
 	--gap: 0.5rem;
 	position: relative;
 	width: calc(100% + 2.5rem);
-	padding: 0 1.25rem;
-	overflow: hidden;
+	padding: 0 0rem;
+	/*overflow: hidden;*/
 	mask-image: linear-gradient(
 		to right,
 		transparent 0.5rem,
@@ -50,11 +50,10 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 0.1rem;
 	padding: 0.5rem 0.25rem;
 	border: 1px solid transparent;
 	border-radius: 0.7rem;
-	background: var(--color-bg-tertiary);
+	background-color: var(--color-bg-tertiary);
 	color: var(--color-text-primary);
 	font: inherit;
 	cursor: pointer;
@@ -69,12 +68,12 @@
 }
 
 .mini-calendar__day.is-today {
-	border-color: var(--color-secondary);
+	border-color: var(--color-secondary-dark);
 }
 
 .mini-calendar__day.is-selected {
-	background: var(--color-accent);
-	border-color: var(--color-accent);
+	background: var(--color-secondary-dark);
+	border-color: var(--color-secondary-dark);
 	color: #fff;
 }
 

@@ -1,12 +1,5 @@
 import "./CelebrationOfTheDay.css";
-import {
-	useEffect,
-	useMemo,
-	useState,
-	useRef,
-	useLayoutEffect,
-	useCallback,
-} from "react";
+import { useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
@@ -59,27 +52,21 @@ const coverText = {
 	show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
 
+// The intro is the "no date picked yet" state. It collapses in place when
+// the first date is chosen; the grid below follows the shrinking height.
 const header = {
-	hidden: {
-		opacity: 0,
-		y: 24,
-	},
-	show: {
-		opacity: 1,
-		y: 0,
-		transition: { duration: 0.6, ease: EASE },
-	},
+	hidden: { opacity: 0, y: 24 },
+	show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 	exit: {
 		opacity: 0,
 		height: 0,
 		paddingTop: 0,
 		paddingBottom: 0,
+		// cancels the container's flex gap
 		marginBottom: "-2rem",
-		transition: { duration: 0.6, ease: EASE },
+		transition: { duration: 0.5, ease: EASE },
 	},
 };
-
-type IntroState = "visible" | "collapsing" | "gone";
 
 /* ===== Small presentational pieces ===== */
 
@@ -104,69 +91,11 @@ function StateBlock({
 }
 
 const CelebrationOfTheDay: React.FC = () => {
-	const { date } = useSelectedDate();
-
-	/* ===== Intro visibility =====
-	 * - "visible":    intro shown.
-	 * - "collapsing": user dismissed it while on screen → animated collapse.
-	 * - "gone":       removed from the DOM. Reached either after the collapse,
-	 *                 or instantly when the intro scrolled out of view (with a
-	 *                 scroll compensation so nothing moves on screen).
-	 */
-	const [intro, setIntro] = useState<IntroState>("visible");
-	const introRef = useRef<HTMLElement | null>(null);
-	const pageRef = useRef<HTMLDivElement>(null);
-	// Height (px) to subtract from scrollY once the intro is removed instantly.
-	const pendingScrollFix = useRef<number | null>(null);
-
-	// Explicit dismiss (button): animated collapse.
-	const dismissIntro = useCallback(() => {
-		setIntro((s) => (s === "visible" ? "collapsing" : s));
-	}, []);
-
-	// Auto removal once the intro is fully above the viewport.
-	useEffect(() => {
-		if (intro !== "visible") return;
-
-		let ticking = false;
-
-		const check = () => {
-			if (ticking) return;
-			ticking = true;
-
-			requestAnimationFrame(() => {
-				ticking = false;
-				const header = introRef.current;
-				const page = pageRef.current;
-				if (!header || !page) return;
-
-				if (header.getBoundingClientRect().bottom <= 0) {
-					// Intro height + the flex gap separating it from the grid.
-					pendingScrollFix.current =
-						page.getBoundingClientRect().top -
-						header.getBoundingClientRect().top;
-					setIntro("gone");
-				}
-			});
-		};
-
-		window.addEventListener("scroll", check, { passive: true });
-		check();
-		return () => window.removeEventListener("scroll", check);
-	}, [intro]);
-
-	// Runs after the DOM update but before paint: the intro is already gone,
-	// we shift the scroll by the exact same amount → no visual jump.
-	useLayoutEffect(() => {
-		if (intro !== "gone" || pendingScrollFix.current === null) return;
-		window.scrollBy({
-			top: -pendingScrollFix.current,
-			behavior: "instant",
-		});
-		pendingScrollFix.current = null;
-	}, [intro]);
+	const { date, hasDateParam } = useSelectedDate();
+	const showIntro = !hasDateParam;
 
 	const { languageCode, t } = useLanguage();
+	const { theme } = useTheme();
 	const {
 		calendar,
 		isLoading: isCalendarLoading,
@@ -190,8 +119,6 @@ const CelebrationOfTheDay: React.FC = () => {
 
 	// Fallback for white liturgical on light theme
 	const isWhite = liturgicalColor.toLowerCase() === "#ffffff";
-	const { theme } = useTheme();
-
 	const effectiveLiturgicalColorForFirstLetter =
 		theme === "light" && isWhite
 			? "var(--color-text-primary)"
@@ -226,35 +153,31 @@ const CelebrationOfTheDay: React.FC = () => {
 
 	return (
 		<div className="celebration-page-container">
-			{/* When "gone", AnimatePresence itself is unmounted so the header
-			disappears in the same commit (no exit animation to wait for). */}
-			{intro !== "gone" && (
-				<AnimatePresence onExitComplete={() => setIntro("gone")}>
-					{intro === "visible" && (
-						<motion.header
-							key="intro"
-							ref={introRef}
-							className="celebration-page-header"
-							variants={header}
-							initial="hidden"
-							animate="show"
-							exit="exit"
-						>
-							<span className="celebration-page-header__eyebrow">
-								─ Liturgie
-							</span>
-							<h1 className="celebration-page-header__title">
-								Célébration du jour
-							</h1>
-							<p className="celebration-page-header__text">
-								Discover the feast of the day, its liturgical
-								color, rank, and associated saints.
-							</p>
-						</motion.header>
-					)}
-				</AnimatePresence>
-			)}
-			<div className="celebration-page" ref={pageRef}>
+			<AnimatePresence>
+				{showIntro && (
+					<motion.header
+						key="intro"
+						className="celebration-page-header"
+						variants={header}
+						initial="hidden"
+						animate="show"
+						exit="exit"
+					>
+						<span className="celebration-page-header__eyebrow">
+							─ Liturgie
+						</span>
+						<h1 className="celebration-page-header__title">
+							Célébration du jour
+						</h1>
+						<p className="celebration-page-header__text">
+							Discover the feast of the day, its liturgical color,
+							rank, and associated saints.
+						</p>
+					</motion.header>
+				)}
+			</AnimatePresence>
+
+			<div className="celebration-page">
 				{/* ===== Left sidebar : date & liturgical facts ===== */}
 				<aside className="celebration-page__aside celebration-page__aside--left">
 					<motion.div
@@ -336,6 +259,7 @@ const CelebrationOfTheDay: React.FC = () => {
 											effectiveLiturgicalColorForFirstLetter,
 									} as React.CSSProperties
 								}
+								layout="position"
 							>
 								{/* --- Cover --- */}
 								<header
@@ -519,12 +443,6 @@ const CelebrationOfTheDay: React.FC = () => {
 									liturgicalSeason?.hex_color || "#8b7f73"
 								}
 							/>
-							<button
-								className="celebration-page__toggle-button"
-								onClick={dismissIntro}
-							>
-								toggle
-							</button>
 						</motion.div>
 					</motion.div>
 				</aside>

@@ -122,11 +122,11 @@
 	color: var(--color-text-tertiary);
 }
 .calendar-modal__day.is-today {
-	border-color: var(--color-secondary);
+	border-color: var(--color-secondary-dark);
 }
 .calendar-modal__day.is-selected {
-	background: var(--color-accent);
-	border-color: var(--color-accent);
+	background: var(--color-secondary-dark);
+	border-color: var(--color-secondary-dark);
 	color: #fff;
 	font-weight: 600;
 }
@@ -167,13 +167,13 @@
 	background: var(--color-bg-tertiary);
 }
 .calendar-modal__btn--primary {
-	background: var(--color-accent);
-	border-color: var(--color-accent);
+	background: var(--color-secondary-dark);
+	border-color: var(--color-secondary-dark);
 	color: #fff;
 }
 .calendar-modal__btn--primary:hover {
-	background: var(--color-accent-dark);
-	border-color: var(--color-accent-dark);
+	background: var(--color-secondary);
+	border-color: var(--color-secondary);
 }
 .calendar-modal__btn:disabled {
 	opacity: 0.45;
