@@ -1,5 +1,5 @@
 import "./CelebrationOfTheDay.css";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
@@ -19,6 +19,9 @@ import { useCelebration } from "../../hooks/useCelebration";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useTheme } from "../../hooks/useTheme";
 import { useSelectedDate } from "../../hooks/useSelectedDate";
+
+//Types
+import type { Celebration } from "../../types/Celebration";
 
 /* ===== Animation presets ===== */
 
@@ -112,8 +115,19 @@ const CelebrationOfTheDay: React.FC = () => {
 		error: celebrationError,
 	} = useCelebration(calendar?.code, date, languageCode);
 
+	// Allow the user to select a secondary celebration to view its details
+	const [selectedCelebration, setSelectedCelebration] =
+		useState<Celebration | null>(null);
+
+	const activeCelebration = selectedCelebration ?? celebration;
+
+	// Réinitialise la sélection quand on change de date ou de calendrier.
+	useEffect(() => {
+		setSelectedCelebration(null);
+	}, [date, calendar?.code]);
+
 	const liturgicalColor =
-		celebration?.liturgical_color_hex ||
+		activeCelebration?.liturgical_color_hex ||
 		liturgicalSeason?.hex_color ||
 		"#8b7f73";
 
@@ -147,7 +161,7 @@ const CelebrationOfTheDay: React.FC = () => {
 		}
 	}, [date, languageCode, invalidDate]);
 
-	const coverSaint = saints?.[0];
+	const coverSaint = activeCelebration?.saints?.[0];
 	const isLoading = isCalendarLoading || isCelebrationLoading;
 	const error = calendarError ?? celebrationError;
 
@@ -244,7 +258,7 @@ const CelebrationOfTheDay: React.FC = () => {
 							</StateBlock>
 						) : (
 							<motion.article
-								key={`${calendar?.code}-${celebration.id}-${date}`}
+								key={`${calendar?.code}-${activeCelebration.id}-${date}`}
 								className="celebration-article__inner"
 								variants={articleGroup}
 								initial="hidden"
@@ -305,7 +319,7 @@ const CelebrationOfTheDay: React.FC = () => {
 											className="celebration-cover__title"
 											variants={rise}
 										>
-											{celebration.feast_name}
+											{activeCelebration.feast_name}
 										</motion.h1>
 									</motion.div>
 								</header>
@@ -324,7 +338,7 @@ const CelebrationOfTheDay: React.FC = () => {
 													background: liturgicalColor,
 												}}
 											/>
-											{celebration.liturgical_color_name ||
+											{activeCelebration.liturgical_color_name ||
 												liturgicalSeason?.color_label ||
 												t("common.unknown")}
 										</dd>
@@ -332,7 +346,7 @@ const CelebrationOfTheDay: React.FC = () => {
 									<div className="celebration-fact">
 										<dt>{t("liturgical.rank")}</dt>
 										<dd>
-											{celebration.rank_label ||
+											{activeCelebration.rank_label ||
 												t("common.unknown")}
 											{/*{celebration.is_optional && (
 											<span className="celebration-fact__note">
@@ -353,15 +367,17 @@ const CelebrationOfTheDay: React.FC = () => {
 								{/* --- Body --- */}
 								<motion.div
 									className={`celebration-prose ${
-										celebration.feast_description
+										activeCelebration.feast_description
 											? ""
 											: "celebration-prose--empty"
 									}`}
 									variants={rise}
 								>
-									{celebration.feast_description ? (
+									{activeCelebration.feast_description ? (
 										<ReactMarkdown>
-											{celebration.feast_description}
+											{
+												activeCelebration.feast_description
+											}
 										</ReactMarkdown>
 									) : (
 										<p>{t("celebration.noDescription")}</p>
@@ -437,6 +453,12 @@ const CelebrationOfTheDay: React.FC = () => {
 						<motion.div variants={sidebarItem(32)}>
 							<SecondaryCelebrations
 								secondaryCelebrations={secondaryCelebrations}
+								mainCelebration={celebration}
+								activeCelebration={activeCelebration}
+								onSelectCelebration={setSelectedCelebration}
+								onRestoreCelebration={() =>
+									setSelectedCelebration(null)
+								}
 								isLoading={isCelebrationLoading}
 								error={calendarError ?? celebrationError}
 								fallbackColor={

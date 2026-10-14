@@ -29,12 +29,22 @@
 		"noSaint": "Aucun saint associé à cette célébration.",
 		"loadingError": "Erreur lors du chargement de la célébration.",
 		"noDescription": "Aucune description disponible pour cette célébration.",
+		"mainCelebration": "Célébration principale",
 		"otherCelebrations": "Autres célébrations du jour",
-		"noOtherCelebrations": "Aucune autre célébration"
+		"noOtherCelebrations": "Aucune autre célébration",
+		"sameRank": "Même rang",
+		"higherRank": "Rang supérieur",
+		"lowerRank": "Rang inférieur"
 	},
 
 	"calendar": {
-		"loadingError": "Erreur lors du chargement du calendrier."
+		"loadingError": "Erreur lors du chargement du calendrier.",
+		"close": "Fermer",
+		"today": "Aujourd'hui",
+		"backToToday": "Retour à aujourd'hui",
+		"pickDate": "Choisir une date",
+		"previousMonth": "Mois précédent",
+		"nextMonth": "Mois suivant"
 	},
 
 	"calendars": {

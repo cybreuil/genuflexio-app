@@ -5,11 +5,23 @@
 	padding: 0;
 	list-style: none;
 }
+.secondary-celebrations__heading {
+	color: var(--color-text-tertiary);
+	font-size: 0.65rem;
+	font-style: italic;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	text-align: center;
+}
 
 .secondary-celebrations__item {
 	display: flex;
 	align-items: flex-start;
 	padding: 0.7rem 0;
+}
+
+.secondary-celebrations__item:last-child {
+	padding-bottom: 0;
 }
 
 .secondary-celebrations__button {
@@ -34,6 +46,7 @@
 
 .secondary-celebrations__button:hover .secondary-celebrations__name {
 	color: var(--color-primary);
+	transition: color 300ms;
 }
 
 .secondary-celebrations__item + .secondary-celebrations__item {

@@ -29,12 +29,22 @@
 		"noSaint": "Nullus sanctus cum hac celebratione associatus est.",
 		"loadingError": "Error in celebratione onerando.",
 		"noDescription": "Nulla descriptio pro hac celebratione praesto est.",
+		"mainCelebration": "Celebratio Principalis",
 		"otherCelebrations": "Aliae celebrationes diei",
-		"noOtherCelebrations": "Nullae aliae celebrationes"
+		"noOtherCelebrations": "Nullae aliae celebrationes",
+		"sameRank": "Eodem gradu",
+		"higherRank": "Gradus superior",
+		"lowerRank": "Gradus inferior"
 	},
 
 	"calendar": {
-		"loadingError": "Error in calendario onerando."
+		"loadingError": "Error in calendario onerando.",
+		"close": "Claudere",
+		"today": "Hodie",
+		"backToToday": "Ad hodie",
+		"pickDate": "Eligere diem",
+		"previousMonth": "Mense praeterito",
+		"nextMonth": "Mense proximo"
 	},
 
 	"calendars": {

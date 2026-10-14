@@ -219,7 +219,7 @@ const FullCalendarModal = ({ open, date, onClose, onSelect }: Props) => {
 								type="button"
 								className="calendar-modal__nav"
 								onClick={() => goMonth(-1)}
-								aria-label="Mois précédent"
+								aria-label={t("calendar.previousMonth")}
 							>
 								<Chevron dir={-1} />
 							</button>
@@ -230,7 +230,7 @@ const FullCalendarModal = ({ open, date, onClose, onSelect }: Props) => {
 								type="button"
 								className="calendar-modal__nav"
 								onClick={() => goMonth(1)}
-								aria-label="Mois suivant"
+								aria-label={t("calendar.nextMonth")}
 							>
 								<Chevron dir={1} />
 							</button>

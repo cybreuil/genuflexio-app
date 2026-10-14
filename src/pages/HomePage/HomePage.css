@@ -244,9 +244,7 @@
 	color: var(--color-on-secondary);
 	font-weight: 600;
 	font-size: 1rem;
-	transition:
-		background 200ms ease,
-		transform 200ms ease;
+	transition: transform 200ms ease;
 }
 
 .home-cta__button:hover {

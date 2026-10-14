@@ -1,5 +1,6 @@
 import "./SecondaryCelebrations.css";
 import type { Celebration } from "../../types/Celebration";
+import React from "react";
 import { Loader } from "../Loader/Loader";
 import { useLanguage } from "../../hooks/useLanguage";
 import { motion } from "framer-motion";
@@ -10,6 +11,10 @@ type SecondaryCelebrationsProps = {
 	isLoading: boolean;
 	error: Error | null;
 	fallbackColor: string;
+	mainCelebration: Celebration | null;
+	activeCelebration: Celebration | null;
+	onSelectCelebration: (celebration: Celebration) => void;
+	onRestoreCelebration: () => void;
 };
 
 const SecondaryCelebrations = ({
@@ -17,8 +22,21 @@ const SecondaryCelebrations = ({
 	isLoading,
 	error,
 	fallbackColor,
+	mainCelebration,
+	activeCelebration,
+	onSelectCelebration,
+	onRestoreCelebration,
 }: SecondaryCelebrationsProps) => {
 	const { t } = useLanguage();
+
+	const visibleCelebrations = (secondaryCelebrations ?? []).filter(
+		(c) => c.id !== activeCelebration?.id && c.id !== mainCelebration?.id,
+	);
+
+	const hasSelectedSecondary =
+		activeCelebration != null &&
+		mainCelebration != null &&
+		activeCelebration.id !== mainCelebration.id;
 
 	return (
 		<motion.section className="panel secondary-celebrations" layout="size">
@@ -51,30 +69,85 @@ const SecondaryCelebrations = ({
 					animate={{ opacity: 1, transition: TRANSITIONS.slower }}
 					layout="position"
 				>
-					{secondaryCelebrations.map((c) => (
-						<li key={c.id} className="secondary-celebrations__item">
-							<button className="secondary-celebrations__button">
-								<span
-									className="secondary-celebrations__dot"
-									style={{
-										background:
-											c.liturgical_color_hex ||
-											fallbackColor,
-									}}
-								/>
-								<span className="secondary-celebrations__body">
-									<span className="secondary-celebrations__name">
-										{c.feast_name}
-									</span>
-									{c.rank_label && (
-										<span className="secondary-celebrations__rank">
-											{c.rank_label}
+					{hasSelectedSecondary && (
+						<>
+							<li className="secondary-celebrations__heading">
+								{t("celebration.mainCelebration")}
+							</li>
+							<li className="secondary-celebrations__item">
+								<button
+									className="secondary-celebrations__button"
+									onClick={onRestoreCelebration}
+								>
+									<span
+										className="secondary-celebrations__dot"
+										style={{
+											background:
+												// c.liturgical_color_hex ||
+												fallbackColor,
+										}}
+									/>
+									<span className="secondary-celebrations__body">
+										<span className="secondary-celebrations__name">
+											{mainCelebration?.feast_name}
 										</span>
-									)}
-								</span>
-							</button>
-						</li>
-					))}
+										<span className="secondary-celebrations__rank">
+											{mainCelebration?.rank_label}
+										</span>
+									</span>
+								</button>
+							</li>
+						</>
+					)}
+					{visibleCelebrations.map((c, index) => {
+						const sameRank =
+							c.rank_precedence ===
+							mainCelebration?.rank_precedence;
+
+						const previous = secondaryCelebrations[index - 1];
+						const previousSameRank =
+							previous?.rank_precedence ===
+							mainCelebration?.rank_precedence;
+
+						return (
+							<React.Fragment key={c.id}>
+								{(index === 0 ||
+									sameRank !== previousSameRank) && (
+									<li className="secondary-celebrations__heading">
+										{sameRank
+											? t("celebration.sameRank")
+											: t("celebration.lowerRank")}
+									</li>
+								)}
+
+								<li className="secondary-celebrations__item">
+									<button
+										className="secondary-celebrations__button"
+										onClick={() => onSelectCelebration(c)}
+									>
+										<span
+											className="secondary-celebrations__dot"
+											style={{
+												background:
+													c.liturgical_color_hex ||
+													fallbackColor,
+											}}
+										/>
+										<span className="secondary-celebrations__body">
+											<span className="secondary-celebrations__name">
+												{c.feast_name}
+											</span>
+											{c.rank_label && (
+												<span className="secondary-celebrations__rank">
+													{c.rank_label}
+												</span>
+											)}
+										</span>
+									</button>
+								</li>
+							</React.Fragment>
+						);
+					})}
 				</motion.ul>
 			)}
 		</motion.section>
