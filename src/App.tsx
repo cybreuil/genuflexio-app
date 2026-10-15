@@ -7,7 +7,7 @@ import { AppRoutes } from "./components/AppRoutes/AppRoutes";
 import { useVisitLogger } from "./hooks/useVisitLogger";
 
 function App() {
-	// Ping analytics une fois par session, au premier chargement du site.
+	// Analytics Ping - One time by Session
 	useVisitLogger();
 
 	return (

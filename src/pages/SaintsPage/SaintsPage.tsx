@@ -20,6 +20,9 @@ import { useLanguage } from "../../hooks/useLanguage.ts";
 // Types
 import type { SaintApi } from "../../types/Saint.ts";
 
+// Error handling
+import { ApiError } from "../../api/client.ts";
+
 /* ===== Animation presets ===== */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -153,6 +156,12 @@ export const SaintsPage = () => {
 					<StateBlock key="error" tone="error">
 						Impossible de charger les saints.
 						<span className="saints-state__detail">
+							{error instanceof ApiError && (
+								<>
+									{error.status}
+									<br />
+								</>
+							)}
 							{error.message}
 						</span>
 					</StateBlock>

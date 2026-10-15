@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCelebrationByDate } from "../api/celebrations";
+import type { ApiError } from "../api/client";
 import type {
 	Celebration,
 	LiturgicalSeasonFromCelebration,
@@ -31,7 +32,7 @@ export function useCelebration(
 	>(null);
 
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<Error | null>(null);
+	const [error, setError] = useState<ApiError | Error | null>(null);
 
 	const invalidDate = Boolean(dateParam && !isValidDate(dateParam));
 
@@ -73,8 +74,15 @@ export function useCelebration(
 			} catch (err) {
 				if (cancelled) return;
 
-				setError(err as Error);
-				console.log("Error fetching celebration data:", err);
+				const error =
+					err instanceof Error
+						? err
+						: new Error(
+								"Unknown error occurred while fetching celebration data.",
+							);
+
+				setError(error);
+				console.log("Error fetching celebration data:", error);
 				setCelebration(null);
 				setSecondaryCelebrations(null);
 				setLiturgicalSeason(null);

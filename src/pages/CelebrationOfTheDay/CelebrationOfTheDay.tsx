@@ -20,8 +20,11 @@ import { useLanguage } from "../../hooks/useLanguage";
 import { useTheme } from "../../hooks/useTheme";
 import { useSelectedDate } from "../../hooks/useSelectedDate";
 
-//Types
+// Types
 import type { Celebration } from "../../types/Celebration";
+
+// Error handling
+import { ApiError } from "../../api/client";
 
 /* ===== Animation presets ===== */
 
@@ -246,6 +249,12 @@ const CelebrationOfTheDay: React.FC = () => {
 									? t("calendar.loadingError")
 									: t("celebration.loadingError")}
 								<span className="celebration-state__detail">
+									{error instanceof ApiError && (
+										<>
+											{error.status}
+											<br />
+										</>
+									)}
 									{error.message}
 								</span>
 							</StateBlock>

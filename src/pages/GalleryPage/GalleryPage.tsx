@@ -16,6 +16,9 @@ import { buildFacet, cartel } from "../../utils/artworkFormat";
 
 import { useLanguage } from "../../hooks/useLanguage";
 
+// Error handling
+import { ApiError } from "../../api/client";
+
 /* ===== Animation presets ===== */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -308,6 +311,12 @@ const GalleryPage = () => {
 					>
 						Impossible de charger la galerie.
 						<span className="gallery-state__detail">
+							{error instanceof ApiError && (
+								<>
+									{error.status}
+									<br />
+								</>
+							)}
 							{error.message}
 						</span>
 					</motion.div>

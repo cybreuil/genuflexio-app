@@ -17,6 +17,8 @@ import {
 	toRoman,
 } from "../../utils/saintFormat";
 
+import { ApiError } from "../../api/client";
+
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const articleGroup = {
@@ -117,6 +119,12 @@ const SaintPage = () => {
 						{t("saint.loadingError")}
 						{error && (
 							<span className="saint-page__state-detail">
+								{error instanceof ApiError && (
+									<>
+										{error.status}
+										<br />
+									</>
+								)}
 								{error.message}
 							</span>
 						)}

@@ -6,7 +6,10 @@ import { SaintPage } from "../../pages/SaintPage/SaintPage";
 import { GalleryPage } from "../../pages/GalleryPage/GalleryPage";
 import { AboutPage } from "../../pages/AboutPage/AboutPage";
 import { AdminPage } from "../../pages/AdminPage/AdminPage";
+import { LoginPage } from "../../pages/LoginPage/LoginPage";
 import { NotFoundPage } from "../../pages/NotFoundPage/NotFoundPage";
+
+import { AdminRoute } from "../Auth/AdminRoute";
 
 const AppRoutes = () => {
 	return (
@@ -21,7 +24,13 @@ const AppRoutes = () => {
 			<Route path="/saints/:slug" element={<SaintPage />} />
 			<Route path="/gallery" element={<GalleryPage />} />
 			<Route path="/about" element={<AboutPage />} />
-			<Route path="/admin" element={<AdminPage />} />
+
+			<Route path="/login" element={<LoginPage />} />
+
+			<Route element={<AdminRoute />}>
+				<Route path="/admin" element={<AdminPage />} />
+			</Route>
+
 			<Route path="*" element={<NotFoundPage />} />
 		</Routes>
 	);

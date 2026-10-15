@@ -1,34 +1,48 @@
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080";
 
-interface ApiError {
-  status?: number;
-  error?: string;
+export class ApiError extends Error {
+	public readonly status: number;
+
+	constructor(status: number, message: string) {
+		super(message);
+		this.name = "ApiError";
+		this.status = status;
+	}
 }
 
-async function fetchApi<T>(
-  endpoint: string,
-  init?: RequestInit
-): Promise<T> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...init?.headers,
-    },
-    ...init,
-  });
+async function fetchApi<T>(endpoint: string, init?: RequestInit): Promise<T> {
+	const headers = new Headers(init?.headers);
+	if (init?.body && !headers.has("Content-Type")) {
+		headers.set("Content-Type", "application/json");
+	}
 
-  const body = await response.json().catch(() => null);
+	// Simulate an error for testing purposes when the endpoint includes "/xxx"
+	// if (endpoint.includes("/image")) {
+	// 	throw new ApiError(500, "Erreur de test");
+	// }
 
-  if (!response.ok) {
-    const error = body as ApiError | null;
+	const response = await fetch(`${API_URL}${endpoint}`, {
+		...init,
+		headers,
+		credentials: "include",
+	});
 
-	  throw new Error(
-		// If the API returns an error message, use it; otherwise, use the status text
-      `Erreur ${response.status} : ${error?.error ?? response.statusText}`
-    );
-  }
+	if (response.status === 204) {
+		return undefined as T;
+	}
 
-  return body as T;
+	const body = await response.json().catch(() => null);
+
+	if (!response.ok) {
+		const error = body as { message?: string } | null;
+
+		throw new ApiError(
+			response.status,
+			error?.message ?? response.statusText ?? "Unknown error",
+		);
+	}
+
+	return body as T;
 }
 
 export { fetchApi };

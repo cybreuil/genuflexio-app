@@ -38,6 +38,11 @@ const SecondaryCelebrations = ({
 		mainCelebration != null &&
 		activeCelebration.id !== mainCelebration.id;
 
+	const isSameRankAsMain =
+		activeCelebration != null &&
+		mainCelebration != null &&
+		activeCelebration.rank_precedence === mainCelebration.rank_precedence;
+
 	return (
 		<motion.section className="panel secondary-celebrations" layout="size">
 			<motion.h3
@@ -72,7 +77,11 @@ const SecondaryCelebrations = ({
 					{hasSelectedSecondary && (
 						<>
 							<li className="secondary-celebrations__heading">
-								{t("celebration.mainCelebration")}
+								{t(
+									isSameRankAsMain
+										? "celebration.sameRank"
+										: "celebration.mainCelebration",
+								)}
 							</li>
 							<li className="secondary-celebrations__item">
 								<button
