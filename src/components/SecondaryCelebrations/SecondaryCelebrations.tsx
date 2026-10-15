@@ -73,6 +73,10 @@ const SecondaryCelebrations = ({
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1, transition: TRANSITIONS.slower }}
 					layout="position"
+					key={
+						visibleCelebrations.map((c) => c.id).join("-") +
+						(hasSelectedSecondary ? "-selected" : "")
+					}
 				>
 					{hasSelectedSecondary && (
 						<>
