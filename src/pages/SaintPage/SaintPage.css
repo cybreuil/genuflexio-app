@@ -200,25 +200,43 @@
 }
 
 .saint-prose__markdown p {
-	margin: 0 0 1.1em;
+	/*margin: 0 0 1.1em;*/
 }
 
-.saint-prose__markdown h2,
+.saint-prose__markdown h1 {
+	margin: 2.5em 0 0.8em;
+	font-size: 1.8rem;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 1.25;
+}
+.saint-prose__markdown h2 {
+	margin: 2.2em 0 0.7em;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 1.25;
+}
 .saint-prose__markdown h3 {
 	margin: 2em 0 0.6em;
-	font-weight: 500;
+	font-weight: 600;
 	letter-spacing: -0.01em;
 	line-height: 1.25;
 }
 
 .saint-prose__markdown h2 {
-	font-size: 1.5rem;
+	font-size: 1.6rem;
 }
 
 .saint-prose__markdown h3 {
-	font-size: 1.2rem;
+	font-size: 1.4rem;
 }
 
+.saint-prose__markdown em {
+	font-style: italic;
+}
+.saint-prose__markdown strong {
+	font-weight: 800;
+}
 .saint-prose__markdown blockquote {
 	margin: 1.5em 0;
 	padding: 0.25em 0 0.25em 1.25em;
