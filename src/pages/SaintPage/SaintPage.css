@@ -233,9 +233,10 @@
 
 .saint-prose__markdown em {
 	font-style: italic;
+	color: var(--color-text-secondary);
 }
 .saint-prose__markdown strong {
-	font-weight: 800;
+	font-weight: 600;
 }
 .saint-prose__markdown blockquote {
 	margin: 1.5em 0;
