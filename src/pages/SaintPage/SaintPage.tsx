@@ -256,7 +256,7 @@ const SaintPage = () => {
 							{saint.slug === "saint-lawrence" && (
 								<p className="ex-voto">
 									Reconnaissance à saint Laurent — 26 décembre
-									2026
+									2025
 								</p>
 							)}
 						</motion.div>
