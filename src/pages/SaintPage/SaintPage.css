@@ -264,6 +264,13 @@
 	font-style: italic;
 }
 
+.saint-prose .ex-voto {
+	color: var(--color-text-secondary);
+	font-size: 0.8rem;
+	font-style: italic;
+	text-align: end;
+}
+
 /* ===== Section titles ===== */
 
 .saint-section__title,

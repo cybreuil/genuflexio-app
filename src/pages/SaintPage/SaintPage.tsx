@@ -253,6 +253,12 @@ const SaintPage = () => {
 									{t("saint.noBiography")}
 								</p>
 							)}
+							{saint.slug === "saint-lawrence" && (
+								<p className="ex-voto">
+									Reconnaissance à saint Laurent — 26 décembre
+									2026
+								</p>
+							)}
 						</motion.div>
 
 						{/* ===== Patronages & attributs ===== */}
