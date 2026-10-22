@@ -480,32 +480,25 @@
 	overflow-y: scroll;
 	width: var(--aside-width);
 	gap: 1rem;
-	mask-image: none;
-}
 
-/* Fondu en haut uniquement */
-.saint-page .aside-column--fade-top {
-	mask-image: linear-gradient(to bottom, transparent, black 2rem);
-}
+	--fade-top: black;
+	--fade-bottom: black;
 
-/* Fondu en bas uniquement */
-.saint-page .aside-column--fade-bottom {
 	mask-image: linear-gradient(
 		to bottom,
-		black calc(100% - 2rem),
-		transparent
-	);
-}
-
-/* Fondu en haut et en bas */
-.saint-page .aside-column--fade-top.aside-column--fade-bottom {
-	mask-image: linear-gradient(
-		to bottom,
-		transparent,
+		var(--fade-top) 0,
 		black 2rem,
 		black calc(100% - 2rem),
-		transparent
+		var(--fade-bottom) 100%
 	);
+}
+
+.saint-page .aside-column--fade-top {
+	--fade-top: transparent;
+}
+
+.saint-page .aside-column--fade-bottom {
+	--fade-bottom: transparent;
 }
 
 .saint-page .aside-column .panel {

@@ -104,7 +104,8 @@ const SaintPage = () => {
 	const categoryOrder = ["title", "order", "symbol"];
 
 	// Ecoute du scroll du aside pour le flou :
-	const asideRef = useRef(null);
+	const asideRef = useRef<HTMLElement | null>(null);
+
 	const [scrollState, setScrollState] = useState({
 		top: false,
 		bottom: false,
@@ -114,29 +115,28 @@ const SaintPage = () => {
 		const aside = asideRef.current;
 		if (!aside) return;
 
-		const updateScrollState = () => {
-			const maxScroll = aside.scrollHeight - aside.clientHeight;
-			const hasScroll = maxScroll > 1;
+		const update = () => {
+			const max = aside.scrollHeight - aside.clientHeight;
+			const top = aside.scrollTop;
+
+			console.log({
+				scrollTop: top,
+				scrollHeight: aside.scrollHeight,
+				clientHeight: aside.clientHeight,
+				maxScroll: max,
+			});
 
 			setScrollState({
-				top: hasScroll && aside.scrollTop > 1,
-				bottom: hasScroll && aside.scrollTop < maxScroll - 1,
+				top: top > 1,
+				bottom: max > 1 && top < max - 1,
 			});
 		};
 
-		updateScrollState();
+		aside.addEventListener("scroll", update);
+		update();
 
-		aside.addEventListener("scroll", updateScrollState, {
-			passive: true,
-		});
-
-		window.addEventListener("resize", updateScrollState);
-
-		return () => {
-			aside.removeEventListener("scroll", updateScrollState);
-			window.removeEventListener("resize", updateScrollState);
-		};
-	}, []);
+		return () => aside.removeEventListener("scroll", update);
+	}, [saint, attributeGroups]);
 
 	return (
 		<div className="saint-page">
