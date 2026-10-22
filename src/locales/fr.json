@@ -84,12 +84,20 @@
 		"loadingError": "Erreur lors du chargement du saint.",
 		"noBiography": "Aucune biographie disponible pour ce saint.",
 		"patronages": "Patronages",
+		"patronage": "Patronage",
 		"attributes": "Attributs",
+		"attribute": "Attribut",
 		"places": "Lieux",
 		"gallery": "Galerie",
 		"noPatronages": "Aucun patronage disponible pour ce saint.",
 		"noAttributes": "Aucun attribut disponible pour ce saint.",
-		"noPlaces": "Aucun lieu disponible pour ce saint."
+		"noPlaces": "Aucun lieu disponible pour ce saint.",
+		"symbol": "Symbole",
+		"title": "Titre",
+		"order": "Ordre",
+		"symbols": "Symboles",
+		"titles": "Titres",
+		"orders": "Ordres"
 	},
 
 	"credits": {

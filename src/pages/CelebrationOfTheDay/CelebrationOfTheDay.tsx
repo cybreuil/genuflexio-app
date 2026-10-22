@@ -267,7 +267,7 @@ const CelebrationOfTheDay: React.FC = () => {
 							</StateBlock>
 						) : (
 							<motion.article
-								key={`${calendar?.code}-${activeCelebration.id}-${date}`}
+								key={`${calendar?.code}-${activeCelebration.id}-${date}-${languageCode}`}
 								className="celebration-article__inner"
 								variants={articleGroup}
 								initial="hidden"

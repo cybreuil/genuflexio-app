@@ -84,12 +84,20 @@
 		"loadingError": "Error in sancto onerando.",
 		"noBiography": "Nulla biographia pro hoc sancto praesto est.",
 		"patronages": "Patronatus",
+		"patronage": "Patrocinium",
 		"attributes": "Attributa",
+		"attribute": "Attributum",
 		"places": "Loci",
 		"gallery": "Pinacotheca",
 		"noPatronages": "Nullus patronatus pro hoc sancto praesto est.",
 		"noAttributes": "Nulla attributa pro hoc sancto praesto sunt.",
-		"noPlaces": "Nulli loci pro hoc sancto praesto sunt."
+		"noPlaces": "Nulli loci pro hoc sancto praesto sunt.",
+		"symbol": "Symbolum",
+		"title": "Titulus",
+		"order": "Ordo",
+		"symbols": "Symbola",
+		"titles": "Tituli",
+		"orders": "Ordines"
 	},
 
 	"credits": {
