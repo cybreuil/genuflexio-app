@@ -1,5 +1,5 @@
 import "./SaintPage.css";
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -9,6 +9,7 @@ import { RippleLink } from "../../components/RippleLink/RippleLink";
 import { SaintMap } from "../../components/SaintMap/SaintMap";
 import { useSaintBySlug } from "../../hooks/useSaints";
 import { useLanguage } from "../../hooks/useLanguage";
+import { useScrollFade } from "../../hooks/useScrollFade";
 import type { Attribute } from "../../types/Attribute";
 import {
 	centuryLabel,
@@ -104,39 +105,8 @@ const SaintPage = () => {
 	const categoryOrder = ["title", "order", "symbol"];
 
 	// Ecoute du scroll du aside pour le flou :
-	const asideRef = useRef<HTMLElement | null>(null);
-
-	const [scrollState, setScrollState] = useState({
-		top: false,
-		bottom: false,
-	});
-
-	useEffect(() => {
-		const aside = asideRef.current;
-		if (!aside) return;
-
-		const update = () => {
-			const max = aside.scrollHeight - aside.clientHeight;
-			const top = aside.scrollTop;
-
-			console.log({
-				scrollTop: top,
-				scrollHeight: aside.scrollHeight,
-				clientHeight: aside.clientHeight,
-				maxScroll: max,
-			});
-
-			setScrollState({
-				top: top > 1,
-				bottom: max > 1 && top < max - 1,
-			});
-		};
-
-		aside.addEventListener("scroll", update);
-		update();
-
-		return () => aside.removeEventListener("scroll", update);
-	}, [saint, attributeGroups]);
+	// Aside fade: shows a gradient on the side(s) that can still scroll
+	const { ref: asideRef, fade } = useScrollFade<HTMLElement>();
 
 	return (
 		<div className="saint-page">
@@ -472,9 +442,13 @@ const SaintPage = () => {
 						</motion.article>
 						<aside
 							ref={asideRef}
-							className={`aside-column
-        					${scrollState.top ? "aside-column--fade-top" : ""}
-             				${scrollState.bottom ? "aside-column--fade-bottom" : ""}`}
+							className={[
+								"aside-column",
+								fade.top && "aside-column--fade-top",
+								fade.bottom && "aside-column--fade-bottom",
+							]
+								.filter(Boolean)
+								.join(" ")}
 						>
 							{attributeGroups
 								.toSorted(
@@ -514,7 +488,7 @@ const SaintPage = () => {
 										</ul>
 									</div>
 								))}
-							{saint.patronages?.length && (
+							{saint.patronages?.length > 0 && (
 								<div className="panel aside-column__patronages">
 									<h3 className="panel__title">
 										{saint.patronages.length > 1

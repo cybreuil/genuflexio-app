@@ -2,6 +2,28 @@
    SAINT PAGE — fiche complète d'un saint
    ========================================================= */
 
+/*Properties
+	for
+	fade
+	effect
+	on
+	aside
+	column
+	when
+	content
+	overflows
+	*/
+@property --fade-top-size {
+	syntax: "<length>";
+	inherits: false;
+	initial-value: 0px;
+}
+@property --fade-bottom-size {
+	syntax: "<length>";
+	inherits: false;
+	initial-value: 0px;
+}
+
 .saint-page {
 	--sticky-top: calc(var(--header-height) + 2rem);
 	--aside-width: 500px;
@@ -477,28 +499,28 @@
 	position: sticky;
 	top: var(--sticky-top);
 	max-height: calc(100vh - var(--sticky-top) - 1rem);
-	overflow-y: scroll;
+	overflow-y: auto;
 	width: var(--aside-width);
 	gap: 1rem;
 
-	--fade-top: black;
-	--fade-bottom: black;
-
+	--fade-top-size: 0px;
+	--fade-bottom-size: 0px;
 	mask-image: linear-gradient(
 		to bottom,
-		var(--fade-top) 0,
-		black 2rem,
-		black calc(100% - 2rem),
-		var(--fade-bottom) 100%
+		transparent 0,
+		black var(--fade-top-size),
+		black calc(100% - var(--fade-bottom-size)),
+		transparent 100%
 	);
+	transition:
+		--fade-top-size 0.25s,
+		--fade-bottom-size 0.25s;
 }
-
 .saint-page .aside-column--fade-top {
-	--fade-top: transparent;
+	--fade-top-size: 2rem;
 }
-
 .saint-page .aside-column--fade-bottom {
-	--fade-bottom: transparent;
+	--fade-bottom-size: 2rem;
 }
 
 .saint-page .aside-column .panel {
