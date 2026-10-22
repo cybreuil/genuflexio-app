@@ -131,7 +131,7 @@ const SaintPage = () => {
 					</StateBlock>
 				) : (
 					<motion.article
-						key={saint.id}
+						key={`${saint.id}-${languageCode}`}
 						className="saint-article"
 						variants={articleGroup}
 						initial="hidden"
@@ -143,11 +143,12 @@ const SaintPage = () => {
 							className={`saint-cover${cover ? "" : " saint-cover--no-image"}`}
 						>
 							{cover && (
-								<img
+								<motion.img
 									className="saint-cover__image"
 									src={cover.image_url}
 									alt={cover.alt_text || name}
 									decoding="async"
+									variants={rise}
 								/>
 							)}
 							<div

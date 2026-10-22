@@ -282,7 +282,6 @@ const CelebrationOfTheDay: React.FC = () => {
 											effectiveLiturgicalColorForFirstLetter,
 									} as React.CSSProperties
 								}
-								layout="position"
 							>
 								{/* --- Cover --- */}
 								<header
