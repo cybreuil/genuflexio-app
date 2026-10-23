@@ -102,6 +102,7 @@
 	"saints": {
 		"filters": {
 			"search": "Quaerere nomine",
+			"label": "Sanctum quaerere",
 			"searchPlaceholder": "Sanctum quaerere...",
 			"century": "Saeculum",
 			"centuryAll": "Omnia",

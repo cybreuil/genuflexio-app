@@ -102,6 +102,7 @@
 	"saints": {
 		"filters": {
 			"search": "Search by name",
+			"label": "Search for a Saint",
 			"searchPlaceholder": "Search for a saint...",
 			"century": "Century",
 			"centuryAll": "All",
