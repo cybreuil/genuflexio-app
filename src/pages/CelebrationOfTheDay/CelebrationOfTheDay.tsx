@@ -202,6 +202,7 @@ const CelebrationOfTheDay: React.FC = () => {
 						variants={sidebarGroup}
 						initial="hidden"
 						animate="show"
+						key={languageCode}
 					>
 						<motion.div
 							className="celebration-block celebration-block--calendar"
@@ -273,7 +274,7 @@ const CelebrationOfTheDay: React.FC = () => {
 							</StateBlock>
 						) : (
 							<motion.article
-								key={`${calendar?.code}-${activeCelebration.id}-${date}-${languageCode}`}
+								key={`article-${calendar?.code}-${activeCelebration.id}-${date}-${languageCode}`}
 								className="celebration-article__inner"
 								variants={articleGroup}
 								initial="hidden"
@@ -460,6 +461,7 @@ const CelebrationOfTheDay: React.FC = () => {
 						variants={sidebarGroup}
 						initial="hidden"
 						animate="show"
+						key={languageCode}
 					>
 						<motion.div
 							className="celebration-block celebration-block--selector"
