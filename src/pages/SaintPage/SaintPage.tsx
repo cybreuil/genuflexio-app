@@ -467,6 +467,7 @@ const SaintPage = () => {
 							variants={asideGroup}
 							initial="hidden"
 							animate="show"
+							key={`aside-${languageCode}`}
 						>
 							{attributeGroups
 								.toSorted(
@@ -476,7 +477,6 @@ const SaintPage = () => {
 								)
 								.map(([category, attrs]) => (
 									<motion.div
-										key={`${category}-${languageCode}`}
 										className={`panel aside-column__${category}`}
 										variants={landIn(-32)}
 									>
@@ -511,7 +511,6 @@ const SaintPage = () => {
 								<motion.div
 									className="panel aside-column__patronages"
 									variants={landIn(-32)}
-									key={`patronages-${languageCode}`}
 								>
 									<h3 className="panel__title">
 										{saint.patronages.length > 1
