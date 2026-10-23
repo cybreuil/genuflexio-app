@@ -148,27 +148,48 @@ const SaintsFilters = ({
 				</select>
 			</motion.label>
 
-			<motion.div className="saints-filters__end" layout>
-				{typeof resultCount === "number" && (
-					<span className="saints-filters__count" aria-live="polite">
+			<div className="saints-filters__end">
+				{/*If loading, then resultcount is undefined
+				 */}
+				{typeof resultCount === "number" ? (
+					<motion.span
+						className="saints-filters__count"
+						aria-live="polite"
+						layout="x"
+					>
 						{resultCount}{" "}
 						{resultCount > 1
 							? t("saints.filters.results")
 							: t("saints.filters.result")}
-					</span>
+					</motion.span>
+				) : (
+					<motion.span
+						className="saints-filters__count"
+						aria-live="polite"
+						layout="x"
+					>
+						loading ...
+					</motion.span>
 				)}
-				<AnimatePresence>
+				<AnimatePresence mode="popLayout">
 					{isDirty && (
-						<button
+						<motion.button
 							type="button"
 							className="saints-filters__reset"
 							onClick={() => onChange(DEFAULT_FILTERS)}
+							initial={{
+								opacity: 0,
+								scale: 0.5,
+							}}
+							animate={{ opacity: 1, scale: 1 }}
+							exit={{ opacity: 0, scale: 0.5 }}
+							layout="x"
 						>
 							{t("saints.filters.reset")}
-						</button>
+						</motion.button>
 					)}
 				</AnimatePresence>
-			</motion.div>
+			</div>
 		</form>
 	);
 };

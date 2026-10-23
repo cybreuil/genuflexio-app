@@ -142,8 +142,7 @@ export const SaintsPage = () => {
 					debouncedQuery={debouncedQuery}
 					onChange={handleFiltersChange}
 					// Let's not use loading: to avoid glitching
-					// resultCount={loading ? undefined : totalCount}
-					resultCount={totalCount}
+					resultCount={loading ? undefined : totalCount}
 				/>
 			</motion.div>
 
