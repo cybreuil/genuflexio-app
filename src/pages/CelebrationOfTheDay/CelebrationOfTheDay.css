@@ -473,36 +473,66 @@
 
 /* ===== Responsive ===== */
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
 	.celebration-page {
 		--aside-width: 260px;
-		gap: 1.5rem;
+		gap: 1rem;
 	}
 }
 
-/* Tablette : on garde l'article large, les latérales passent en dessous en 2 colonnes */
+/* Tablette & mobile : une colonne.
+   Les asides et leurs wrappers sticky sont dissous (display: contents) pour
+   que les 4 blocs deviennent des enfants directs de la grille et puissent
+   être réordonnés par pertinence : contrôle → contenu → contexte → réglage. */
 @media (max-width: 900px) {
 	.celebration-page {
-		grid-template-columns: 1fr 1fr;
-		padding-inline: 1.25rem;
+		grid-template-columns: minmax(0, 1fr);
+		width: min(100% - 2.5rem, 820px);
+		gap: 1.25rem;
+	}
+
+	.celebration-page__aside,
+	.celebration-page__sticky {
+		display: contents;
+	}
+
+	.celebration-block--calendar {
+		order: 1;
+		/*position: sticky;
+		top: calc(var(--header-height) + 0.5rem);*/
+		/*z-index: 5;*/
 	}
 
 	.celebration-article {
-		grid-column: 1 / -1;
-		order: -1;
+		order: 2;
+		height: auto;
 	}
 
-	.celebration-page__sticky {
-		position: static;
+	.celebration-block--secondary {
+		order: 3;
+	}
+
+	.celebration-block--season {
+		order: 4;
+	}
+
+	.celebration-block--selector {
+		order: 5;
+	}
+
+	.celebration-article__inner {
+		height: auto;
 	}
 }
 
-/* Mobile : tout en une colonne */
 @media (max-width: 600px) {
+	.celebration-page-container {
+		padding-top: calc(var(--header-height) + 1rem);
+	}
+
 	.celebration-page {
-		grid-template-columns: 1fr;
-		padding: calc(var(--header-height) + 1rem) 1rem 3rem;
-		gap: 1.25rem;
+		width: calc(100% - 2rem);
+		gap: 1rem;
 	}
 
 	.celebration-cover {

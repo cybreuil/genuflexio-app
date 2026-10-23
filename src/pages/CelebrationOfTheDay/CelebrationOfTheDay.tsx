@@ -203,7 +203,10 @@ const CelebrationOfTheDay: React.FC = () => {
 						initial="hidden"
 						animate="show"
 					>
-						<motion.div variants={sidebarItem(-32)}>
+						<motion.div
+							className="celebration-block celebration-block--calendar"
+							variants={sidebarItem(-32)}
+						>
 							<MiniCalendar />
 						</motion.div>
 						{/*<motion.div variants={sidebarItem(-32)}>
@@ -223,7 +226,10 @@ const CelebrationOfTheDay: React.FC = () => {
 							}
 						/>
 					</motion.div>*/}
-						<motion.div variants={sidebarItem(-32)}>
+						<motion.div
+							className="celebration-block celebration-block--season"
+							variants={sidebarItem(-32)}
+						>
 							<LiturgicalSeason
 								season={liturgicalSeason}
 								date={date}
@@ -455,10 +461,16 @@ const CelebrationOfTheDay: React.FC = () => {
 						initial="hidden"
 						animate="show"
 					>
-						<motion.div variants={sidebarItem(32)}>
+						<motion.div
+							className="celebration-block celebration-block--selector"
+							variants={sidebarItem(32)}
+						>
 							<CalendarSelector />
 						</motion.div>
-						<motion.div variants={sidebarItem(32)}>
+						<motion.div
+							className="celebration-block celebration-block--secondary"
+							variants={sidebarItem(32)}
+						>
 							<SecondaryCelebrations
 								secondaryCelebrations={secondaryCelebrations}
 								mainCelebration={celebration}

@@ -26,15 +26,15 @@
 
 .saint-page {
 	--sticky-top: calc(var(--header-height) + 2rem);
-	--aside-width: 500px;
+	--page-width: min(1200px, 100% - 3rem);
 	flex: 1;
-	/*margin: 0 auto;*/
-	padding: calc(var(--header-height) + 1.5rem) 0 4rem;
+	display: flex;
+	flex-direction: column;
+	padding: calc(var(--header-height) + 1.5rem) 0 0rem;
 }
 
 .saint-page__breadcrumb {
-	/*margin-bottom: 1.25rem;*/
-	width: min(90%, 900px);
+	width: var(--page-width);
 	margin: 0 auto 1.25rem;
 }
 
@@ -53,14 +53,13 @@
 	color: var(--color-secondary-dark);
 }
 
-/*Container*/
+/*Container : article ~820px / aside ~350px à 1200px, tout en proportions */
 .saint-page-container {
-	width: min(90%, 1440px);
-	margin: auto;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	padding: 0 2rem;
+	width: var(--page-width);
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+	align-items: start;
 	gap: 2rem;
 }
 /* ===== Article shell ===== */
@@ -71,7 +70,6 @@
 	background: var(--color-bg-component);
 	border: 1px solid var(--color-border-light);
 	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
-	flex: 1;
 }
 
 /* ===== Cover ===== */
@@ -492,16 +490,18 @@
 	font-size: 0.78rem;
 }
 
-/*Aside*/
+/*Aside
+  Scroll + mask sur l'élément lui-même : les panneaux entrent en fade + y
+  (variant `rise`), jamais en x, pour ne pas être rognés par le scroll container. */
 .saint-page .aside-column {
-	display: flex;
-	flex-direction: column;
 	position: sticky;
 	top: var(--sticky-top);
 	max-height: calc(100vh - var(--sticky-top) - 1rem);
-	overflow-y: auto;
-	width: var(--aside-width);
+	display: flex;
+	flex-direction: column;
 	gap: 1rem;
+	overflow-y: auto;
+	scrollbar-width: none;
 
 	--fade-top-size: 0px;
 	--fade-bottom-size: 0px;
@@ -515,6 +515,9 @@
 	transition:
 		--fade-top-size 0.25s,
 		--fade-bottom-size 0.25s;
+}
+.saint-page .aside-column::-webkit-scrollbar {
+	display: none;
 }
 .saint-page .aside-column--fade-top {
 	--fade-top-size: 2rem;
@@ -548,6 +551,9 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0.15rem;
+	/* Indispensable : sans min-width:0 le texte ne wrappe jamais et le clamp n'a rien à couper */
+	flex: 1;
+	min-width: 0;
 }
 .saint-page .aside-column .aside__category-item .aside__category-item__name {
 	font-weight: 500;
@@ -559,7 +565,11 @@
 	.aside__category-item
 	.aside__category-item__description {
 	color: var(--color-text-tertiary);
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
 	font-size: 0.8rem;
+	line-height: 1.4;
 }
 .saint-page .aside-column .aside__category-dot {
 	flex: none;
@@ -567,17 +577,19 @@
 	height: 5px;
 	border-radius: 50%;
 	box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
-	background-color: currentColor;
+	background-color: var(--color-secondary);
 }
 
 /* ===== States ===== */
 
 .saint-page__state {
+	flex: 1;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	gap: 0.75rem;
+	height: max-content;
 	min-height: 360px;
 	padding: 3rem 2rem;
 	border: 1px dashed var(--color-border-medium);
@@ -585,6 +597,8 @@
 	color: var(--color-text-secondary);
 	font-size: 1.1rem;
 	text-align: center;
+	width: var(--page-width);
+	margin: 0 auto;
 }
 
 .saint-page__state--error {
@@ -600,13 +614,25 @@
 /* ===== Responsive ===== */
 
 @media (max-width: 900px) {
+	.saint-page-container {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
 	.saint-page .aside-column {
 		display: none;
 	}
 }
+
+/* Au-dessus de 900px l'aside porte déjà patronages et attributs : pas de doublon */
+@media (min-width: 901px) {
+	.saint-meta {
+		display: none;
+	}
+}
+
 @media (max-width: 600px) {
 	.saint-page {
-		width: calc(100% - 2rem);
+		--page-width: calc(100% - 2rem);
 		padding-top: calc(var(--header-height) + 1rem);
 	}
 

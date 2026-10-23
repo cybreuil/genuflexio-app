@@ -28,123 +28,121 @@
 .saint-map__marker {
 	position: relative;
 	display: grid;
-	width: 24px;
-	height: 24px;
+	place-items: center;
+	width: 28px;
+	height: 28px;
 	padding: 0;
 	border: 0;
 	border-radius: 50%;
 	background: transparent;
 	cursor: pointer;
-	place-items: center;
-}
-
-.saint-map__marker-dot {
-	position: absolute;
-	inset: 5px;
-	border: 3px solid #fff;
-	border-radius: 50%;
-	background: var(--marker-color);
-	box-shadow:
-		0 0 0 4px color-mix(in srgb, var(--marker-color) 20%, transparent),
-		0 3px 10px rgba(0, 0, 0, 0.2);
-	transition:
-		transform 160ms ease,
-		box-shadow 160ms ease;
-}
-
-.saint-map__marker:hover .saint-map__marker-dot,
-.saint-map__marker:focus-visible .saint-map__marker-dot {
-	transform: scale(1.3);
-	box-shadow:
-		0 0 0 7px color-mix(in srgb, var(--marker-color) 22%, transparent),
-		0 4px 14px rgba(0, 0, 0, 0.25);
 }
 
 .saint-map__marker:focus-visible {
 	outline: none;
 }
 
-/* Grouped marker */
-
-.saint-map__marker-group {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 26px;
-	height: 26px;
-	gap: 2px;
-	padding: 4px;
-	border: 3px solid #fff;
-	border-radius: 50%;
-	background: rgba(255, 255, 255, 0.9);
-	box-shadow:
-		0 0 0 4px rgba(41, 38, 31, 0.12),
-		0 3px 10px rgba(0, 0, 0, 0.2);
-	transition:
-		transform 160ms ease,
-		box-shadow 160ms ease;
-}
-
-.saint-map__marker-group i {
+/* Un seul dessin pour tous les markers : disque plein ou divisé en secteurs */
+.saint-map__marker-dot {
 	display: block;
-	width: 7px;
-	height: 7px;
-	flex: 0 0 7px;
+	width: 14px;
+	height: 14px;
+	border: 2px solid #fff;
 	border-radius: 50%;
+	background: var(--marker-fill);
+	box-shadow:
+		0 0 0 3px color-mix(in srgb, var(--marker-color) 22%, transparent),
+		0 2px 8px rgba(0, 0, 0, 0.22);
+	transition:
+		transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+		box-shadow 180ms ease;
 }
 
-.saint-map__marker:hover .saint-map__marker-group,
-.saint-map__marker:focus-visible .saint-map__marker-group {
-	transform: scale(1.18);
+.saint-map__marker--active .saint-map__marker-dot {
+	transform: scale(1.25);
 	box-shadow:
-		0 0 0 7px rgba(41, 38, 31, 0.12),
-		0 4px 14px rgba(0, 0, 0, 0.25);
+		0 0 0 6px color-mix(in srgb, var(--marker-color) 24%, transparent),
+		0 4px 14px rgba(0, 0, 0, 0.28);
+}
+
+/* Épinglé : halo blanc en plus pour marquer l'état persistant */
+.saint-map__marker--pinned .saint-map__marker-dot {
+	box-shadow:
+		0 0 0 3px #fff,
+		0 0 0 6px color-mix(in srgb, var(--marker-color) 45%, transparent),
+		0 4px 14px rgba(0, 0, 0, 0.28);
 }
 
 /* Popup */
 
+.saint-map__popup-wrap {
+	pointer-events: none;
+}
+
+.saint-map__popup-wrap .maplibregl-popup-content {
+	padding: 0.7rem 0.9rem;
+	border-radius: 0.8rem;
+	background: rgba(255, 255, 255, 0.92);
+	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+	backdrop-filter: blur(12px);
+	font-family: inherit;
+}
+
+.saint-map__popup-wrap .maplibregl-popup-tip {
+	border-top-color: rgba(255, 255, 255, 0.92);
+}
+
 .saint-map__popup {
 	display: flex;
-	min-width: 150px;
 	flex-direction: column;
-	gap: 0.3rem;
-	padding: 0.15rem 0.1rem;
-}
-
-.saint-map__popup-roles {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.3rem;
-}
-
-.saint-map__popup-role {
-	position: relative;
-	display: inline-flex;
-	align-items: center;
-	color: var(--role-color);
-	font-size: 0.65rem;
-	font-weight: 700;
-	letter-spacing: 0.07em;
-	line-height: 1;
-	text-transform: uppercase;
-}
-
-.saint-map__popup-role:not(:last-child)::after {
-	content: "·";
-	margin-left: 0.3rem;
-	color: rgba(41, 38, 31, 0.3);
+	gap: 0.4rem;
+	min-width: 140px;
 }
 
 .saint-map__popup-name {
+	display: flex;
+	align-items: baseline;
+	gap: 0.45rem;
 	color: #29261f;
 	font-size: 0.95rem;
+	font-weight: 500;
 	line-height: 1.2;
 }
 
 .saint-map__popup-country {
 	color: rgba(41, 38, 31, 0.5);
-	font-size: 0.68rem;
-	letter-spacing: 0.04em;
+	font-size: 0.65rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+}
+
+.saint-map__popup-roles {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.3rem 0.8rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.saint-map__popup-roles li {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	color: var(--role-color);
+	font-size: 0.65rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.saint-map__popup-roles li::before {
+	content: "";
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--role-color);
 }
 
 /* Legend */

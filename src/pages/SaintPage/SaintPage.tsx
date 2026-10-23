@@ -26,11 +26,26 @@ const articleGroup = {
 	hidden: {},
 	show: { transition: { staggerChildren: 0.09 } },
 };
+const asideGroup = {
+	hidden: {},
+	show: {
+		transition: {
+			staggerChildren: 0.1,
+			delayChildren: 0.15,
+			staggerDirection: -1,
+		},
+	},
+};
 
 const rise = {
 	hidden: { opacity: 0, y: 18 },
 	show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
 };
+
+const landIn = (fromY: number) => ({
+	hidden: { opacity: 0, y: fromY },
+	show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+});
 
 function StateBlock({
 	tone = "neutral",
@@ -440,7 +455,7 @@ const SaintPage = () => {
 								</motion.section>
 							)}
 						</motion.article>
-						<aside
+						<motion.aside
 							ref={asideRef}
 							className={[
 								"aside-column",
@@ -449,6 +464,9 @@ const SaintPage = () => {
 							]
 								.filter(Boolean)
 								.join(" ")}
+							variants={asideGroup}
+							initial="hidden"
+							animate="show"
 						>
 							{attributeGroups
 								.toSorted(
@@ -457,9 +475,10 @@ const SaintPage = () => {
 										categoryOrder.indexOf(categoryB),
 								)
 								.map(([category, attrs]) => (
-									<div
-										key={category}
+									<motion.div
+										key={`${category}-${languageCode}`}
 										className={`panel aside-column__${category}`}
+										variants={landIn(-32)}
 									>
 										<h3 className="panel__title">
 											{attrs.length > 1
@@ -486,10 +505,14 @@ const SaintPage = () => {
 												</li>
 											))}
 										</ul>
-									</div>
+									</motion.div>
 								))}
 							{saint.patronages?.length > 0 && (
-								<div className="panel aside-column__patronages">
+								<motion.div
+									className="panel aside-column__patronages"
+									variants={landIn(-32)}
+									key={`patronages-${languageCode}`}
+								>
 									<h3 className="panel__title">
 										{saint.patronages.length > 1
 											? t(`saint.patronages`)
@@ -514,9 +537,9 @@ const SaintPage = () => {
 											</li>
 										))}
 									</ul>
-								</div>
+								</motion.div>
 							)}
-						</aside>
+						</motion.aside>
 					</div>
 				)}
 			</AnimatePresence>
