@@ -40,7 +40,14 @@ const CalendarSelector = () => {
 					<option value="">{t("calendars.loadingError")}</option>
 				)}
 				{options.map((c) => (
-					<option key={c.code} value={c.code}>
+					<option
+						key={c.code}
+						value={c.code}
+						disabled={
+							c.code === "ROMAN_1960" ||
+							c.code === "ROMAN_1960_FRANCE"
+						}
+					>
 						{"\u00A0\u00A0".repeat(c.depth)}
 						{c.depth > 0 ? "↳ " : ""}
 						{c.name}
