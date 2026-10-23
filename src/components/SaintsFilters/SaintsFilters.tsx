@@ -1,27 +1,46 @@
 import "./SaintsFilters.css";
-import type { SaintSort } from "../../hooks/useSaints";
-import { toRoman } from "../../utils/saintFormat";
 import { AnimatePresence, motion } from "framer-motion";
+
+import { useLanguage } from "../../hooks/useLanguage";
+
+import { centuryLabel } from "../../utils/saintFormat";
+
+export type SaintSort =
+	| "random"
+	| "name_asc"
+	| "name_desc"
+	| "century_asc"
+	| "century_desc";
 
 export type SaintsFiltersValue = {
 	query: string;
-	century: string; // "all" | "unknown" | "1".."21"
+	// TODO if needed: add support for 'unknown' century, request on century = null on api
+	century: string; // "all" | "1".."21"
 	sort: SaintSort;
 };
 
 export const DEFAULT_FILTERS: SaintsFiltersValue = {
 	query: "",
 	century: "all",
-	sort: "century_asc",
+	sort: "random",
 };
 
 const CENTURIES = Array.from({ length: 21 }, (_, i) => i + 1);
 
-const SORT_OPTIONS: { value: SaintSort; label: string }[] = [
-	{ value: "name_asc", label: "Nom, A → Z" },
-	{ value: "name_desc", label: "Nom, Z → A" },
-	{ value: "century_asc", label: "Siècle, du plus ancien" },
-	{ value: "century_desc", label: "Siècle, du plus récent" },
+const getSaintSort = (century: string, t: (key: string) => string) => [
+	{ value: "random", label: t("saints.filters.sortRandom") },
+	{ value: "name_asc", label: t("saints.filters.sortNameAsc") },
+	{ value: "name_desc", label: t("saints.filters.sortNameDesc") },
+	{
+		value: "century_asc",
+		label: t("saints.filters.sortCenturyAsc"),
+		disabled: century !== "all",
+	},
+	{
+		value: "century_desc",
+		label: t("saints.filters.sortCenturyDesc"),
+		disabled: century !== "all",
+	},
 ];
 
 type Props = {
@@ -37,26 +56,31 @@ const SaintsFilters = ({
 	resultCount,
 	debouncedQuery,
 }: Props) => {
+	const { t } = useLanguage();
 	const isDirty =
 		debouncedQuery !== DEFAULT_FILTERS.query ||
 		value.century !== DEFAULT_FILTERS.century ||
 		value.sort !== DEFAULT_FILTERS.sort;
 
+	const saintSortOptions = getSaintSort(value.century, t);
+
 	return (
 		<form
 			className="saints-filters"
 			role="search"
-			aria-label="Filtrer les saints"
+			aria-label={t("saints.filters.label")}
 			onSubmit={(e) => e.preventDefault()}
 		>
 			<motion.label
 				className="saints-filters__field saints-filters__field--grow"
 				layout="x"
 			>
-				<span className="saints-filters__label">Recherche</span>
+				<span className="saints-filters__label">
+					{t("saints.filters.search")}
+				</span>
 				<input
 					type="search"
-					placeholder="Nom d'un saint…"
+					placeholder={t("saints.filters.searchPlaceholder")}
 					value={value.query}
 					onChange={(e) =>
 						onChange({ ...value, query: e.target.value })
@@ -66,26 +90,43 @@ const SaintsFilters = ({
 			</motion.label>
 
 			<motion.label className="saints-filters__field" layout="x">
-				<span className="saints-filters__label">Siècle</span>
+				{" "}
+				<span className="saints-filters__label">
+					{t("saints.filters.century")}
+				</span>
 				<select
 					value={value.century}
-					onChange={(e) =>
-						onChange({ ...value, century: e.target.value })
-					}
+					onChange={(e) => {
+						const century = e.target.value;
+
+						const sort =
+							century !== "all" ? "name_asc" : value.sort;
+
+						onChange({
+							...value,
+							century,
+							sort,
+						});
+					}}
 				>
-					<option value="all">Tous</option>
+					<option value="all">
+						{t("saints.filters.centuryAll")}
+					</option>
 					{CENTURIES.map((c) => (
 						<option key={c} value={c}>
-							{toRoman(c)}
-							{c === 1 ? "er" : "e"}
+							{centuryLabel(c, t) ?? c}
 						</option>
 					))}
-					<option value="unknown">Inconnu</option>
+					{/*<option value="unknown">
+						{t("saints.filters.centuryUnknown")}
+					</option>*/}
 				</select>
 			</motion.label>
 
 			<motion.label className="saints-filters__field" layout="x">
-				<span className="saints-filters__label">Tri</span>
+				<span className="saints-filters__label">
+					{t("saints.filters.sort")}
+				</span>
 				<select
 					value={value.sort}
 					onChange={(e) =>
@@ -95,8 +136,12 @@ const SaintsFilters = ({
 						})
 					}
 				>
-					{SORT_OPTIONS.map((o) => (
-						<option key={o.value} value={o.value}>
+					{saintSortOptions.map((o) => (
+						<option
+							key={o.value}
+							value={o.value}
+							disabled={o.disabled}
+						>
 							{o.label}
 						</option>
 					))}
@@ -106,18 +151,23 @@ const SaintsFilters = ({
 			<motion.div className="saints-filters__end" layout>
 				{typeof resultCount === "number" && (
 					<span className="saints-filters__count" aria-live="polite">
-						{resultCount} {resultCount > 1 ? "saints" : "saint"}
+						{resultCount}{" "}
+						{resultCount > 1
+							? t("saints.filters.results")
+							: t("saints.filters.result")}
 					</span>
 				)}
-				{isDirty && (
-					<button
-						type="button"
-						className="saints-filters__reset"
-						onClick={() => onChange(DEFAULT_FILTERS)}
-					>
-						Réinitialiser
-					</button>
-				)}
+				<AnimatePresence>
+					{isDirty && (
+						<button
+							type="button"
+							className="saints-filters__reset"
+							onClick={() => onChange(DEFAULT_FILTERS)}
+						>
+							{t("saints.filters.reset")}
+						</button>
+					)}
+				</AnimatePresence>
 			</motion.div>
 		</form>
 	);

@@ -99,6 +99,27 @@
 		"titles": "Tituli",
 		"orders": "Ordines"
 	},
+	"saints": {
+		"filters": {
+			"search": "Quaerere nomine",
+			"searchPlaceholder": "Sanctum quaerere...",
+			"century": "Saeculum",
+			"centuryAll": "Omnia",
+			"centuryUnknown": "Saeculum ignotum",
+			"patronage": "Patrocinium",
+			"attribute": "Attributum",
+			"place": "Locus",
+			"sort": "Ordina secundum",
+			"results": "Sancti",
+			"result": "Sanctus",
+			"reset": "Restituere",
+			"sortRandom": "Ordine fortuito",
+			"sortNameAsc": "Nomen A → Z",
+			"sortNameDesc": "Nomen Z → A",
+			"sortCenturyAsc": "Saeculum ascendens",
+			"sortCenturyDesc": "Saeculum descendens"
+		}
+	},
 
 	"credits": {
 		"title": "Credita",

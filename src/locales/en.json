@@ -99,6 +99,27 @@
 		"titles": "Titles",
 		"orders": "Orders"
 	},
+	"saints": {
+		"filters": {
+			"search": "Search by name",
+			"searchPlaceholder": "Search for a saint...",
+			"century": "Century",
+			"centuryAll": "All",
+			"centuryUnknown": "Unknown",
+			"patronage": "Filter by patronage",
+			"attribute": "Filter by attribute",
+			"place": "Filter by place",
+			"sort": "Sort by",
+			"results": "Saints",
+			"result": "Saint",
+			"reset": "Reset",
+			"sortRandom": "Random",
+			"sortNameAsc": "Name A → Z",
+			"sortNameDesc": "Name Z → A",
+			"sortCenturyAsc": "Century Ascending",
+			"sortCenturyDesc": "Century Descending"
+		}
+	},
 
 	"credits": {
 		"title": "Credits",
