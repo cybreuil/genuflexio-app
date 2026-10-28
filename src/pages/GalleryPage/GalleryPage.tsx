@@ -238,7 +238,7 @@ const GalleryPage = () => {
 		() => ({
 			saint: buildFacet(images, (i) => i.saint_name),
 			artist: buildFacet(images, (i) => i.creator),
-			period: buildFacet(
+			century: buildFacet(
 				images,
 				(i) => (i.century != null ? String(i.century) : null),
 				(i) => (i.century != null ? `${i.century}e siècle` : ""),

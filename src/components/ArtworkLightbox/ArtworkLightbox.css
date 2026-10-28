@@ -102,14 +102,15 @@
 
 /* ===== Stage ===== */
 
+/*Flex works better than grid because of 1fr parent, need double check*/
 .lightbox__stage {
 	grid-area: stage;
 	position: relative;
-	display: grid;
-	place-items: inherit;
-	/*display: flex;
-	justify-content: center;*/
-	height: 200px;
+	/*display: grid;
+	place-items: center;*/
+	display: flex;
+	justify-content: center;
+
 	min-width: 0;
 	min-height: 0;
 	padding: 0 4.5rem 2rem;
