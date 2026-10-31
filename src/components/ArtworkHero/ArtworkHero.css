@@ -166,7 +166,7 @@
 
 .artwork-hero__title {
 	display: flex;
-	align-items: flex-end;
+	align-items: end;
 	margin: 0;
 	color: #fff;
 	font-size: clamp(3.25rem, 9vw, 7.5rem);
@@ -180,7 +180,9 @@
 }
 .artwork-hero__title svg {
 	color: var(--color-secondary);
-	margin-right: -0.8rem;
+	margin-right: -1rem;
+	width: clamp(100px, 15vw, 200px);
+	height: clamp(100px, 15vw, 200px);
 }
 
 .artwork-hero__description {
@@ -294,6 +296,10 @@
 
 	.artwork-hero__title {
 		font-size: clamp(2.75rem, 16vw, 5rem);
+	}
+	.artwork-hero__title svg {
+		width: clamp(100px, 28vw, 150px);
+		height: clamp(100px, 28vw, 150px);
 	}
 
 	.artwork-hero__description {

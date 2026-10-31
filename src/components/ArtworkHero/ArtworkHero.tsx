@@ -138,7 +138,10 @@ function ArtworkHero({
 					transition={{ duration: 0.5, delay: 0.2 }}
 					// layoutId="website-title"
 				>
-					<DesignedLogo title="Saints" width={200} height={200} />
+					<DesignedLogo
+						title="Saints"
+						className="designedLogoHeroTitle"
+					/>
 					enuflexio
 				</motion.h1>
 				{/*) : (*/}

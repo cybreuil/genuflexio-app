@@ -477,9 +477,36 @@
 	.celebration-page {
 		--aside-width: 260px;
 		gap: 1rem;
+		grid-template-columns: minmax(0, 1fr) minmax(0, var(--aside-width));
+		align-items: flex-start;
+	}
+
+	.celebration-page__aside,
+	.celebration-page__sticky {
+		display: contents;
+	}
+	.celebration-article {
+		grid-column: 1;
+	}
+	.celebration-block--calendar {
+		grid-column: 2;
+		order: 1;
+	}
+	.celebration-block--secondary {
+		grid-column: 2;
+		order: 2;
+	}
+
+	.celebration-block--season {
+		grid-column: 2;
+		order: 3;
+	}
+
+	.celebration-block--selector {
+		grid-column: 2;
+		order: 4;
 	}
 }
-
 /* Tablette & mobile : une colonne.
    Les asides et leurs wrappers sticky sont dissous (display: contents) pour
    que les 4 blocs deviennent des enfants directs de la grille et puissent
