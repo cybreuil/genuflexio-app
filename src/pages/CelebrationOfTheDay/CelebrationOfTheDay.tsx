@@ -196,73 +196,80 @@ const CelebrationOfTheDay: React.FC = () => {
 
 			<div className="celebration-page">
 				<div className="celebration-page__sidebar">
-					{/* Groupe gauche */}
-					<aside className="celebration-page__aside celebration-page__aside--left">
-						<motion.div
-							className="celebration-page__sticky"
-							variants={sidebarGroup}
-							initial="hidden"
-							animate="show"
-							key={languageCode}
-						>
+					<div className="celebration-page__sidebar-sticky">
+						{/* Groupe gauche */}
+						<aside className="celebration-page__aside celebration-page__aside--left">
 							<motion.div
-								className="celebration-block celebration-block--calendar"
-								variants={sidebarItem(-32)}
+								className="celebration-page__sticky"
+								variants={sidebarGroup}
+								initial="hidden"
+								animate="show"
+								key={languageCode}
 							>
-								<MiniCalendar />
-							</motion.div>
+								<motion.div
+									className="celebration-block celebration-block--calendar"
+									variants={sidebarItem(-32)}
+								>
+									<MiniCalendar />
+								</motion.div>
 
-							<motion.div
-								className="celebration-block celebration-block--season"
-								variants={sidebarItem(-32)}
-							>
-								<LiturgicalSeason
-									season={liturgicalSeason}
-									date={date}
-								/>
+								<motion.div
+									className="celebration-block celebration-block--season"
+									variants={sidebarItem(-32)}
+								>
+									<LiturgicalSeason
+										season={liturgicalSeason}
+										date={date}
+									/>
+								</motion.div>
 							</motion.div>
-						</motion.div>
-					</aside>
+						</aside>
 
-					{/* Groupe droit */}
-					<aside className="celebration-page__aside celebration-page__aside--right">
-						<motion.div
-							className="celebration-page__sticky"
-							variants={sidebarGroup}
-							initial="hidden"
-							animate="show"
-							key={languageCode}
-						>
+						{/* Groupe droit */}
+						<aside className="celebration-page__aside celebration-page__aside--right">
 							<motion.div
-								className="celebration-block celebration-block--selector"
-								variants={sidebarItem(32)}
+								className="celebration-page__sticky"
+								variants={sidebarGroup}
+								initial="hidden"
+								animate="show"
+								key={languageCode}
 							>
-								<CalendarSelector />
-							</motion.div>
+								<motion.div
+									className="celebration-block celebration-block--selector"
+									variants={sidebarItem(32)}
+								>
+									<CalendarSelector />
+								</motion.div>
 
-							<motion.div
-								className="celebration-block celebration-block--secondary"
-								variants={sidebarItem(32)}
-							>
-								<SecondaryCelebrations
-									secondaryCelebrations={
-										secondaryCelebrations
-									}
-									mainCelebration={celebration}
-									activeCelebration={activeCelebration}
-									onSelectCelebration={setSelectedCelebration}
-									onRestoreCelebration={() =>
-										setSelectedCelebration(null)
-									}
-									isLoading={isCelebrationLoading}
-									error={calendarError ?? celebrationError}
-									fallbackColor={
-										liturgicalSeason?.hex_color || "#8b7f73"
-									}
-								/>
+								<motion.div
+									className="celebration-block celebration-block--secondary"
+									variants={sidebarItem(32)}
+								>
+									<SecondaryCelebrations
+										secondaryCelebrations={
+											secondaryCelebrations
+										}
+										mainCelebration={celebration}
+										activeCelebration={activeCelebration}
+										onSelectCelebration={
+											setSelectedCelebration
+										}
+										onRestoreCelebration={() =>
+											setSelectedCelebration(null)
+										}
+										isLoading={isCelebrationLoading}
+										error={
+											calendarError ?? celebrationError
+										}
+										fallbackColor={
+											liturgicalSeason?.hex_color ||
+											"#8b7f73"
+										}
+									/>
+								</motion.div>
 							</motion.div>
-						</motion.div>
-					</aside>
+						</aside>
+					</div>
 				</div>
 
 				{/* ===== Main article ===== */}
