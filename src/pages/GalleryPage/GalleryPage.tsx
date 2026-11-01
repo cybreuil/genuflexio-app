@@ -53,7 +53,6 @@ const FALLBACK_RATIO = 1.3;
 const GAP_SCORE = 0.08;
 
 function getColumnCount(width: number) {
-	if (width < 640) return 1;
 	if (width < 1024) return 2;
 	if (width < 1400) return 3;
 	return 4;

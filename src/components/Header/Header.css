@@ -75,7 +75,7 @@
 	position: absolute;
 	inset: 0;
 	z-index: -1;
-	background: color-mix(in srgb, var(--color-bg-primary) 78%, transparent);
+	background: color-mix(in srgb, var(--color-bg-primary) 80%, transparent);
 	-webkit-backdrop-filter: blur(16px) saturate(1.4);
 	backdrop-filter: blur(16px) saturate(1.4);
 	opacity: 0;
@@ -85,9 +85,12 @@
 .header--scrolled {
 	border-radius: 1rem;
 	border-color: var(--color-border-light);
-	box-shadow: 0 8px 30px rgb(0 0 0 / 0.06);
+	box-shadow:
+		0 1px 2px rgb(0 0 0 / 0.06),
+		0 12px 40px -8px rgb(0 0 0 / 0.18);
 	transform: translateY(1rem);
-	width: min(90%, 1440px);
+	/*width: min(90%, 1440px);*/
+	width: var(--container-width);
 }
 
 .header--scrolled::before {
@@ -333,6 +336,27 @@ body.no-scroll {
 
 	.header .burger-icon {
 		display: block;
+	}
+}
+
+@media (max-width: 600px) {
+	.header {
+		border-top: 0;
+		border-left: 0;
+		border-right: 0;
+		border-bottom: 1 px solid transparent;
+		border-radius: 0;
+	}
+	.header--scrolled {
+		width: 100%;
+		border-bottom: 1px solid var(--color-border-light);
+		transform: translateY(0);
+	}
+	.header--hidden {
+		transform: translateY(calc(-100% - 1px));
+	}
+	.header--scrolled .header__logo {
+		height: 100%;
 	}
 }
 
