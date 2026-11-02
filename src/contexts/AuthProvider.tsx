@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 
 import { AuthContext } from "./AuthContext";
-import { apiLogin, apiLogout, getCurrentUser } from "../api/auth";
-import type { ApiError } from "../api/client";
+import { apiLogin, apiLogout, apiRefresh, getCurrentUser } from "../api/auth";
+import { ApiError } from "../api/client";
 
 import type { AuthContextType, LoginCredentials, User } from "../types/Auth";
 
@@ -20,36 +20,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 				setUser(null);
 				return null;
 			}
-
 			throw error;
 		}
 	}, []);
 
+	// Restauration de session : on échange le cookie refresh contre un access
+	// token, puis on charge l'utilisateur. Un 401 = simplement pas connecté.
 	useEffect(() => {
 		let cancelled = false;
 
 		async function initializeAuth() {
 			try {
+				await apiRefresh();
 				const currentUser = await getCurrentUser();
-
-				if (!cancelled) {
-					setUser(currentUser);
-				}
+				if (!cancelled) setUser(currentUser);
 			} catch (error) {
-				if (!cancelled) {
-					if (error instanceof ApiError && error.status === 401) {
-						setUser(null);
-					} else {
-						console.error(
-							"Erreur de restauration de session :",
-							error,
-						);
-					}
+				if (cancelled) return;
+				setUser(null);
+				if (!(error instanceof ApiError && error.status === 401)) {
+					console.error("Erreur de restauration de session :", error);
 				}
 			} finally {
-				if (!cancelled) {
-					setIsAuthLoading(false);
-				}
+				if (!cancelled) setIsAuthLoading(false);
 			}
 		}
 
@@ -65,7 +57,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 			await apiLogin(credentials);
 
 			const currentUser = await refreshUser();
-
 			if (!currentUser) {
 				throw new Error(
 					"Impossible de récupérer la session utilisateur.",

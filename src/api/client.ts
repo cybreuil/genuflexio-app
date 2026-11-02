@@ -10,16 +10,28 @@ export class ApiError extends Error {
 	}
 }
 
+/* ===== Access token (en mémoire uniquement) =====
+ * Le refresh token vit dans un cookie httpOnly géré par le back ;
+ * l'access token (JWT court) ne quitte jamais la mémoire JS.
+ */
+let accessToken: string | null = null;
+
+export function setAccessToken(token: string | null): void {
+	accessToken = token;
+}
+
+export function getAccessToken(): string | null {
+	return accessToken;
+}
+
 async function fetchApi<T>(endpoint: string, init?: RequestInit): Promise<T> {
 	const headers = new Headers(init?.headers);
 	if (init?.body && !headers.has("Content-Type")) {
 		headers.set("Content-Type", "application/json");
 	}
-
-	// Simulate an error for testing purposes when the endpoint includes "/xxx"
-	// if (endpoint.includes("/image")) {
-	// 	throw new ApiError(500, "Erreur de test");
-	// }
+	if (accessToken && !headers.has("Authorization")) {
+		headers.set("Authorization", `Bearer ${accessToken}`);
+	}
 
 	const response = await fetch(`${API_URL}${endpoint}`, {
 		...init,
@@ -34,11 +46,15 @@ async function fetchApi<T>(endpoint: string, init?: RequestInit): Promise<T> {
 	const body = await response.json().catch(() => null);
 
 	if (!response.ok) {
-		const error = body as { message?: string } | null;
+		// Le back renvoie toujours { status, error }
+		const payload = body as { error?: string; message?: string } | null;
 
 		throw new ApiError(
 			response.status,
-			error?.message ?? response.statusText ?? "Unknown error",
+			payload?.error ??
+				payload?.message ??
+				response.statusText ??
+				"Unknown error",
 		);
 	}
 

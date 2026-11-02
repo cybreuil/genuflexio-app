@@ -28,7 +28,7 @@ const stagger = {
 };
 
 const LoginPage = () => {
-	const { isAuthenticated, signIn } = useAuth();
+	const { user, isAuthLoading, login } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { images } = useRandomImages(1);
@@ -39,10 +39,15 @@ const LoginPage = () => {
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	// Page d'origine si on a été redirigé par RequireAuth
+	// Page d'origine si on a été redirigé par AdminRoute
 	const from = (location.state as { from?: string } | null)?.from ?? "/admin";
 
-	if (isAuthenticated) {
+	// On attend la fin de la restauration de session avant de décider
+	if (isAuthLoading) {
+		return <Loader size={56} />;
+	}
+
+	if (user) {
 		return <Navigate to={from} replace />;
 	}
 
@@ -54,14 +59,15 @@ const LoginPage = () => {
 		setError(null);
 
 		try {
-			const { token } = await apiLogin({ email: email.trim(), password });
-			signIn(token);
+			await login({ email: email.trim(), password });
 			navigate(from, { replace: true });
 		} catch (err) {
 			setError(
-				err instanceof Error
-					? err.message
-					: "Connexion impossible. Réessayez.",
+				err instanceof ApiError && err.status === 401
+					? "Email ou mot de passe incorrect."
+					: err instanceof Error
+						? err.message
+						: "Connexion impossible. Réessayez.",
 			);
 			setSubmitting(false);
 		}

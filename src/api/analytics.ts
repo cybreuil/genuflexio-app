@@ -56,3 +56,21 @@ export function getVisits({
 		signal,
 	});
 }
+
+export type PurgeVisitsResponse = {
+	older_than: VisitsRange;
+	deleted: number;
+};
+
+/**
+ * DELETE /visits?older_than=…
+ * Supprime les visites plus anciennes que la plage ("all" = tout).
+ */
+export function purgeVisits(
+	olderThan: VisitsRange,
+): Promise<PurgeVisitsResponse> {
+	const params = new URLSearchParams({ older_than: olderThan });
+	return fetchApi<PurgeVisitsResponse>(`/visits?${params.toString()}`, {
+		method: "DELETE",
+	});
+}

@@ -7,17 +7,23 @@ export interface AuthContextType {
 	refreshUser: () => Promise<User | null>;
 }
 
+/** GET /auth/me */
 export interface User {
-	id: string;
+	id: number;
+	email: string;
 	role: string;
 }
 
+/** POST /auth/login */
 export interface LoginCredentials {
-	id: string;
+	email: string;
 	password: string;
 }
 
+/** Réponse de /auth/login et /auth/refresh */
 export type LoginResponse = {
-	token: string;
-	expires_at?: string; // ISO 8601, optionnel
+	access_token: string;
+	token_type: "Bearer";
+	/** Durée de vie de l'access token, en secondes */
+	expires_in: number;
 };

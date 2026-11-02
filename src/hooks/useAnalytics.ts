@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import { getVisitStats, getVisits } from "../api/analytics";
-import type {
-	Visit,
-	VisitStats,
-	VisitsRange,
-} from "../types/Analytics";
+import type { Visit, VisitStats, VisitsRange } from "../types/Analytics";
 
 function toError(error: unknown, fallback: string): Error {
 	return error instanceof Error ? error : new Error(fallback);
 }
 
-const useVisitStats = (range: VisitsRange) => {
+const useVisitStats = (range: VisitsRange, reloadKey = 0) => {
 	const [stats, setStats] = useState<VisitStats | null>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
@@ -32,7 +28,7 @@ const useVisitStats = (range: VisitsRange) => {
 			});
 
 		return () => controller.abort();
-	}, [range]);
+	}, [range, reloadKey]);
 
 	return { stats, loading, error };
 };
@@ -41,9 +37,15 @@ type UseVisitsParams = {
 	page: number;
 	perPage?: number;
 	range: VisitsRange;
+	reloadKey?: number;
 };
 
-const useVisits = ({ page, perPage = 25, range }: UseVisitsParams) => {
+const useVisits = ({
+	page,
+	perPage = 25,
+	range,
+	reloadKey,
+}: UseVisitsParams) => {
 	const [visits, setVisits] = useState<Visit[]>([]);
 	const [total, setTotal] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
@@ -71,7 +73,7 @@ const useVisits = ({ page, perPage = 25, range }: UseVisitsParams) => {
 			});
 
 		return () => controller.abort();
-	}, [page, perPage, range]);
+	}, [page, perPage, range, reloadKey]);
 
 	return { visits, total, totalPages, loading, error };
 };

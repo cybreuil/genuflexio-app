@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // Components
 import { Loader } from "../../components/Loader/Loader";
 import { Pagination } from "../../components/Pagination/Pagination";
+import { PurgeVisits } from "../../components/PurgeVisits/PurgeVisits";
 
 // Hooks
 import { useVisitStats, useVisits } from "../../hooks/useAnalytics";
@@ -150,8 +151,7 @@ function DailyChart({ daily }: { daily: VisitStats["daily"] }) {
 		if (daily.length === 0) return null;
 
 		const max = Math.max(1, ...daily.map((d) => d.visits));
-		const step =
-			daily.length > 1 ? (W - PAD * 2) / (daily.length - 1) : 0;
+		const step = daily.length > 1 ? (W - PAD * 2) / (daily.length - 1) : 0;
 		const points = daily.map((d, i) => {
 			const x = PAD + i * step;
 			const y = H - PAD - (d.visits / max) * (H - PAD * 2);
@@ -208,19 +208,20 @@ const AdminPage = () => {
 	const { languageCode } = useLanguage();
 	const [range, setRange] = useState<VisitsRange>("30d");
 	const [page, setPage] = useState(1);
+	const [reloadKey, setReloadKey] = useState(0);
 
 	const {
 		stats,
 		loading: statsLoading,
 		error: statsError,
-	} = useVisitStats(range);
+	} = useVisitStats(range, reloadKey);
 	const {
 		visits,
 		total,
 		totalPages,
 		loading: visitsLoading,
 		error: visitsError,
-	} = useVisits({ page, perPage: VISITS_PER_PAGE, range });
+	} = useVisits({ page, perPage: VISITS_PER_PAGE, range, reloadKey });
 
 	const dateTime = useMemo(
 		() =>
@@ -453,14 +454,20 @@ const AdminPage = () => {
 						<h2 className="admin-section__title">
 							Dernières visites
 						</h2>
+						{!visitsLoading && !visitsError && (
+							<p className="admin-section__meta">
+								{fmt(total)} visite{total > 1 ? "s" : ""}
+								{totalPages > 1 &&
+									` · page ${page} / ${totalPages}`}
+							</p>
+						)}
 					</div>
-					{!visitsLoading && !visitsError && (
-						<p className="admin-section__meta">
-							{fmt(total)} visite{total > 1 ? "s" : ""}
-							{totalPages > 1 &&
-								` · page ${page} / ${totalPages}`}
-						</p>
-					)}
+					<PurgeVisits
+						onPurged={() => {
+							setPage(1);
+							setReloadKey((k) => k + 1);
+						}}
+					/>
 				</div>
 
 				<AnimatePresence mode="wait">
