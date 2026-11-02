@@ -7,8 +7,9 @@
 	justify-content: center;
 	text-align: center;
 	padding: calc(var(--header-height) + 2rem) 0 4rem;
-	width: min(760px, 100% - 3rem);
+	width: min(var(--measure), var(--container-width));
 	margin: 0 auto;
+	/*min-height: 100dvh;*/
 }
 
 /* Halo de fond qui pulse */
@@ -160,23 +161,23 @@
 /* Responsive */
 @media (max-width: 768px) {
 	.not-found-page {
-		padding: 1rem;
+		padding-top: calc(var(--header-height) + 1rem);
 	}
 
 	.not-found-number {
 		gap: 0.5rem;
 	}
 
-	.not-found-nav {
+	/*.not-found-nav {
 		flex-direction: column;
 		width: 100%;
 		max-width: 300px;
-	}
+	}*/
 
-	.not-found-link {
+	/*.not-found-link {
 		width: 100%;
 		text-align: center;
-	}
+	}*/
 
 	.not-found-quote {
 		position: relative;

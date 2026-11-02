@@ -50,8 +50,16 @@
 
 	/* ---- Layout : largeur de contenu partagée ---- */
 	--container-max: 1440px;
-	--container-width: min(90%, var(--container-max));
-	--container-gutter: 1.5rem;
+	--container-gutter: clamp(1rem, 4vw, 3rem);
+	--container-width: min(
+		var(--container-max),
+		100% - 2 * var(--container-gutter)
+	);
+
+	/* Colonnes intérieures au rail */
+	--measure: 760px; /* en-têtes éditoriaux, texte centré */
+	--article-width: 820px; /* carte article (saint, célébration) */
+	--aside-width: 300px;
 
 	/* ---- Interface ---- */
 	--header-height: 80px;

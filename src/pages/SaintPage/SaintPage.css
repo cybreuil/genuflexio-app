@@ -26,8 +26,7 @@
 
 .saint-page {
 	--sticky-top: calc(var(--header-height) + 2rem);
-	--page-width: min(1200px, 100% - 3rem);
-	flex: 1;
+	--page-width: var(--container-width);
 	display: flex;
 	flex-direction: column;
 	padding: calc(var(--header-height) + 1.5rem) 0 4rem;
@@ -632,8 +631,13 @@
 
 @media (max-width: 600px) {
 	.saint-page {
-		--page-width: calc(100% - 2rem);
 		padding-top: calc(var(--header-height) + 1rem);
+	}
+	.saint-page-container {
+		width: 100%;
+	}
+	.saint-article {
+		border: 0;
 	}
 
 	.saint-cover {

@@ -14,7 +14,7 @@
 }
 
 .celebration-page-header {
-	width: min(760px, 100% - 3rem);
+	width: min(var(--measure), var(--container-width));
 	display: flex;
 	flex-direction: column;
 	padding: clamp(1.5rem, 5vh, 3.5rem) 0 clamp(1rem, 3vh, 2rem);
@@ -51,7 +51,6 @@
 
 .celebration-page {
 	--celebration-accent: #8b8b8b;
-	--aside-width: 300px;
 	--sticky-top: calc(var(--header-height) + 2rem);
 
 	flex: 1;
@@ -59,11 +58,11 @@
 	display: grid;
 	grid-template-columns:
 		minmax(0, var(--aside-width))
-		minmax(0, 820px)
+		minmax(0, var(--article-width))
 		minmax(0, var(--aside-width));
 	gap: 2rem;
 	align-items: stretch;
-	width: min(90%, 1440px);
+	width: var(--container-width);
 	margin: 0 auto;
 }
 
@@ -556,12 +555,13 @@
 @media (max-width: 900px) {
 	.celebration-page {
 		grid-template-columns: minmax(0, 1fr);
-		width: min(100% - 2.5rem, 820px);
+		width: min(var(--article-width), var(--container-width));
 		gap: 1.25rem;
 	}
 
 	.celebration-page__aside,
-	.celebration-page__sticky {
+	.celebration-page__sticky,
+	.celebration-page__sidebar {
 		display: contents;
 	}
 
@@ -600,7 +600,6 @@
 	}
 
 	.celebration-page {
-		width: calc(100% - 2rem);
 		gap: 1rem;
 	}
 

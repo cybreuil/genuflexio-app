@@ -14,7 +14,7 @@
 /* ===== En-tête ===== */
 
 .saints-header {
-	width: min(760px, 100% - 3rem);
+	width: min(var(--measure), var(--container-width));
 	margin: 0 auto;
 	padding: clamp(1.5rem, 5vh, 3.5rem) 0 clamp(1rem, 3vh, 2rem);
 	text-align: center;
@@ -61,7 +61,7 @@
 /* ===== Toolbar (filtres à venir) ===== */
 
 .saints-toolbar {
-	width: min(1200px, 100% - 3rem);
+	width: var(--container-width);
 	margin: 0 auto;
 	padding-bottom: 1.25rem;
 	border-bottom: 1px solid var(--color-border-light);
@@ -73,7 +73,7 @@
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 	gap: 1.5rem;
-	width: min(1200px, 100% - 3rem);
+	width: var(--container-width);
 	margin: 0 auto;
 	align-items: stretch;
 }
@@ -86,7 +86,7 @@
 	align-items: center;
 	justify-content: center;
 	gap: 0.75rem;
-	width: min(1200px, 100% - 3rem);
+	width: var(--container-width);
 	min-height: 360px;
 	margin: 0 auto;
 	padding: 3rem 2rem;
@@ -116,16 +116,9 @@
 		padding: calc(var(--header-height) + 1rem) 0 3rem;
 	}
 
-	.saints-header,
-	.saints-toolbar,
-	.saints-grid,
-	.saints-state {
-		width: calc(100% - 2rem);
-	}
-
 	.saints-grid {
 		grid-template-columns: repeat(2, 1fr);
-		gap: 0.9rem;
+		gap: 0.8rem;
 	}
 }
 
