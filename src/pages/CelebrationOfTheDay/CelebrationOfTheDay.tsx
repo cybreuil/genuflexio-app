@@ -165,6 +165,15 @@ const CelebrationOfTheDay: React.FC = () => {
 	}, [date, languageCode, invalidDate]);
 
 	const coverSaint = activeCelebration?.saints?.[0];
+	// Cascade : image du saint principal → image de la fête → dégradé liturgique (CSS)
+	const coverImage = coverSaint?.saint_image_url
+		? { src: coverSaint.saint_image_url, alt: coverSaint.saint_name }
+		: activeCelebration?.feast_image_url
+			? {
+					src: activeCelebration.feast_image_url,
+					alt: activeCelebration.feast_name,
+				}
+			: null;
 	const isLoading = isCalendarLoading || isCelebrationLoading;
 	const error = calendarError ?? celebrationError;
 
@@ -326,16 +335,16 @@ const CelebrationOfTheDay: React.FC = () => {
 								{/* --- Cover --- */}
 								<header
 									className={`celebration-cover${
-										coverSaint?.saint_image_url
+										coverImage
 											? ""
 											: " celebration-cover--no-image"
 									}`}
 								>
-									{coverSaint?.saint_image_url && (
+									{coverImage && (
 										<motion.img
 											className="celebration-cover__image"
-											src={coverSaint.saint_image_url}
-											alt={coverSaint.saint_name}
+											src={coverImage.src}
+											alt={coverImage.alt}
 											decoding="async"
 											variants={rise}
 										/>

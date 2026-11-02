@@ -160,7 +160,7 @@
 		);
 }
 
-/* Sans image : fond plein dégradé à partir de la couleur liturgique */
+/* Sans image : fond dégradé à partir de la couleur liturgique + croix en filigrane */
 .celebration-cover--no-image {
 	min-height: clamp(220px, 32vh, 340px);
 	background: radial-gradient(
@@ -168,6 +168,23 @@
 		color-mix(in srgb, var(--celebration-accent) 65%, var(--color-bg-dark)),
 		var(--color-bg-dark) 70%
 	);
+}
+
+.celebration-cover--no-image::before {
+	content: "";
+	position: absolute;
+	right: clamp(1.5rem, 6%, 4rem);
+	top: 50%;
+	width: clamp(120px, 22%, 220px);
+	aspect-ratio: 2 / 3;
+	transform: translateY(-50%);
+	z-index: -1;
+	opacity: 0.08;
+	pointer-events: none;
+	/* croix latine : barre verticale + traverse au tiers supérieur */
+	background:
+		linear-gradient(#fff, #fff) center / 14% 100% no-repeat,
+		linear-gradient(#fff, #fff) center 28% / 100% 10% no-repeat;
 }
 
 .celebration-cover__text {

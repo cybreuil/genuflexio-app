@@ -33,6 +33,8 @@ export type Celebration = {
 	feast_id: number;
 	feast_name: string;
 	feast_description: string;
+	/** Illustration propre à la fête (Pâques, Noël…). Fallback quand aucun saint n'a d'image. */
+	feast_cover_image_id: number;
 	liturgical_color_name: string;
 	liturgical_color_hex: string;
 	rank_id: number;
