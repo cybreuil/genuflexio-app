@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useLocation } from "react-router-dom";
 
 import { AuthContext } from "./AuthContext";
 import { apiLogin, apiLogout, apiRefresh, getCurrentUser } from "../api/auth";
@@ -6,9 +7,18 @@ import { ApiError } from "../api/client";
 
 import type { AuthContextType, LoginCredentials, User } from "../types/Auth";
 
+const isAdminArea = (pathname: string) =>
+	pathname.startsWith("/admin") || pathname.startsWith("/login");
+
 export function AuthProvider({ children }: { children: ReactNode }) {
+	const { pathname } = useLocation();
 	const [user, setUser] = useState<User | null>(null);
-	const [isAuthLoading, setIsAuthLoading] = useState(true);
+	const [isAuthLoading, setIsAuthLoading] = useState(() =>
+		isAdminArea(pathname),
+	);
+	// Garantit une seule tentative de restauration par chargement de l'app,
+	// que l'on arrive directement sur /admin ou qu'on y navigue depuis le site.
+	const restoreAttempted = useRef(false);
 
 	const refreshUser = useCallback(async (): Promise<User | null> => {
 		try {
@@ -24,9 +34,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		}
 	}, []);
 
-	// Restauration de session : on échange le cookie refresh contre un access
-	// token, puis on charge l'utilisateur. Un 401 = simplement pas connecté.
+	// Restauration de session (admin uniquement) : le cookie refresh renvoie un access token + l'utilisateur. Un 401 = simplement pas connecté.
 	useEffect(() => {
+		if (restoreAttempted.current || !isAdminArea(pathname)) return;
+		restoreAttempted.current = true;
+
 		let cancelled = false;
 
 		async function initializeAuth() {
@@ -50,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		return () => {
 			cancelled = true;
 		};
-	}, []);
+	}, [pathname]);
 
 	const login = useCallback(
 		async (credentials: LoginCredentials): Promise<void> => {

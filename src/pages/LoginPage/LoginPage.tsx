@@ -10,8 +10,8 @@ import { Loader } from "../../components/Loader/Loader";
 import { useAuth } from "../../hooks/useAuth";
 import { useRandomImages } from "../../hooks/useImages";
 
-// API
-import { apiLogin } from "../../api/auth";
+// Types
+import { ApiError } from "../../api/client";
 
 /* ===== Animation presets ===== */
 
