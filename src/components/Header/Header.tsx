@@ -1,5 +1,4 @@
 import "./Header.css";
-import { Logo } from "../Logo/Logo";
 import { Link, useLocation, NavLink } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { TRANSITIONS, EASINGS } from "../../styles/theme";
@@ -9,6 +8,7 @@ import { ThemeToggle } from "../ThemeToggle/ThemeToggle";
 import { LanguageDropDown } from "../LanguageDropDown/LanguageDropDown";
 import type { NavItem } from "../../types/NavItem";
 import { useLanguage } from "../../hooks/useLanguage";
+import { DesignedLogo } from "../../icons";
 
 const NAV_ITEMS: NavItem[] = [
 	// { to: "/", labelKey: "nav.home", end: true },
@@ -174,7 +174,7 @@ const Header = () => {
 						aria-label="Genuflexio"
 					>
 						<span className="header__logo" aria-hidden="true">
-							<Logo color="currentColor" />
+							<DesignedLogo color="currentColor" />
 						</span>
 						<AnimatePresence>
 							{showWordmark && (

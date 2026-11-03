@@ -5,7 +5,7 @@ import type { Image } from "../../types/Image";
 import "./ArtworkHero.css";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-import { DesignedLogo } from "../../icons";
+import { DesignedLogoWithText } from "../../icons/DesignedLogoWithText";
 
 const ROWS = 2;
 const TILES_PER_ROW = 10;
@@ -138,10 +138,10 @@ function ArtworkHero({
 					transition={{ duration: 0.5, delay: 0.2 }}
 					// layoutId="website-title"
 				>
-					<img
-						src="/Genuflexio_txt_7.svg"
-						alt="Saints"
-						className="designedLogoHeroTitle"
+					<DesignedLogoWithText
+						height={250}
+						fillFirstLetter="var(--color-secondary)"
+						fillHalo="var(--color-secondary-light)"
 					/>
 				</motion.h1>
 				{/*) : (*/}

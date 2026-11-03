@@ -1,8 +1,13 @@
 type IconProps = React.SVGProps<SVGSVGElement> & {
 	title?: string | null;
-	fill?: string | null;
+	fill?: string;
+	fillHalo?: string;
 	width?: number | string;
 	height?: number | string;
 };
 
-export type { IconProps };
+type IconWithTextProps = IconProps & {
+	fillFirstLetter?: string;
+};
+
+export type { IconProps, IconWithTextProps };
