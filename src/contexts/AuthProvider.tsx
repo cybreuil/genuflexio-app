@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import {
+	useCallback,
+	useEffect,
+	useState,
+	useRef,
+	type ReactNode,
+} from "react";
 import { useLocation } from "react-router-dom";
 
 import { AuthContext } from "./AuthContext";
@@ -13,9 +19,8 @@ const isAdminArea = (pathname: string) =>
 export function AuthProvider({ children }: { children: ReactNode }) {
 	const { pathname } = useLocation();
 	const [user, setUser] = useState<User | null>(null);
-	const [isAuthLoading, setIsAuthLoading] = useState(() =>
-		isAdminArea(pathname),
-	);
+	const [restoreDone, setRestoreDone] = useState(false);
+	const isAuthLoading = isAdminArea(pathname) && !restoreDone;
 	// Garantit une seule tentative de restauration par chargement de l'app,
 	// que l'on arrive directement sur /admin ou qu'on y navigue depuis le site.
 	const restoreAttempted = useRef(false);
@@ -39,29 +44,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		if (restoreAttempted.current || !isAdminArea(pathname)) return;
 		restoreAttempted.current = true;
 
-		let cancelled = false;
-
-		async function initializeAuth() {
+		async function restoreSession() {
 			try {
 				const res = await apiRefresh();
-				const currentUser = res.user;
-				if (!cancelled) setUser(currentUser);
+				setUser(res.user);
 			} catch (error) {
-				if (cancelled) return;
 				setUser(null);
 				if (!(error instanceof ApiError && error.status === 401)) {
 					console.error("Erreur de restauration de session :", error);
 				}
 			} finally {
-				if (!cancelled) setIsAuthLoading(false);
+				setRestoreDone(true);
 			}
 		}
 
-		void initializeAuth();
-
-		return () => {
-			cancelled = true;
-		};
+		void restoreSession();
 	}, [pathname]);
 
 	const login = useCallback(
