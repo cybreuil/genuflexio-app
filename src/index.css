@@ -5,7 +5,6 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
-	font-feature-settings: "liga";
 }
 
 @font-face {
@@ -15,7 +14,6 @@
 	font-weight: 100 900;
 	font-style: italic;
 	font-display: swap;
-	font-feature-settings: "liga";
 }
 
 @font-face {
@@ -38,6 +36,7 @@ body {
 	--page-background: var(--color-bg-primary);
 
 	font-family: "Source Serif", serif;
+	font-feature-settings: "liga";
 	line-height: 1.4;
 	font-size: 1rem;
 	font-weight: 400;
