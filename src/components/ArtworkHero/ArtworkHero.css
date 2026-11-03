@@ -166,22 +166,23 @@
 
 .artwork-hero__title {
 	display: flex;
-	color: #fff;
+	/*Hard coded to avoid theme switching*/
+	color: #f1ece3;
 	text-shadow:
 		0 4px 24px rgb(0 0 0 / 0.5),
 		0 12px 60px rgb(0 0 0 / 0.35);
 }
-.artwork-hero__title img {
-	color: var(--color-secondary);
-	/*width: clamp(100px, 15vw, 200px);
-	height: clamp(100px, 15vw, 200px);*/
-	height: 300px;
+.artwork-hero__title svg {
+	/* text-shadow n'agit pas sur un svg : drop-shadow suit la forme des paths */
+	filter: drop-shadow(0 4px 12px rgb(0 0 0 / 0.55))
+		drop-shadow(0 12px 40px rgb(0 0 0 / 0.35));
 }
 
 .artwork-hero__description {
 	max-width: 52ch;
 	margin: 1.5rem 0 0;
-	color: rgb(255 255 255 / 0.72);
+	color: #bfb5a8;
+
 	font-size: clamp(1rem, 1.2vw, 1.15rem);
 	line-height: 1.65;
 	text-wrap: balance;

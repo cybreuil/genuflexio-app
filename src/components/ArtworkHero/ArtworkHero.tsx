@@ -5,7 +5,11 @@ import type { Image } from "../../types/Image";
 import "./ArtworkHero.css";
 import { motion, useScroll, useTransform } from "framer-motion";
 
-import { DesignedLogoWithText } from "../../icons/DesignedLogoWithText";
+import {
+	DesignedLogoWithText,
+	DesignedLogoWithText2,
+	DesignedLogoWithText3,
+} from "../../icons";
 
 const ROWS = 2;
 const TILES_PER_ROW = 10;
@@ -138,8 +142,8 @@ function ArtworkHero({
 					transition={{ duration: 0.5, delay: 0.2 }}
 					// layoutId="website-title"
 				>
-					<DesignedLogoWithText
-						height={250}
+					<DesignedLogoWithText3
+						height={200}
 						fillFirstLetter="var(--color-secondary)"
 						fillHalo="var(--color-secondary-light)"
 					/>

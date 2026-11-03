@@ -9,3 +9,5 @@ export * from "./LightModeIcon";
 
 export * from "./DesignedLogo";
 export * from "./DesignedLogoWithText";
+export * from "./DesignedLogoWithText2";
+export * from "./DesignedLogoWithText3";
