@@ -31,8 +31,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 		async function initializeAuth() {
 			try {
-				await apiRefresh();
-				const currentUser = await getCurrentUser();
+				const res = await apiRefresh();
+				const currentUser = res.user;
 				if (!cancelled) setUser(currentUser);
 			} catch (error) {
 				if (cancelled) return;
@@ -54,16 +54,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 	const login = useCallback(
 		async (credentials: LoginCredentials): Promise<void> => {
-			await apiLogin(credentials);
+			const res = await apiLogin(credentials);
 
-			const currentUser = await refreshUser();
-			if (!currentUser) {
-				throw new Error(
-					"Impossible de récupérer la session utilisateur.",
-				);
-			}
+			setUser(res.user);
 		},
-		[refreshUser],
+		[],
 	);
 
 	const logout = useCallback(async (): Promise<void> => {

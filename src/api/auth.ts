@@ -1,4 +1,4 @@
-import { fetchApi, setAccessToken } from "./client";
+import { fetchApi, refreshSession, setAccessToken } from "./client";
 
 import type { LoginCredentials, LoginResponse, User } from "../types/Auth";
 
@@ -7,12 +7,15 @@ import type { LoginCredentials, LoginResponse, User } from "../types/Auth";
  * Le back pose le refresh token en cookie httpOnly (scopé /auth) et renvoie
  * l'access token dans le body : on le garde en mémoire via setAccessToken.
  */
-export async function apiLogin(payload: LoginCredentials): Promise<void> {
-	const data = await fetchApi<LoginResponse>("/auth/login", {
+export async function apiLogin(
+	payload: LoginCredentials,
+): Promise<LoginResponse> {
+	const res = await fetchApi<LoginResponse>("/auth/login", {
 		method: "POST",
 		body: JSON.stringify(payload),
 	});
-	setAccessToken(data.access_token);
+	setAccessToken(res.access_token);
+	return res;
 }
 
 /**
@@ -20,12 +23,7 @@ export async function apiLogin(payload: LoginCredentials): Promise<void> {
  * Utilise le cookie refresh pour obtenir un nouvel access token.
  * À appeler au démarrage de l'app (restauration de session après F5).
  */
-export async function apiRefresh(): Promise<void> {
-	const data = await fetchApi<LoginResponse>("/auth/refresh", {
-		method: "POST",
-	});
-	setAccessToken(data.access_token);
-}
+export const apiRefresh = refreshSession;
 
 /** GET /auth/me : récupère l'utilisateur connecté (nécessite un access token). */
 export function getCurrentUser(): Promise<User> {

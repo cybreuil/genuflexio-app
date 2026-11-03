@@ -26,4 +26,5 @@ export type LoginResponse = {
 	token_type: "Bearer";
 	/** Durée de vie de l'access token, en secondes */
 	expires_in: number;
+	user: User;
 };
