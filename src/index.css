@@ -5,6 +5,7 @@
 	font-weight: 100 900;
 	font-style: normal;
 	font-display: swap;
+	font-feature-settings: "liga";
 }
 
 @font-face {
@@ -14,6 +15,7 @@
 	font-weight: 100 900;
 	font-style: italic;
 	font-display: swap;
+	font-feature-settings: "liga";
 }
 
 @font-face {
