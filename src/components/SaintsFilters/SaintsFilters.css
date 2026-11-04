@@ -4,6 +4,12 @@
 
 .saints-filters {
 	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.saints-filters__bar {
+	display: flex;
 	flex-wrap: wrap;
 	align-items: flex-end;
 	gap: 0.75rem 1rem;
@@ -30,7 +36,8 @@
 }
 
 .saints-filters input,
-.saints-filters select {
+.saints-filters select,
+.saints-filters__toggle {
 	height: 2.6rem;
 	padding: 0 0.9rem;
 	border: 1px solid var(--color-border-light);
@@ -63,16 +70,61 @@
 }
 
 .saints-filters input:hover,
-.saints-filters select:hover {
+.saints-filters select:hover,
+.saints-filters__toggle:hover {
 	border-color: var(--color-border-medium);
 }
 
 .saints-filters input:focus-visible,
-.saints-filters select:focus-visible {
+.saints-filters select:focus-visible,
+.saints-filters__toggle:focus-visible {
 	outline: none;
 	border-color: var(--color-secondary);
 	box-shadow: 0 0 0 3px
 		color-mix(in srgb, var(--color-secondary) 25%, transparent);
+}
+
+/* ===== Toggle facettes ===== */
+
+.saints-filters__toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0 1.1rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.saints-filters__toggle--open {
+	border-color: var(--color-secondary);
+}
+
+.saints-filters__badge {
+	display: grid;
+	place-items: center;
+	min-width: 1.35rem;
+	height: 1.35rem;
+	padding: 0 0.35rem;
+	border-radius: 999px;
+	background: var(--color-secondary);
+	color: var(--color-on-secondary);
+	font-size: 0.72rem;
+	font-weight: 700;
+}
+
+/* ===== Panneau facettes (chips : voir FacetRow.css) ===== */
+
+.saints-filters__panel {
+	overflow: hidden;
+}
+
+.saints-filters__panel-inner {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin-top: 1.25rem;
+	padding-top: 0.5rem;
+	border-top: 1px solid var(--color-border-light);
 }
 
 .saints-filters__end {

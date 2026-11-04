@@ -1,8 +1,10 @@
 import "./GalleryFilters.css";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import type { Facet, FacetMap } from "../../types/Facet";
+import type { FacetMap } from "../../types/Facet";
 import type { GalleryFacetKey } from "../../types/Image";
+import { FacetRow } from "../FacetRow/FacetRow";
+import { periodLabel } from "../../utils/artworkFormat";
 
 export type GallerySort =
 	"random" | "title" | "artist" | "period_asc" | "period_desc";
@@ -49,81 +51,6 @@ type Props = {
 	resultCount: number;
 	totalCount: number;
 };
-
-const MAX_VISIBLE = 8;
-
-function FacetRow({
-	name,
-	items,
-	selected,
-	onSelect,
-}: {
-	name: FacetKey;
-	items?: Facet[];
-	selected: string | null;
-	onSelect: (v: string | null) => void;
-}) {
-	const [expanded, setExpanded] = useState(false);
-	if (!items || items.length === 0) return null;
-	const visible = expanded ? items : items.slice(0, MAX_VISIBLE);
-	const hidden = items.length - visible.length;
-
-	return (
-		<div className="gallery-facet">
-			<span className="gallery-facet__label">{FACET_LABELS[name]}</span>
-			<ul className="gallery-facet__chips">
-				<li>
-					<button
-						type="button"
-						className={`gallery-chip${selected === null ? " gallery-chip--active" : ""}`}
-						onClick={() => onSelect(null)}
-					>
-						Tous
-					</button>
-				</li>
-				{visible.map((f) => (
-					<li key={f.value}>
-						<button
-							type="button"
-							className={`gallery-chip${selected === f.value ? " gallery-chip--active" : ""}`}
-							onClick={() =>
-								onSelect(selected === f.value ? null : f.value)
-							}
-							aria-pressed={selected === f.value}
-						>
-							{f.label}
-							<span className="gallery-chip__count">
-								{f.count}
-							</span>
-						</button>
-					</li>
-				))}
-				{hidden > 0 && (
-					<li>
-						<button
-							type="button"
-							className="gallery-chip gallery-chip--more"
-							onClick={() => setExpanded(true)}
-						>
-							+{hidden}
-						</button>
-					</li>
-				)}
-				{expanded && items.length > MAX_VISIBLE && (
-					<li>
-						<button
-							type="button"
-							className="gallery-chip gallery-chip--more"
-							onClick={() => setExpanded(false)}
-						>
-							Réduire
-						</button>
-					</li>
-				)}
-			</ul>
-		</div>
-	);
-}
 
 const GalleryFilters = ({
 	value,
@@ -223,25 +150,43 @@ const GalleryFilters = ({
 					>
 						<div className="gallery-filters__panel-inner">
 							<FacetRow
-								name="saint"
+								label={FACET_LABELS.saint}
+								allLabel="Tous"
+								lessLabel="Réduire"
 								items={facets.saint}
 								selected={value.saint}
 								onSelect={(v) => set("saint", v)}
 							/>
 							<FacetRow
-								name="artist"
+								label={FACET_LABELS.artist}
+								allLabel="Tous"
+								lessLabel="Réduire"
 								items={facets.artist}
 								selected={value.artist}
 								onSelect={(v) => set("artist", v)}
 							/>
 							<FacetRow
-								name="century"
+								label={FACET_LABELS.century}
+								allLabel="Tous"
+								lessLabel="Réduire"
 								items={facets.century}
-								selected={value.century}
-								onSelect={(v) => set("century", v)}
+								formatLabel={(f) => periodLabel(f.value)}
+								selected={
+									value.century !== null
+										? String(value.century)
+										: null
+								}
+								onSelect={(v) =>
+									set(
+										"century",
+										v !== null ? Number(v) : null,
+									)
+								}
 							/>
 							<FacetRow
-								name="museum"
+								label={FACET_LABELS.museum}
+								allLabel="Tous"
+								lessLabel="Réduire"
 								items={facets.museum}
 								selected={value.museum}
 								onSelect={(v) => set("museum", v)}

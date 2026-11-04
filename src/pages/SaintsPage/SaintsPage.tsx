@@ -73,13 +73,14 @@ export const SaintsPage = () => {
 	const [page, setPage] = useState(1);
 	const [selectedSaint, setSelectedSaint] = useState<SaintApi | null>(null);
 
-	const { century, sort } = filters;
+	const { century, sort, attributes, patronages } = filters;
 	const {
 		saints: saintsList,
 		loading,
 		error,
 		totalCount,
 		totalPages,
+		facets,
 		debouncedQuery,
 	} = useSaints({
 		page,
@@ -88,6 +89,8 @@ export const SaintsPage = () => {
 		q: filters.query,
 		century,
 		sort,
+		attributes,
+		patronages,
 	});
 
 	const handleFiltersChange = (next: SaintsFiltersValue) => {
@@ -103,7 +106,7 @@ export const SaintsPage = () => {
 		window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
 	};
 
-	const gridKey = `${page}-${debouncedQuery}-${century}-${sort}`;
+	const gridKey = `${page}-${debouncedQuery}-${century}-${sort}-${attributes.join(",")}-${patronages.join(",")}`;
 
 	// For layout disabling during grid rearrangement
 	// const [layoutGridKey, setLayoutGridKey] = useState(gridKey);
@@ -139,6 +142,7 @@ export const SaintsPage = () => {
 			>
 				<SaintsFilters
 					value={filters}
+					facets={facets}
 					debouncedQuery={debouncedQuery}
 					onChange={handleFiltersChange}
 					// Let's not use loading: to avoid glitching

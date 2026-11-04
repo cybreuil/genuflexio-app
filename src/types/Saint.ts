@@ -36,8 +36,8 @@ export interface SaintsListApiResponse {
 	// perPage: number;
 	total: number;
 	total_pages: number;
-	/** Present when `include_facets` was requested. */
-	facets?: FacetMap<SaintFacetKey>;
+	/** Facets, present when `include_facets` was requested (Paginated.context). */
+	context?: FacetMap<SaintFacetKey>;
 }
 
 export interface SaintDetailedResponse {

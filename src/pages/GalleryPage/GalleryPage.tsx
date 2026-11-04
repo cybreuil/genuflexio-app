@@ -16,6 +16,7 @@ import { ArtworkLightbox } from "../../components/ArtworkLightbox/ArtworkLightbo
 import { cartel } from "../../utils/artworkFormat";
 
 import { useLanguage } from "../../hooks/useLanguage";
+import { useDebounced } from "../../hooks/useDebounced";
 
 // Error handling
 import { ApiError } from "../../api/client";
@@ -47,6 +48,7 @@ const tile = {
 /* ===== Masonry ===== */
 
 const PAGE_SIZE = 40;
+const SEARCH_DEBOUNCE_MS = 600;
 
 // Typical devotional painting is a portrait; used when the API has no dimensions.
 const FALLBACK_RATIO = 1.3;
@@ -132,6 +134,14 @@ const GalleryPage = () => {
 
 	const columnCount = useColumnCount();
 
+	// Only the free-text query is debounced; chips and sort apply immediately.
+	const debouncedQuery = useDebounced(
+		filters.query.trim(),
+		SEARCH_DEBOUNCE_MS,
+	);
+	// Everything the request depends on, except the raw (undebounced) query.
+	const { saint, artist, museum, century, sort } = filters;
+
 	// Derived, not stored: single source of truth is `images`.
 	const columns = useMemo(
 		() => distribute(images, columnCount),
@@ -163,21 +173,19 @@ const GalleryPage = () => {
 					offset,
 					seed,
 					languageCode,
-					q: filters.query.trim() || undefined,
-					saint_id: filters.saint ? Number(filters.saint) : undefined,
-					artist: filters.artist || undefined,
-					museum: filters.museum || undefined,
-					century: filters.century
-						? Number(filters.century)
-						: undefined,
+					q: debouncedQuery || undefined,
+					saint_id: saint ? Number(saint) : undefined,
+					artist: artist || undefined,
+					museum: museum || undefined,
+					century: century ? Number(century) : undefined,
 					sort:
-						filters.sort === "random"
+						sort === "random"
 							? undefined
-							: filters.sort === "period_asc"
+							: sort === "period_asc"
 								? "century_asc"
-								: filters.sort === "period_desc"
+								: sort === "period_desc"
 									? "century_desc"
-									: filters.sort,
+									: sort,
 					include_facets: reset,
 				});
 
@@ -201,7 +209,16 @@ const GalleryPage = () => {
 				}
 			}
 		},
-		[filters, seed, languageCode],
+		[
+			debouncedQuery,
+			saint,
+			artist,
+			museum,
+			century,
+			sort,
+			seed,
+			languageCode,
+		],
 	);
 
 	// Filters changed → start over. (Not tied to columnCount: resizing
@@ -244,7 +261,10 @@ const GalleryPage = () => {
 		[images],
 	);
 
-	const wallKey = useMemo(() => JSON.stringify(filters), [filters]);
+	const wallKey = useMemo(
+		() => JSON.stringify({ ...filters, query: debouncedQuery }),
+		[filters, debouncedQuery],
+	);
 
 	return (
 		<div className="gallery-page">

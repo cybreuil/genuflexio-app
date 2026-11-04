@@ -114,6 +114,8 @@
 			"results": "Saints",
 			"result": "Saint",
 			"reset": "Reset",
+			"filters": "Filters",
+			"less": "Show less",
 			"sortRandom": "Random",
 			"sortNameAsc": "Name A → Z",
 			"sortNameDesc": "Name Z → A",

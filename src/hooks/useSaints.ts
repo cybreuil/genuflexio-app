@@ -6,22 +6,9 @@ import type {
 	SaintFacetKey,
 } from "../types/Saint";
 import type { FacetMap } from "../types/Facet";
+import { useDebounced } from "./useDebounced";
 
 const SEARCH_DEBOUNCE_MS = 600;
-
-function useDebounced<T>(value: T, delay: number): T {
-	const [debounced, setDebounced] = useState(value);
-
-	useEffect(() => {
-		const id = setTimeout(() => {
-			setDebounced(value);
-		}, delay);
-
-		return () => clearTimeout(id);
-	}, [value, delay]);
-
-	return debounced;
-}
 
 type UseSaintsParams = {
 	page?: number;
@@ -80,7 +67,7 @@ const useSaints = ({
 				setSaints(response.data);
 				setTotalCount(response.total);
 				setTotalPages(response.total_pages);
-				if (response.facets) setFacets(response.facets);
+				if (response.context) setFacets(response.context);
 			})
 			.catch((error) => {
 				if (error.name === "AbortError") {
