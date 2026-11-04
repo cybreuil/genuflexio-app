@@ -1,14 +1,11 @@
 import "./GalleryFilters.css";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import type { Facet } from "../../utils/artworkFormat";
+import type { Facet, FacetMap } from "../../types/Facet";
+import type { GalleryFacetKey } from "../../types/Image";
 
 export type GallerySort =
-	| "random"
-	| "title"
-	| "artist"
-	| "period_asc"
-	| "period_desc";
+	"random" | "title" | "artist" | "period_asc" | "period_desc";
 
 export type GalleryFiltersValue = {
 	query: string;
@@ -36,7 +33,7 @@ const SORT_OPTIONS: { value: GallerySort; label: string }[] = [
 	{ value: "title", label: "Par titre" },
 ];
 
-type FacetKey = "artist" | "museum" | "century" | "saint";
+type FacetKey = GalleryFacetKey;
 
 const FACET_LABELS: Record<FacetKey, string> = {
 	saint: "Saint",
@@ -48,7 +45,7 @@ const FACET_LABELS: Record<FacetKey, string> = {
 type Props = {
 	value: GalleryFiltersValue;
 	onChange: (next: GalleryFiltersValue) => void;
-	facets: Record<FacetKey, Facet[]>;
+	facets: FacetMap<FacetKey>;
 	resultCount: number;
 	totalCount: number;
 };
@@ -62,12 +59,12 @@ function FacetRow({
 	onSelect,
 }: {
 	name: FacetKey;
-	items: Facet[];
+	items?: Facet[];
 	selected: string | null;
 	onSelect: (v: string | null) => void;
 }) {
 	const [expanded, setExpanded] = useState(false);
-	if (items.length === 0) return null;
+	if (!items || items.length === 0) return null;
 	const visible = expanded ? items : items.slice(0, MAX_VISIBLE);
 	const hidden = items.length - visible.length;
 

@@ -2,6 +2,11 @@ import type { Attribute } from "./Attribute";
 import type { Image } from "./Image";
 import type { Place } from "./Place";
 import type { Patronage } from "./Patronage";
+import type { FacetMap } from "./Facet";
+
+/** Facets the saints list endpoint can aggregate. */
+export type SaintFacetKey =
+	"century" | "title" | "order" | "symbol" | "patronage";
 
 export interface Saint {
 	id: string;
@@ -31,6 +36,8 @@ export interface SaintsListApiResponse {
 	// perPage: number;
 	total: number;
 	total_pages: number;
+	/** Present when `include_facets` was requested. */
+	facets?: FacetMap<SaintFacetKey>;
 }
 
 export interface SaintDetailedResponse {
@@ -65,6 +72,11 @@ export type GetSaintsParams = {
 	q?: string;
 	century?: string;
 	sort?: string;
+	/** Attribute codes (title / order / symbol), e.g. ["virgin", "martyr"]. */
+	attributes?: string[];
+	/** Patronage codes. */
+	patronages?: string[];
+	include_facets?: boolean;
 	signal?: AbortSignal;
 };
 

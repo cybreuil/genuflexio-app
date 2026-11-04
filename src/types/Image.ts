@@ -1,3 +1,7 @@
+import type { FacetMap } from "./Facet";
+
+export type GalleryFacetKey = "saint" | "artist" | "century" | "museum";
+
 export type ImageSaint = {
 	id: number;
 	slug: string;
@@ -47,10 +51,14 @@ export type GetWallImagesParams = {
 	century?: number;
 	sort?: "title" | "artist" | "century_asc" | "century_desc";
 	languageCode?: string;
+	/** Ask the API to aggregate facets (only needed on the first page). */
+	include_facets?: boolean;
 };
 
 export type ImagesListWallResponse = {
 	data: Image[];
 	total: number;
 	has_more: boolean;
+	/** Present when `include_facets` was requested. */
+	facets?: FacetMap<GalleryFacetKey>;
 };

@@ -12,6 +12,9 @@ export function getSaints({
 	q,
 	century,
 	sort,
+	attributes,
+	patronages,
+	include_facets,
 	signal,
 }: GetSaintsParams = {}): Promise<SaintsListApiResponse> {
 	const params = new URLSearchParams({
@@ -30,6 +33,19 @@ export function getSaints({
 
 	if (sort) {
 		params.set("sort", sort);
+	}
+
+	// Multi-valued filters are sent comma-separated: ?attributes=virgin,martyr
+	if (attributes?.length) {
+		params.set("attributes", attributes.join(","));
+	}
+
+	if (patronages?.length) {
+		params.set("patronages", patronages.join(","));
+	}
+
+	if (include_facets) {
+		params.set("include_facets", "1");
 	}
 
 	return fetchApi<SaintsListApiResponse>(`/saints?${params.toString()}`, {

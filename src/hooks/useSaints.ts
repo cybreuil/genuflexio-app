@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { getSaints, getSaintBySlug } from "../api/saints";
-import type { SaintApi, SaintDetailedResponse } from "../types/Saint";
+import type {
+	SaintApi,
+	SaintDetailedResponse,
+	SaintFacetKey,
+} from "../types/Saint";
+import type { FacetMap } from "../types/Facet";
 
 const SEARCH_DEBOUNCE_MS = 600;
 
@@ -25,6 +30,8 @@ type UseSaintsParams = {
 	q?: string;
 	century?: string;
 	sort?: string;
+	attributes?: string[];
+	patronages?: string[];
 };
 
 const useSaints = ({
@@ -34,15 +41,21 @@ const useSaints = ({
 	q,
 	century,
 	sort,
+	attributes,
+	patronages,
 }: UseSaintsParams = {}) => {
 	const [saints, setSaints] = useState<SaintApi[] | []>([]);
 	const [totalCount, setTotalCount] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
+	const [facets, setFacets] = useState<FacetMap<SaintFacetKey>>({});
 
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
 
 	const debouncedQuery = useDebounced(q, SEARCH_DEBOUNCE_MS);
+	// Stable identity for the effect deps (arrays are recreated on each render)
+	const attributesKey = attributes?.join(",") ?? "";
+	const patronagesKey = patronages?.join(",") ?? "";
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -57,12 +70,17 @@ const useSaints = ({
 			q: debouncedQuery,
 			century,
 			sort,
+			attributes: attributesKey ? attributesKey.split(",") : undefined,
+			patronages: patronagesKey ? patronagesKey.split(",") : undefined,
+			// Facets describe the filtered corpus, so page changes don't affect them
+			include_facets: page === 1,
 			signal: controller.signal,
 		})
 			.then((response) => {
 				setSaints(response.data);
 				setTotalCount(response.total);
 				setTotalPages(response.total_pages);
+				if (response.facets) setFacets(response.facets);
 			})
 			.catch((error) => {
 				if (error.name === "AbortError") {
@@ -86,7 +104,16 @@ const useSaints = ({
 		return () => {
 			controller.abort();
 		};
-	}, [page, perPage, languageCode, debouncedQuery, century, sort]);
+	}, [
+		page,
+		perPage,
+		languageCode,
+		debouncedQuery,
+		century,
+		sort,
+		attributesKey,
+		patronagesKey,
+	]);
 
 	return {
 		saints,
@@ -94,6 +121,7 @@ const useSaints = ({
 		error,
 		totalCount,
 		totalPages,
+		facets,
 		debouncedQuery,
 	};
 };

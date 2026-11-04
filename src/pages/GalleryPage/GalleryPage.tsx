@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { getWallImages } from "../../api/images";
-import type { Image } from "../../types/Image";
+import type { GalleryFacetKey, Image } from "../../types/Image";
+import type { FacetMap } from "../../types/Facet";
 import { Loader } from "../../components/Loader/Loader";
 import {
 	GalleryFilters,
@@ -12,7 +13,7 @@ import {
 	type GalleryFiltersValue,
 } from "../../components/GalleryFilters/GalleryFilters";
 import { ArtworkLightbox } from "../../components/ArtworkLightbox/ArtworkLightbox";
-import { buildFacet, cartel } from "../../utils/artworkFormat";
+import { cartel } from "../../utils/artworkFormat";
 
 import { useLanguage } from "../../hooks/useLanguage";
 
@@ -115,6 +116,9 @@ const GalleryPage = () => {
 	const [error, setError] = useState<Error | null>(null);
 	const [hasMore, setHasMore] = useState(true);
 	const [total, setTotal] = useState(0);
+	// Facets come from the API with the first page of each filter set:
+	// they describe the whole filtered corpus, not just what is on screen.
+	const [facets, setFacets] = useState<FacetMap<GalleryFacetKey>>({});
 	const [filters, setFilters] = useState<GalleryFiltersValue>(
 		DEFAULT_GALLERY_FILTERS,
 	);
@@ -174,6 +178,7 @@ const GalleryPage = () => {
 								: filters.sort === "period_desc"
 									? "century_desc"
 									: filters.sort,
+					include_facets: reset,
 				});
 
 				if (requestId !== requestIdRef.current) return;
@@ -181,6 +186,7 @@ const GalleryPage = () => {
 				setImages((current) =>
 					reset ? result.data : mergeUnique(current, result.data),
 				);
+				if (reset && result.facets) setFacets(result.facets);
 				setTotal(result.total);
 				setHasMore(result.has_more);
 				offsetRef.current = offset + result.data.length;
@@ -232,20 +238,6 @@ const GalleryPage = () => {
 	// -------------------------
 	// Derived
 	// -------------------------
-
-	const facets = useMemo(
-		() => ({
-			saint: buildFacet(images, (i) => i.saint_name),
-			artist: buildFacet(images, (i) => i.creator),
-			century: buildFacet(
-				images,
-				(i) => (i.century != null ? String(i.century) : null),
-				(i) => (i.century != null ? `${i.century}e siècle` : ""),
-			).sort((a, b) => Number(a.value) - Number(b.value)),
-			museum: buildFacet(images, (i) => i.repository),
-		}),
-		[images],
-	);
 
 	const indexById = useMemo(
 		() => new Map(images.map((img, i) => [img.id, i])),

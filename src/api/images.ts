@@ -26,14 +26,13 @@ export function getRandomImages(count: number = 1): Promise<Image[]> {
 
 // HELPER
 function toQueryParams(
-	params: Record<string, string | number | undefined>,
+	params: Record<string, string | number | boolean | undefined>,
 ): string {
 	const searchParams = new URLSearchParams();
 
 	for (const [key, value] of Object.entries(params)) {
-		if (value !== undefined) {
-			searchParams.set(key, String(value));
-		}
+		if (value === undefined || value === false) continue;
+		searchParams.set(key, value === true ? "1" : String(value));
 	}
 
 	return searchParams.toString();

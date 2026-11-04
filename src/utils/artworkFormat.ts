@@ -46,22 +46,3 @@ export function cartel(img: Image): string {
 		.filter(Boolean)
 		.join(", ");
 }
-
-export type Facet = { value: string; label: string; count: number };
-
-export function buildFacet(
-	images: Image[],
-	pick: (img: Image) => string | null | undefined,
-	label: (value: string) => string = (v) => v,
-): Facet[] {
-	const counts = new Map<string, number>();
-	for (const img of images) {
-		const v = pick(img);
-		if (v) counts.set(v, (counts.get(v) ?? 0) + 1);
-	}
-	return Array.from(counts.entries())
-		.map(([value, count]) => ({ value, label: label(value), count }))
-		.sort(
-			(a, b) => b.count - a.count || a.label.localeCompare(b.label, "fr"),
-		);
-}
