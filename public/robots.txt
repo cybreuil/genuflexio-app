@@ -1,0 +1,11 @@
+
+User-agent: *
+Allow: /
+
+# Private administration area
+Disallow: /admin
+Disallow: /login
+
+
+# Sitemap
+Sitemap: https://genuflexio.com/sitemap.xml

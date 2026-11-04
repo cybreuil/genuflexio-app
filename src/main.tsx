@@ -12,6 +12,7 @@ import { CalendarProvider } from "./contexts/CalendarProvider.tsx";
 import { LanguageProvider } from "./contexts/LanguageProvider.tsx";
 import { ThemeProvider } from "./contexts/ThemeProvider.tsx";
 import { AuthProvider } from "./contexts/AuthProvider.tsx";
+import { PageMetaThemeColor } from "./components/PageMetaThemeColor/PageMetaThemeColor.tsx";
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
@@ -20,6 +21,7 @@ createRoot(document.getElementById("root")!).render(
 				<ThemeProvider>
 					<LanguageProvider>
 						<CalendarProvider>
+							<PageMetaThemeColor />
 							<App />
 						</CalendarProvider>
 					</LanguageProvider>
