@@ -165,13 +165,16 @@ const CelebrationOfTheDay: React.FC = () => {
 	}, [date, languageCode, invalidDate]);
 
 	const coverSaint = activeCelebration?.saints?.[0];
-	// Cascade : image du saint principal → image de la fête → dégradé liturgique (CSS)
-	const coverImage = coverSaint?.saint_image_url
-		? { src: coverSaint.saint_image_url, alt: coverSaint.saint_name }
-		: activeCelebration?.feast_image_url
+	// Cascade : image de la fête → image du saint principal → dégradé liturgique (CSS)
+	const coverImage = activeCelebration?.feast_cover_image_url
+		? {
+				src: activeCelebration.feast_cover_image_url,
+				alt: activeCelebration.feast_name,
+			}
+		: coverSaint?.saint_image_url
 			? {
-					src: activeCelebration.feast_image_url,
-					alt: activeCelebration.feast_name,
+					src: coverSaint.saint_image_url,
+					alt: coverSaint.saint_name,
 				}
 			: null;
 	const isLoading = isCalendarLoading || isCelebrationLoading;
