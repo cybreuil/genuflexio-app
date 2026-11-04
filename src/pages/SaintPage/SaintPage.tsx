@@ -123,9 +123,17 @@ const SaintPage = () => {
 	// Aside fade: shows a gradient on the side(s) that can still scroll
 	const { ref: asideRef, fade } = useScrollFade<HTMLElement>();
 
+	const saintHasNoAttributesOrPatronages =
+		attributeGroups.length === 0 &&
+		(!saint?.patronages || saint.patronages.length === 0);
+
 	return (
 		<div className="saint-page">
-			<nav className="saint-page__breadcrumb" aria-label="Fil d'Ariane">
+			<nav
+				className={`saint-page__breadcrumb ${saintHasNoAttributesOrPatronages ? "no-aside" : ""}
+			`}
+				aria-label="Fil d'Ariane"
+			>
 				<RippleLink to="/saints" className="saint-page__back">
 					← {t("saint.backToList")}
 				</RippleLink>
@@ -152,7 +160,9 @@ const SaintPage = () => {
 						)}
 					</StateBlock>
 				) : (
-					<div className="saint-page-container">
+					<div
+						className={`saint-page-container ${saintHasNoAttributesOrPatronages ? "no-aside" : ""}`}
+					>
 						<motion.article
 							key={`${saint.id}-${languageCode}`}
 							className="saint-article"

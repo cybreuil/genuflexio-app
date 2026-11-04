@@ -36,6 +36,9 @@
 	width: var(--page-width);
 	margin: 0 auto 1.25rem;
 }
+.saint-page__breadcrumb.no-aside {
+	max-width: 820px;
+}
 
 .saint-page__back {
 	color: var(--color-text-tertiary);
@@ -60,6 +63,12 @@
 	grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
 	align-items: start;
 	gap: 2rem;
+}
+.saint-page-container.no-aside {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	max-width: 820px;
 }
 /* ===== Article shell ===== */
 
@@ -437,7 +446,7 @@
 
 .saint-gallery__grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 	gap: 1.25rem;
 	margin: 0;
 	padding: 0;
@@ -619,6 +628,10 @@
 
 	.saint-page .aside-column {
 		display: none;
+	}
+	.saint-gallery__grid {
+		gap: 1rem;
+		grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 	}
 }
 
