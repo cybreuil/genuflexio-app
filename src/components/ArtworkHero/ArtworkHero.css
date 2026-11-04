@@ -151,21 +151,23 @@
 	width: min(780px, 100% - 2rem);
 	height: 100%;
 	margin: 0 auto;
+	/* On remonte le bloc*/
 	padding-bottom: 6vh;
+	gap: 1.5rem;
 	text-align: center;
 }
 
 .artwork-hero__eyebrow {
-	margin-bottom: 1.25rem;
 	color: var(--color-secondary);
 	font-size: 0.75rem;
 	font-weight: 600;
 	letter-spacing: 0.3em;
 	text-transform: uppercase;
+	margin-bottom: -1rem;
 }
 
 .artwork-hero__title {
-	display: flex;
+	width: clamp(330px, 45vw, 650px);
 	/*Hard coded to avoid theme switching*/
 	color: #f1ece3;
 	text-shadow:
@@ -173,6 +175,7 @@
 		0 12px 60px rgb(0 0 0 / 0.35);
 }
 .artwork-hero__title svg {
+	display: block;
 	/* text-shadow n'agit pas sur un svg : drop-shadow suit la forme des paths */
 	filter: drop-shadow(0 4px 12px rgb(0 0 0 / 0.55))
 		drop-shadow(0 12px 40px rgb(0 0 0 / 0.35));
@@ -180,7 +183,6 @@
 
 .artwork-hero__description {
 	max-width: 52ch;
-	margin: 1.5rem 0 0;
 	color: #bfb5a8;
 
 	font-size: clamp(1rem, 1.2vw, 1.15rem);
@@ -195,7 +197,7 @@
 	flex-wrap: wrap;
 	justify-content: center;
 	gap: 0.75rem 1rem;
-	margin-top: 2.25rem;
+	margin-top: 0.75rem;
 }
 
 .artwork-hero__action {
@@ -270,6 +272,9 @@
 				var(--page-background, var(--color-bg-primary)) 100%
 			);
 	}
+	.artwork-hero__eyebrow {
+		margin-bottom: 0rem;
+	}
 }
 
 @media (max-width: 600px) {
@@ -290,10 +295,6 @@
 
 	.artwork-hero__title {
 		font-size: clamp(2.75rem, 16vw, 5rem);
-	}
-	.artwork-hero__title svg {
-		width: clamp(100px, 28vw, 150px);
-		height: clamp(100px, 28vw, 150px);
 	}
 
 	.artwork-hero__description {

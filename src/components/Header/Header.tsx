@@ -174,7 +174,11 @@ const Header = () => {
 						aria-label="Genuflexio"
 					>
 						<span className="header__logo" aria-hidden="true">
-							<DesignedLogo color="currentColor" height="100%" />
+							<DesignedLogo
+								fill="currentColor"
+								fillHalo="var(--color-secondary)"
+								height="100%"
+							/>
 						</span>
 						<AnimatePresence>
 							{showWordmark && (

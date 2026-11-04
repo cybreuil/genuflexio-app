@@ -25,8 +25,8 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: rgba(255, 255, 255, 0.1);
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	background-color: transparent;
+	border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
 	transition: 0.4s;
 	border-radius: 34px;
 	overflow: hidden;
@@ -40,7 +40,7 @@
 	width: 26px;
 	left: 4px;
 	bottom: 3px;
-	background-color: #fff;
+	background-color: #f1ece3;
 	transition: 0.4s;
 	border-radius: 50%;
 	z-index: 2;
@@ -72,7 +72,7 @@
 
 /* État actif de la checkbox */
 input:checked + .slider {
-	background-color: rgba(0, 0, 0, 0.2);
+	background-color: transparent;
 }
 
 input:checked + .slider:before {
@@ -86,12 +86,12 @@ input:focus + .slider {
 
 /* Thème clair */
 [data-theme="light"] .slider {
-	background-color: #ffd700;
-	border-color: rgba(0, 0, 0, 0.1);
+	background-color: #d4b46b;
+	border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
 }
 
 [data-theme="light"] .slider:before {
-	background-color: #fff;
+	background-color: #f1ece3;
 	box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -100,11 +100,13 @@ input:focus + .slider {
 	opacity: 0;
 	transform: translateY(-50%) rotate(-45deg);
 	transition: all 0.4s ease;
+	color: #f1ece3;
 }
 
 .slider .slider-icon.moon {
 	opacity: 1;
 	transition: all 0.4s ease;
+	color: #1f1a15;
 }
 
 input:checked + .slider .slider-icon.sun {
@@ -119,11 +121,11 @@ input:checked + .slider .slider-icon.moon {
 
 /* Hover effects */
 .slider:hover {
-	border-color: rgba(255, 255, 255, 0.3);
+	border: 1px solid color-mix(in srgb, currentColor 50%, transparent);
 }
 
 [data-theme="light"] .slider:hover {
-	border-color: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgb(31 26 21 / 0.5);
 }
 
 /* Media queries */

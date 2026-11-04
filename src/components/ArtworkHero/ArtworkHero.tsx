@@ -143,7 +143,8 @@ function ArtworkHero({
 					// layoutId="website-title"
 				>
 					<DesignedLogoWithText3
-						height={200}
+						title="Genuflexio"
+						width="100%"
 						fillFirstLetter="var(--color-secondary)"
 						fillHalo="var(--color-secondary-light)"
 					/>

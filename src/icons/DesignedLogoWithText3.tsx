@@ -7,7 +7,7 @@ const DesignedLogoWithText3 = React.forwardRef<
 >(function DesignedLogo(
 	{
 		title = null,
-		height = 100,
+		width = 100,
 		fillFirstLetter = "currentColor",
 		fill = "currentColor",
 		fillHalo = "currentColor",
@@ -22,7 +22,7 @@ const DesignedLogoWithText3 = React.forwardRef<
 			id="a"
 			xmlns="http://www.w3.org/2000/svg"
 			viewBox="0 0 1377.3888 425.6967"
-			height={height}
+			width={width}
 			ref={ref}
 			{...ariaProps}
 			{...props}
