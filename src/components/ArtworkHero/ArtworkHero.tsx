@@ -6,8 +6,8 @@ import "./ArtworkHero.css";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 import {
-	DesignedLogoWithText,
-	DesignedLogoWithText2,
+	// DesignedLogoWithText,
+	// DesignedLogoWithText2,
 	DesignedLogoWithText3,
 } from "../../icons";
 
@@ -15,7 +15,7 @@ const ROWS = 2;
 const TILES_PER_ROW = 10;
 
 interface ArtworkHeroProps {
-	title: string;
+	languageCode?: string;
 	eyebrow?: string;
 	description?: string;
 	children?: ReactNode;
@@ -59,7 +59,7 @@ function ArtworkTile({ image }: { image: Image }) {
 }
 
 function ArtworkHero({
-	title,
+	languageCode,
 	eyebrow,
 	description,
 	children,
@@ -99,7 +99,7 @@ function ArtworkHero({
 	}, []);
 
 	return (
-		<section className="artwork-hero" ref={containerRef}>
+		<section className="artwork-hero" ref={containerRef} key={languageCode}>
 			{rows.length > 0 && (
 				<div className="artwork-hero__backdrop" aria-hidden="true">
 					{rows.map((row, rowIndex) => (

@@ -63,3 +63,5 @@ add switch on secondary celebration on click with just a state change + fix days
 we need fix exit for backdrop modal
 
 FIX john henry newman gif photo not converted !
+
+ajouter des variations sur attributs de couleur en fonction de officiel ou traditionnel

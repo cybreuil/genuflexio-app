@@ -18,8 +18,47 @@
 	},
 
 	"hero": {
-		"eyebrow": "Sancti, Celebrationes et Opera",
-		"description": "Vitas, historias atque opera sanctis per saecula dedicata explora."
+		"eyebrow": "Calendarium Liturgicum · Sancti · Ars Sacra",
+		"description": "Explora celebrationes liturgicas singulis diebus, vitam sanctorum, et opera artis quae eos honorant per saecula.",
+		"celebration": "Celebratio Diei",
+		"discoverSaints": "Explora Sanctos"
+	},
+
+	"homepage": {
+		"project": "De Proposito",
+		"projectTitle1": "Unus dies, una celebratio.",
+		"projectTitle2": "Unus sanctus, mille historiae.",
+		"projectDescription": "Ex personali studio, pietate Dei amoreque permotus, Genuflexio calendarium liturgicum atque patrimonium artisticum quod ex eo ortum est coniungit. Celebrationes liturgicas quacumque anni die consulite, per saecula vitae sanctorum sequentes, atque opera artis — saepe praeclara picturae exemplaria — eis dedicata contemplamini.",
+		"features": {
+			"celebration": {
+				"title": "Celebrationes liturgicae",
+				"description": "Celebrationes cuiusque diei cognoscite: earum gradum, colorem liturgicum, historiam atque proprietates. Calendarium libere percurrite, calendaria nationalia inter se comparate, atque traditionis Romanae consuetudines explorate.",
+				"linkLabel": "Hodiernam celebrationem videre",
+				"accent": "─ Ordo liturgicus"
+			},
+			"calendars": {
+				"title": "Plura calendaria",
+				"description": "Calendaria nationalia vel calendarium traditum ante annum 1962 usitatum: consuetudines comparate atque illud eligite quod usui vestro convenit. (Nota: calendarium anni 1960 adhuc elaboratur.)",
+				"linkLabel": "Calendarium eligere",
+				"accent": "─ Traditiones et consuetudines"
+			},
+			"saints": {
+				"title": "Vitae Sanctorum",
+				"description": "Vitas sanctorum, titulos, patrocinia atque attributa eorum explorate. Loca quae eorum vitam insigniter marcarunt ope tabulae geographicae dedicatae reperite, atque ex eorum exemplo et testimonio fidei inspirationem haurite.",
+				"linkLabel": "Sanctos cognoscere",
+				"accent": "─ Historia et hagiographia"
+			},
+			"gallery": {
+				"title": "Pinacotheca artis sacrae",
+				"description": "Haec pinacotheca, amorem meum erga picturam veterem atque praesertim divitias artis Barocae referens, opera publici iuris complectitur. Opera sanctis atque praecipuis traditionis christianae personis dedicata contemplamini.",
+				"linkLabel": "Pinacothecam percurrere",
+				"accent": "─ Patrimonium artisticum"
+			}
+		},
+		"cta": {
+			"title": "Quae celebratio hodie agitur?",
+			"button": "Celebrationem hodiernam videre"
+		}
 	},
 
 	"celebration": {
@@ -264,5 +303,13 @@
 	},
 	"404": {
 		"text": "Pagina non inventa"
+	},
+	"galleryPage": {
+		"gallery": "Pinacotheca",
+		"galleryPageTitle": "Ars sacra per saecula",
+		"galleryPageDescription": "Murus operum, ad Deum conversus, in dominio publico, libere percurrendus. Filtra per sanctum, pictorem, aetatem vel museum — deinde in conclave ingredere.",
+		"error": "Pinacotheca onerari non potest.",
+		"noResults": "Nulla opera his cribra congruunt.",
+		"endOfRoom": "Finis conclavis"
 	}
 }

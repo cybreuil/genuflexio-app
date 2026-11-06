@@ -18,10 +18,47 @@
 	},
 
 	"hero": {
-		"eyebrow": "Saints, Celebrations and Works",
-		"description": "Explore the lives, stories, and works devoted to the saints throughout the centuries."
+		"eyebrow": "Liturgical calendar · Saints · Sacred art",
+		"description": "Discover the liturgical celebrations of each day, explore the lives of the saints, and browse the works of art that honor them throughout the centuries.",
+		"celebration": "Celebration of the Day",
+		"discoverSaints": "Discover the Saints"
 	},
-
+	"homepage": {
+		"project": "The Project",
+		"projectTitle1": "A day, a celebration.",
+		"projectTitle2": "A saint, a thousand stories.",
+		"projectDescription": "Born of a personal journey, out of devotion and love for God, Genuflexio brings together the liturgical calendar and the artistic heritage it has inspired. Explore liturgical celebrations on any date of your choosing, trace the centuries through the lives of the saints, and contemplate the works of art — many of them masterpieces — dedicated to them.",
+		"features": {
+			"celebration": {
+				"title": "Liturgical Celebrations",
+				"description": "Discover each day's celebrations: their rank, liturgical colour, history and distinctive features. Freely browse the calendar, compare national calendars and explore the customs of the Roman tradition, shaped by centuries of worship.",
+				"linkLabel": "See today's celebration",
+				"accent": "─ Liturgical Ordo"
+			},
+			"calendars": {
+				"title": "Multiple Calendars",
+				"description": "National calendars or the traditional calendar preceding 1962: compare liturgical practices and follow the one that best suits your observance. (Note: the 1960 calendar is still under development.)",
+				"linkLabel": "Choose a calendar",
+				"accent": "─ Traditions and Customs"
+			},
+			"saints": {
+				"title": "The Lives of the Saints",
+				"description": "Explore the lives of the saints, their titles, patronages and attributes. Discover the places that shaped their lives through a dedicated interactive map, and find inspiration and guidance in their example and witness.",
+				"linkLabel": "Discover the Saints",
+				"accent": "─ History and Hagiography"
+			},
+			"gallery": {
+				"title": "The Sacred Art Gallery",
+				"description": "Reflecting my personal appreciation for classical painting and the richness of Baroque art, this gallery brings together works in the public domain. Discover paintings dedicated to the saints and the great figures of the Christian tradition.",
+				"linkLabel": "Explore the Gallery",
+				"accent": "─ Artistic Heritage"
+			}
+		},
+		"cta": {
+			"title": "What feast is celebrated today?",
+			"button": "Discover today's celebration"
+		}
+	},
 	"celebration": {
 		"invalidDate": "Invalid date. Please choose a correct date.",
 		"noCelebration": "No celebration found for this date.",
@@ -264,5 +301,13 @@
 
 	"404": {
 		"text": "Page not Found"
+	},
+	"galleryPage": {
+		"gallery": "Gallery",
+		"galleryPageTitle": "Sacred art through the centuries",
+		"galleryPageDescription": "A wall of works, turned towards God, from the public domain, to browse freely. Filter by saint, artist, period or museum — then enter the room.",
+		"error": "Unable to load the gallery.",
+		"noResults": "No works match these filters.",
+		"endOfRoom": "End of the room"
 	}
 }

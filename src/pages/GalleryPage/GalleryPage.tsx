@@ -111,7 +111,7 @@ function mergeUnique(current: Image[], incoming: Image[]) {
 /* ===== Page ===== */
 
 const GalleryPage = () => {
-	const { languageCode } = useLanguage();
+	const { languageCode, t } = useLanguage();
 	const [images, setImages] = useState<Image[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [loadingMore, setLoadingMore] = useState(false);
@@ -274,14 +274,14 @@ const GalleryPage = () => {
 				initial="hidden"
 				animate="show"
 			>
-				<span className="gallery-header__eyebrow">─ Galerie</span>
+				<span className="gallery-header__eyebrow">
+					─ {t("galleryPage.galleryPageTitle")}
+				</span>
 				<h1 className="gallery-header__title">
-					Les saints vus par les peintres
+					{t("galleryPage.galleryPageTitle")}
 				</h1>
 				<p className="gallery-header__text">
-					Un mur d'œuvres, du domaine public, à parcourir librement.
-					Filtrez par saint, artiste, période ou musée — puis entrez
-					dans la salle.
+					{t("galleryPage.galleryPageDescription")}
 				</p>
 			</motion.header>
 
@@ -320,7 +320,7 @@ const GalleryPage = () => {
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
 					>
-						Impossible de charger la galerie.
+						{t("galleryPage.error")}
 						<span className="gallery-state__detail">
 							{error instanceof ApiError && (
 								<>
@@ -339,7 +339,7 @@ const GalleryPage = () => {
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
 					>
-						Aucune œuvre ne correspond à ces filtres.
+						{t("galleryPage.noResults")}
 					</motion.div>
 				) : (
 					<motion.div
@@ -450,7 +450,7 @@ const GalleryPage = () => {
 								// 		Charger plus
 								// 	</button>
 								<span className="gallery-load-more__end">
-									─ Fin de la salle ─
+									─ {t("galleryPage.endOfRoom")} ─
 								</span>
 							)}
 						</div>

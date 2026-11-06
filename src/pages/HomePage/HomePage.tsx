@@ -4,6 +4,7 @@ import { RippleLink } from "../../components/RippleLink/RippleLink";
 import { ArtworkHero } from "../../components/ArtworkHero/ArtworkHero";
 import { useRandomImages } from "../../hooks/useImages";
 import { useLanguage } from "../../hooks/useLanguage";
+import { useMemo } from "react";
 
 /* Reveal helpers: fade + slight rise when the section enters the viewport */
 const sectionReveal = {
@@ -20,53 +21,61 @@ const staggerGroup = {
 	show: { transition: { staggerChildren: 0.12 } },
 };
 
-const FEATURES = [
-	{
-		title: "La célébration du jour",
-		text: "Chaque jour, découvrez la fête liturgique célébrée : son rang, sa couleur, son histoire. Un calendrier vivant, consultable jour après jour.",
-		link: "/celebration",
-		linkLabel: "Voir aujourd'hui",
-		accent: "─ Calendrier liturgique",
-	},
-	{
-		title: "Plusieurs calendriers",
-		text: "Calendriers nationaux ou calendrier traditionnel antérieur à 1962 : comparez les usages et suivez celui qui correspond à votre pratique.",
-		link: "/celebration",
-		linkLabel: "Choisir un calendrier",
-		accent: "─ Traditions & usages",
-	},
-	{
-		title: "Les vies des saints",
-		text: "Des centaines de saints, leurs histoires et les chefs-d'œuvre qu'ils ont inspirés — peintures célèbres, pour la plupart dans le domaine public.",
-		link: "/saints",
-		linkLabel: "Parcourir la galerie",
-		accent: "─ Art & mémoire",
-	},
-];
-
 const HomePage = () => {
+	const { t, languageCode } = useLanguage();
+	const FEATURES = useMemo(
+		() => [
+			{
+				title: t("homepage.features.celebration.title"),
+				text: t("homepage.features.celebration.description"),
+				accent: t("homepage.features.celebration.accent"),
+				link: "/celebration",
+				linkLabel: t("homepage.features.celebration.linkLabel"),
+			},
+			// {
+			// 	title: t("homepage.features.calendars.title"),
+			// 	text: t("homepage.features.calendars.description"),
+			// 	accent: t("homepage.features.calendars.accent"),
+			// 	link: "/celebration",
+			// 	linkLabel: t("homepage.features.calendars.linkLabel"),
+			// },
+			{
+				title: t("homepage.features.saints.title"),
+				text: t("homepage.features.saints.description"),
+				accent: t("homepage.features.saints.accent"),
+				link: "/saints",
+				linkLabel: t("homepage.features.saints.linkLabel"),
+			},
+			{
+				title: t("homepage.features.gallery.title"),
+				text: t("homepage.features.gallery.description"),
+				accent: t("homepage.features.gallery.accent"),
+				link: "/gallery",
+				linkLabel: t("homepage.features.gallery.linkLabel"),
+			},
+		],
+		[t],
+	);
 	// Une peinture aléatoire par carte ; purement décoratif, la page
 	// fonctionne aussi tant que les images ne sont pas arrivées.
 	const { images } = useRandomImages(FEATURES.length);
-
-	const { t } = useLanguage();
 
 	return (
 		<div className="home-page">
 			<ArtworkHero
 				eyebrow={t("hero.eyebrow")}
-				title="Genuflexio"
 				description={t("hero.description")}
+				languageCode={languageCode}
 			>
 				<RippleLink
 					to="/celebration"
 					className="artwork-hero__action artwork-hero__action--primary"
 					rippleColor="rgba(0, 0, 0, 0.15)"
 				>
-					Célébration du jour
+					{t("celebrationPage.celebrationOfTheDay")}
 				</RippleLink>
 				<RippleLink to="/saints" className="artwork-hero__action">
-					Découvrir les saints
+					{t("hero.discoverSaints")}
 				</RippleLink>
 			</ArtworkHero>
 
@@ -74,28 +83,28 @@ const HomePage = () => {
 			<motion.section
 				className="home-intro"
 				variants={sectionReveal}
+				key={languageCode}
 				initial="hidden"
 				whileInView="show"
 				viewport={{ once: true, amount: 0.4 }}
 			>
-				<span className="home-intro__eyebrow">Le projet</span>
+				<span className="home-intro__eyebrow">
+					{t("homepage.project")}
+				</span>
 				<h2 className="home-intro__title">
-					Un jour, une célébration.
+					{t("homepage.projectTitle1")}
 					<br />
-					Un saint, mille histoires.
+					{t("homepage.projectTitle2")}
 				</h2>
 				<p className="home-intro__text">
-					Genuflexio réunit le calendrier liturgique et le patrimoine
-					artistique qu'il a inspiré. Consultez la fête du jour selon
-					votre calendrier, remontez le fil des siècles à travers les
-					vies des saints, et contemplez les œuvres — souvent des
-					peintures majeures — qui leur sont consacrées.
+					{t("homepage.projectDescription")}
 				</p>
 			</motion.section>
 
 			{/* ===== Fonctionnalités (avec œuvres) ===== */}
 			<motion.section
 				className="home-features"
+				key={`features-${languageCode}`}
 				variants={staggerGroup}
 				initial="hidden"
 				whileInView="show"
@@ -106,7 +115,7 @@ const HomePage = () => {
 
 					return (
 						<motion.article
-							key={feature.title}
+							key={feature.link}
 							className="home-feature"
 							variants={sectionReveal}
 						>
@@ -155,15 +164,13 @@ const HomePage = () => {
 				whileInView="show"
 				viewport={{ once: true, amount: 0.5 }}
 			>
-				<h2 className="home-cta__title">
-					Quelle fête célèbre-t-on aujourd'hui ?
-				</h2>
+				<h2 className="home-cta__title">{t("homepage.cta.title")}</h2>
 				<RippleLink
 					to="/celebration"
 					className="home-cta__button"
 					rippleColor="rgba(0, 0, 0, 0.15)"
 				>
-					Découvrir la célébration du jour
+					{t("homepage.cta.button")}
 				</RippleLink>
 			</motion.section>
 		</div>

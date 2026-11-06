@@ -18,10 +18,47 @@
 	},
 
 	"hero": {
-		"eyebrow": "Saints, célébrations et œuvres",
-		"description": "Explorez les vies, les histoires et les œuvres consacrées aux saints à travers les siècles."
+		"eyebrow": "Calendrier liturgique · Saints · Art sacré",
+		"description": "Découvrez les célébrations liturgiques de chaque jour, explorez la vie des saints et parcourez les œuvres d’art qui leur rendent hommage, à travers les siècles.",
+		"celebration": "Célébration du jour",
+		"discoverSaints": "Découvrir les saints"
 	},
-
+	"homepage": {
+		"project": "Le projet",
+		"projectTitle1": "Un jour, une célébration.",
+		"projectTitle2": "Un saint, mille histoires.",
+		"projectDescription": "Né d'une démarche personnelle, par dévotion et par amour de Dieu, Genuflexio réunit le calendrier liturgique et le patrimoine artistique qu’il a inspiré. Consultez les célébrations liturgiques à la date de votre choix, remontez le fil des siècles à travers les vies des saints et contemplez les œuvres d’art — souvent des peintures majeures — qui leur sont consacrées.",
+		"features": {
+			"celebration": {
+				"title": "Les célébrations liturgiques",
+				"description": "Découvrez les célébrations de chaque jour : leur rang, leur couleur liturgique, leur histoire et leurs particularités. Parcourez librement le calendrier, comparez les calendriers nationaux et explorez les usages de la tradition romaine.",
+				"linkLabel": "Voir aujourd'hui",
+				"accent": "─ Ordo liturgique"
+			},
+			"calendars": {
+				"title": "Plusieurs calendriers",
+				"description": "Calendriers nationaux ou calendrier traditionnel antérieur à 1962 : comparez les usages et suivez celui qui correspond à votre pratique. (NB: Le calendrier de 1960 est en construction.)",
+				"linkLabel": "Choisir un calendrier",
+				"accent": "─ Traditions et usages"
+			},
+			"saints": {
+				"title": "Les vies des saints",
+				"description": "Parcourez les vies des saints, leurs titres, leurs patronages et leurs attributs. Retrouvez les lieux qui ont marqué leur existence grâce à une cartographie dédiée, et laissez-vous inspirer par leurs vies et leur témoignage.",
+				"linkLabel": "Découvrir les saints",
+				"accent": "─ Histoire et hagiographie"
+			},
+			"gallery": {
+				"title": "La galerie d'art sacré",
+				"description": "Reflètant mon attachement à la peinture ancienne, et à la richesse de l'art baroque, la galerie rassemble des œuvres du domaine public. Découvrez les œuvres consacrées aux saints et aux grandes figures de la tradition chrétienne.",
+				"linkLabel": "Parcourir la galerie",
+				"accent": "─ Patrimoine artistique"
+			}
+		},
+		"cta": {
+			"title": "Quelle fête célèbre-t-on aujourd'hui ?",
+			"button": "Voir la célébration du jour"
+		}
+	},
 	"celebration": {
 		"invalidDate": "Date invalide. Veuillez choisir une date correcte.",
 		"noCelebration": "Aucune célébration trouvée pour cette date.",
@@ -264,5 +301,13 @@
 		"liturgy": "Liturgie",
 		"celebrationOfTheDay": "Célébration du jour",
 		"celebrationPageDescription": "Découvrez la célébration du jour, sa couleur liturgique, son rang et les saints associés. Differents calendriers sont disponibles pour explorer les variations régionales et historiques."
+	},
+	"galleryPage": {
+		"gallery": "Galerie",
+		"galleryPageTitle": "L'art sacré à travers les siècles",
+		"galleryPageDescription": "Un mur d'œuvres, tourné vers Dieu, du domaine public, à parcourir librement. Filtrez par saint, artiste, période ou musée — puis entrez dans la salle.",
+		"error": "Impossible de charger la galerie.",
+		"noResults": "Aucune œuvre ne correspond à ces filtres.",
+		"endOfRoom": "Fin de la salle"
 	}
 }

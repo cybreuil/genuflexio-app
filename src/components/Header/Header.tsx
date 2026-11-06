@@ -17,7 +17,7 @@ const NAV_ITEMS: NavItem[] = [
 	{ to: "/gallery", labelKey: "nav.gallery" },
 	// { to: "/search", labelKey: "nav.search" },
 	{ to: "/about", labelKey: "nav.about" },
-	{ to: "/404", labelKey: "nav.404" },
+	,
 ];
 
 // Scroll Actions
@@ -173,19 +173,11 @@ const Header = () => {
 						className="header__brand"
 						aria-label="Genuflexio"
 					>
-						<span className="header__logo" aria-hidden="true">
-							<DesignedLogo
-								fill="currentColor"
-								fillHalo="var(--color-secondary)"
-								height="100%"
-							/>
-						</span>
 						<AnimatePresence>
 							{showWordmark && (
 								<motion.span
-									className="header__wordmark"
-									// Not using layout Animation anymore
-									// layoutId="website-title"
+									className="header__logo"
+									aria-hidden="true"
 									initial={{ opacity: 0, x: -10 }}
 									animate={{ opacity: 1, x: 0 }}
 									exit={{
@@ -202,10 +194,12 @@ const Header = () => {
 										delay: 0.2,
 										ease: EASINGS.out,
 									}}
-									// WIP
-									// transition={{TRANSITIONS.normal}}
 								>
-									Genuflexio
+									<DesignedLogo
+										fill="currentColor"
+										// fillHalo="var(--color-secondary)"
+										height="100%"
+									/>
 								</motion.span>
 							)}
 						</AnimatePresence>
