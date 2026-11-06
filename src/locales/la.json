@@ -317,7 +317,31 @@
 		"galleryPageDescription": "Murus operum, ad Deum conversus, in dominio publico, libere percurrendus. Filtra per sanctum, pictorem, aetatem vel museum — deinde in conclave ingredere.",
 		"error": "Pinacotheca onerari non potest.",
 		"noResults": "Nulla opera his cribra congruunt.",
-		"endOfRoom": "Finis conclavis"
+		"endOfRoom": "Finis conclavis",
+		"sortOptions": {
+			"sortRandom": "Dispositio libera",
+			"sortTitle": "Secundum titulum",
+			"sortArtist": "Secundum artificem",
+			"sortPeriodAsc": "A vetustissimis",
+			"sortPeriodDesc": "A recentissimis"
+		},
+		"facetKeys": {
+			"saint": "Sanctus",
+			"artist": "Artifex",
+			"century": "Saeculum",
+			"museum": "Museum"
+		},
+		"filters": {
+			"search": "Opus quaerere",
+			"searchPlaceholder": "Titulus, artifex, sanctus…",
+			"filters": "Criteria",
+			"reset": "Restituere",
+			"sort": "Ordinare",
+			"artwork": "opus",
+			"artworks": "opera",
+			"all": "Omnia",
+			"less": "Minus ostendere"
+		}
 	},
 	"loginPage": {
 		"error401": "Email aut tessera incorrecta.",

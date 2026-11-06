@@ -5,6 +5,7 @@ import type { FacetMap } from "../../types/Facet";
 import type { GalleryFacetKey } from "../../types/Image";
 import { FacetRow } from "../FacetRow/FacetRow";
 import { periodLabel } from "../../utils/artworkFormat";
+import { useLanguage } from "../../hooks/useLanguage";
 
 export type GallerySort =
 	"random" | "title" | "artist" | "period_asc" | "period_desc";
@@ -27,22 +28,32 @@ export const DEFAULT_GALLERY_FILTERS: GalleryFiltersValue = {
 	sort: "random",
 };
 
-const SORT_OPTIONS: { value: GallerySort; label: string }[] = [
-	{ value: "random", label: "Accrochage libre" },
-	{ value: "period_asc", label: "Du plus ancien" },
-	{ value: "period_desc", label: "Du plus récent" },
-	{ value: "artist", label: "Par artiste" },
-	{ value: "title", label: "Par titre" },
+const getSortOptions = (t: (key: string) => string) => [
+	{ value: "random", label: t("galleryPage.sortOptions.sortRandom") },
+	{ value: "period_asc", label: t("galleryPage.sortOptions.sortPeriodAsc") },
+	{
+		value: "period_desc",
+		label: t("galleryPage.sortOptions.sortPeriodDesc"),
+	},
+	{ value: "artist", label: t("galleryPage.sortOptions.sortArtist") },
+	{ value: "title", label: t("galleryPage.sortOptions.sortTitle") },
 ];
+
+const getFacetLabels = (t: (key: string) => string) => ({
+	saint: t("galleryPage.facetKeys.saint"),
+	artist: t("galleryPage.facetKeys.artist"),
+	century: t("galleryPage.facetKeys.century"),
+	museum: t("galleryPage.facetKeys.museum"),
+});
 
 type FacetKey = GalleryFacetKey;
 
-const FACET_LABELS: Record<FacetKey, string> = {
-	saint: "Saint",
-	artist: "Artiste",
-	century: "Siècle",
-	museum: "Musée",
-};
+// const FACET_LABELS: Record<FacetKey, string> = {
+// 	saint: "Saint",
+// 	artist: "Artiste",
+// 	century: "Siècle",
+// 	museum: "Musée",
+// };
 
 type Props = {
 	value: GalleryFiltersValue;
@@ -59,6 +70,7 @@ const GalleryFilters = ({
 	resultCount,
 	totalCount,
 }: Props) => {
+	const { t } = useLanguage();
 	const [open, setOpen] = useState(false);
 
 	const activeCount = [
@@ -75,19 +87,21 @@ const GalleryFilters = ({
 		v: GalleryFiltersValue[K],
 	) => onChange({ ...value, [key]: v });
 
+	const sortOptions = getSortOptions(t);
+	const facetLabels = getFacetLabels(t);
+
 	return (
 		<div className="gallery-filters">
 			<div className="gallery-filters__bar">
-				<label className="gallery-filters__search">
-					<span className="sr-only">Rechercher une œuvre</span>
-					<input
-						type="search"
-						placeholder="Titre, artiste, saint…"
-						value={value.query}
-						onChange={(e) => set("query", e.target.value)}
-						autoComplete="off"
-					/>
-				</label>
+				<input
+					aria-label={t("galleryPage.filters.search")}
+					placeholder={t("galleryPage.filters.searchPlaceholder")}
+					className="gallery-filters__search"
+					type="search"
+					value={value.query}
+					onChange={(e) => set("query", e.target.value)}
+					autoComplete="off"
+				/>
 
 				<button
 					type="button"
@@ -95,7 +109,7 @@ const GalleryFilters = ({
 					onClick={() => setOpen((o) => !o)}
 					aria-expanded={open}
 				>
-					Filtres
+					{t("galleryPage.filters.filters")}
 					{activeCount > 0 && (
 						<span className="gallery-filters__badge">
 							{activeCount}
@@ -103,26 +117,23 @@ const GalleryFilters = ({
 					)}
 				</button>
 
-				<label className="gallery-filters__sort">
-					<span className="sr-only">Trier</span>
-					<select
-						value={value.sort}
-						onChange={(e) =>
-							set("sort", e.target.value as GallerySort)
-						}
-					>
-						{SORT_OPTIONS.map((o) => (
-							<option key={o.value} value={o.value}>
-								{o.label}
-							</option>
-						))}
-					</select>
-				</label>
+				<select
+					aria-label={t("galleryPage.filters.sort")}
+					className="gallery-filters__sort"
+					value={value.sort}
+					onChange={(e) => set("sort", e.target.value as GallerySort)}
+				>
+					{sortOptions.map((o) => (
+						<option key={o.value} value={o.value}>
+							{o.label}
+						</option>
+					))}
+				</select>
 
 				<span className="gallery-filters__count" aria-live="polite">
 					{resultCount === totalCount
-						? `${totalCount} œuvres`
-						: `${resultCount} / ${totalCount} œuvres`}
+						? `${totalCount} ${totalCount > 1 ? t("galleryPage.filters.artworks") : t("galleryPage.filters.artwork")}`
+						: `${resultCount} / ${totalCount} ${t("galleryPage.filters.artworks")}`}
 				</span>
 
 				{isDirty && (
@@ -131,7 +142,7 @@ const GalleryFilters = ({
 						className="gallery-filters__reset"
 						onClick={() => onChange(DEFAULT_GALLERY_FILTERS)}
 					>
-						Réinitialiser
+						{t("galleryPage.filters.reset")}
 					</button>
 				)}
 			</div>
@@ -150,25 +161,25 @@ const GalleryFilters = ({
 					>
 						<div className="gallery-filters__panel-inner">
 							<FacetRow
-								label={FACET_LABELS.saint}
-								allLabel="Tous"
-								lessLabel="Réduire"
+								label={facetLabels.saint}
+								allLabel={t("galleryPage.filters.all")}
+								lessLabel={t("galleryPage.filters.less")}
 								items={facets.saint}
 								selected={value.saint}
 								onSelect={(v) => set("saint", v)}
 							/>
 							<FacetRow
-								label={FACET_LABELS.artist}
-								allLabel="Tous"
-								lessLabel="Réduire"
+								label={facetLabels.artist}
+								allLabel={t("galleryPage.filters.all")}
+								lessLabel={t("galleryPage.filters.less")}
 								items={facets.artist}
 								selected={value.artist}
 								onSelect={(v) => set("artist", v)}
 							/>
 							<FacetRow
-								label={FACET_LABELS.century}
-								allLabel="Tous"
-								lessLabel="Réduire"
+								label={facetLabels.century}
+								allLabel={t("galleryPage.filters.all")}
+								lessLabel={t("galleryPage.filters.less")}
 								items={facets.century}
 								formatLabel={(f) => periodLabel(f.value)}
 								selected={
@@ -184,9 +195,9 @@ const GalleryFilters = ({
 								}
 							/>
 							<FacetRow
-								label={FACET_LABELS.museum}
-								allLabel="Tous"
-								lessLabel="Réduire"
+								label={facetLabels.museum}
+								allLabel={t("galleryPage.filters.all")}
+								lessLabel={t("galleryPage.filters.less")}
 								items={facets.museum}
 								selected={value.museum}
 								onSelect={(v) => set("museum", v)}

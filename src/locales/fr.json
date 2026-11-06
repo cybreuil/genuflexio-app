@@ -315,7 +315,31 @@
 		"galleryPageDescription": "Un mur d'œuvres, tourné vers Dieu, du domaine public, à parcourir librement. Filtrez par saint, artiste, période ou musée — puis entrez dans la salle.",
 		"error": "Impossible de charger la galerie.",
 		"noResults": "Aucune œuvre ne correspond à ces filtres.",
-		"endOfRoom": "Fin de la salle"
+		"endOfRoom": "Fin de la salle",
+		"sortOptions": {
+			"sortRandom": "Accrochage libre",
+			"sortTitle": "Par titre",
+			"sortArtist": "Par artiste",
+			"sortPeriodAsc": "Du plus ancien",
+			"sortPeriodDesc": "Du plus récent"
+		},
+		"facetKeys": {
+			"saint": "Saint",
+			"artist": "Artiste",
+			"century": "Siècle",
+			"museum": "Musée"
+		},
+		"filters": {
+			"search": "Rechercher une œuvre",
+			"searchPlaceholder": "Titre, artiste, saint…",
+			"filters": "Filtres",
+			"reset": "Réinitialiser",
+			"sort": "Trier",
+			"artwork": "œuvre",
+			"artworks": "œuvres",
+			"all": "Tous",
+			"less": "Réduire"
+		}
 	},
 	"loginPage": {
 		"error401": "Email ou mot de passe incorrect.",

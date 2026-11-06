@@ -315,7 +315,31 @@
 		"galleryPageDescription": "A wall of works, turned towards God, from the public domain, to browse freely. Filter by saint, artist, period or museum — then enter the room.",
 		"error": "Unable to load the gallery.",
 		"noResults": "No works match these filters.",
-		"endOfRoom": "End of the room"
+		"endOfRoom": "End of the room",
+		"sortOptions": {
+			"sortRandom": "Random",
+			"sortTitle": "By title",
+			"sortArtist": "By artist",
+			"sortPeriodAsc": "Oldest first",
+			"sortPeriodDesc": "Newest first"
+		},
+		"facetKeys": {
+			"saint": "Saint",
+			"artist": "Artist",
+			"century": "Century",
+			"museum": "Museum"
+		},
+		"filters": {
+			"search": "Search artwork",
+			"searchPlaceholder": "Title, artist, saint…",
+			"filters": "Filters",
+			"reset": "Reset",
+			"sort": "Sort by",
+			"artwork": "artwork",
+			"artworks": "artworks",
+			"all": "All",
+			"less": "Show less"
+		}
 	},
 	"loginPage": {
 		"administration": "Administration",
