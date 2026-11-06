@@ -193,14 +193,13 @@ const CelebrationOfTheDay: React.FC = () => {
 						exit="exit"
 					>
 						<span className="celebration-page-header__eyebrow">
-							─ Liturgie
+							─ {t("celebrationPage.liturgy")}
 						</span>
 						<h1 className="celebration-page-header__title">
-							Célébration du jour
+							{t("celebrationPage.celebrationOfTheDay")}
 						</h1>
 						<p className="celebration-page-header__text">
-							Discover the feast of the day, its liturgical color,
-							rank, and associated saints.
+							{t("celebrationPage.celebrationPageDescription")}
 						</p>
 					</motion.header>
 				)}

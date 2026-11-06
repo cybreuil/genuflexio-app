@@ -29,7 +29,7 @@ const VALUES = [0, 1, 2] as const;
 const NUMBERS = [0, 1, 2, 3] as const;
 const TIMELINE = [0, 1, 2, 3] as const;
 
-const CONTACT_EMAIL = "contact@genuflexio.app";
+const CONTACT_EMAIL = "contact@genuflexio.com";
 const GITHUB_URL = "https://github.com/cybreuil";
 
 const AboutPage = () => {

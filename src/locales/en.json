@@ -97,7 +97,8 @@
 		"order": "Order",
 		"symbols": "Symbols",
 		"titles": "Titles",
-		"orders": "Orders"
+		"orders": "Orders",
+		"breadcrumb": "Breadcrumb"
 	},
 	"saints": {
 		"filters": {
@@ -217,6 +218,48 @@
 			"secondary": "Discover the saints",
 			"contact": "A question, a correction? Write to us at"
 		}
+	},
+	"admin": {
+		"totalVisits": "Total Visits",
+		"uniqueVisitors": "Unique Visitors",
+		"today": "Today",
+		"countries": "Countries",
+		"title": "Administration",
+		"traffic": "Traffic",
+		"trafficText": "A visit is counted on the first load of the site, once per session. Data is enriched on the server side (country, browser, device).",
+		"statsError": "Unable to load statistics.",
+		"tendency": "Trend",
+		"visitsPerDay": "Visits per day",
+		"repartition": "Breakdown",
+		"whereFrom": "Where do they come from?",
+		"devices": "Devices",
+		"browsers": "Browsers",
+		"referrers": "Referrers",
+		"referrerDirect": "Direct access",
+		"languages": "Languages",
+		"entryPages": "Entry pages",
+		"journal": "Log",
+		"lastVisits": "Recent visits",
+		"visits_plural": "visits",
+		"visits_one": "visit",
+		"page": "Page",
+		"journalError": "Unable to load log.",
+		"journalEmpty": "No visits during this period.",
+		"date": "Date",
+		"country": "Country",
+		"device": "Device",
+		"browser": "Browser",
+		"referrer": "Referrer",
+		"path": "Entry page",
+		"unknown": "Unknown",
+		"new": "new",
+		"direct": "direct"
+	},
+
+	"celebrationPage": {
+		"liturgy": "Liturgy",
+		"celebrationOfTheDay": "Celebration of the day",
+		"celebrationPageDescription": "Discover the celebration of the day, its liturgical color, rank, and associated saints. Different calendars are available to explore regional and historical variations."
 	},
 
 	"404": {

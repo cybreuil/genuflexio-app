@@ -97,7 +97,8 @@
 		"order": "Ordre",
 		"symbols": "Symboles",
 		"titles": "Titres",
-		"orders": "Ordres"
+		"orders": "Ordres",
+		"breadcrumb": "Fil d'Ariane"
 	},
 	"saints": {
 		"filters": {
@@ -220,7 +221,48 @@
 			"contact": "Une question, une correction ? Écrivez-nous à"
 		}
 	},
+	"admin": {
+		"totalVisits": "Visites",
+		"uniqueVisitors": "Visiteurs uniques",
+		"today": "Aujourd'hui",
+		"countries": "Pays",
+		"title": "Administration",
+		"traffic": "Fréquentation",
+		"trafficText": "Une visite est comptée au premier chargement du site, une fois par session. Les données sont enrichies côté serveur (pays, navigateur, appareil).",
+		"statsError": "Impossible de charger les statistiques.",
+		"tendency": "Tendance",
+		"visitsPerDay": "Visites par jour",
+		"repartition": "Répartition",
+		"whereFrom": "D'où viennent-ils ?",
+		"devices": "Appareils",
+		"browsers": "Navigateurs",
+		"referrers": "Provenance",
+		"referrerDirect": "Accès direct",
+		"languages": "Langues",
+		"entryPages": "Pages d'entrée",
+		"journal": "Journal",
+		"lastVisits": "Dernières visites",
+		"visits_plural": "visites",
+		"visits_one": "visite",
+		"page": "Page",
+		"journalError": "Impossible de charger le journal.",
+		"journalEmpty": "Aucune visite sur cette période.",
+		"date": "Date",
+		"country": "Pays",
+		"device": "Appareil",
+		"browser": "Navigateur",
+		"referrer": "Provenance",
+		"path": "Page d'entrée",
+		"unknown": "Inconnu",
+		"new": "nouveau",
+		"direct": "direct"
+	},
 	"404": {
 		"text": "Page introuvable"
+	},
+	"celebrationPage": {
+		"liturgy": "Liturgie",
+		"celebrationOfTheDay": "Célébration du jour",
+		"celebrationPageDescription": "Découvrez la célébration du jour, sa couleur liturgique, son rang et les saints associés. Differents calendriers sont disponibles pour explorer les variations régionales et historiques."
 	}
 }

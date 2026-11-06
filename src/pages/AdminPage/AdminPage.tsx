@@ -33,7 +33,7 @@ const stagger = {
 };
 
 const RANGES: { value: VisitsRange; label: string }[] = [
-	{ value: "7d", label: "7 jours" },
+	{ value: "7d", label: "t" },
 	{ value: "30d", label: "30 jours" },
 	{ value: "90d", label: "90 jours" },
 	{ value: "all", label: "Tout" },
@@ -205,7 +205,7 @@ function DailyChart({ daily }: { daily: VisitStats["daily"] }) {
 /* ===== Page ===== */
 
 const AdminPage = () => {
-	const { languageCode } = useLanguage();
+	const { languageCode, t } = useLanguage();
 	const [range, setRange] = useState<VisitsRange>("30d");
 	const [page, setPage] = useState(1);
 	const [reloadKey, setReloadKey] = useState(0);
@@ -249,17 +249,17 @@ const AdminPage = () => {
 	const kpis = stats
 		? [
 				{
-					label: "Visites",
+					label: t("admin.totalVisits"),
 					value: fmt(stats.total_visits),
 					note: RANGES.find((r) => r.value === range)?.label,
 				},
 				{
-					label: "Visiteurs uniques",
+					label: t("admin.uniqueVisitors"),
 					value: fmt(stats.unique_visitors),
 					note: `${pct(stats.new_visitors_ratio)} de nouveaux`,
 				},
 				{
-					label: "Aujourd'hui",
+					label: t("admin.today"),
 					value: fmt(stats.visits_today),
 					note: deltaLabel(
 						stats.visits_today,
@@ -267,7 +267,7 @@ const AdminPage = () => {
 					),
 				},
 				{
-					label: "Pays",
+					label: t("admin.countries"),
 					value: fmt(stats.countries_count),
 					note: stats.top_countries[0]
 						? `${flagEmoji(stats.top_countries[0].country_code)} ${stats.top_countries[0].country_name} en tête`
@@ -285,13 +285,9 @@ const AdminPage = () => {
 				initial="hidden"
 				animate="show"
 			>
-				<span className="admin-eyebrow">─ Administration</span>
-				<h1 className="admin-header__title">Fréquentation</h1>
-				<p className="admin-header__text">
-					Une visite est comptée au premier chargement du site, une
-					fois par session. Les données sont enrichies côté serveur
-					(pays, navigateur, appareil).
-				</p>
+				<span className="admin-eyebrow">─ {t("admin.title")}</span>
+				<h1 className="admin-header__title">{t("admin.traffic")}</h1>
+				<p className="admin-header__text">{t("admin.trafficText")}</p>
 
 				<div
 					className="admin-ranges"
@@ -323,7 +319,7 @@ const AdminPage = () => {
 					</StateBlock>
 				) : statsError || !stats ? (
 					<StateBlock key="stats-error" tone="error">
-						Impossible de charger les statistiques.
+						{t("admin.statsError")}
 						<span className="admin-state__detail">
 							{statsError?.message}
 						</span>
@@ -370,8 +366,9 @@ const AdminPage = () => {
 							variants={reveal}
 						>
 							<SectionHead
-								eyebrow="─ Tendance"
-								title="Visites par jour"
+								eyebrow={`─ ${t("admin.tendency")}`}
+
+								title={t("admin.visitsPerDay")}
 							/>
 							<div className="admin-card admin-card--wide">
 								<DailyChart daily={stats.daily} />
@@ -384,15 +381,15 @@ const AdminPage = () => {
 							variants={reveal}
 						>
 							<SectionHead
-								eyebrow="─ Répartition"
-								title="D'où viennent-ils ?"
+								eyebrow={`─ ${t("admin.repartition")}`}
+								title={t("admin.whereFrom")}
 							/>
 							<motion.div
 								className="admin-grid"
 								variants={stagger}
 							>
 								<RankedList
-									title="Pays"
+									title={t("admin.countries")}
 									items={stats.top_countries.map((c) => ({
 										label: c.country_code,
 										count: c.count,
@@ -413,26 +410,26 @@ const AdminPage = () => {
 									}}
 								/>
 								<RankedList
-									title="Appareils"
+									title={t("admin.devices")}
 									items={stats.top_devices}
 								/>
 								<RankedList
-									title="Navigateurs"
+									title={t("admin.browsers")}
 									items={stats.top_browsers}
 								/>
 								<RankedList
-									title="Provenance"
+									title={t("admin.referrers")}
 									items={stats.top_referrers}
 									renderLabel={(item) =>
-										item.label || "Accès direct"
+										item.label || t("admin.referrerDirect")
 									}
 								/>
 								<RankedList
-									title="Langues"
+									title={t("admin.languages")}
 									items={stats.top_languages}
 								/>
 								<RankedList
-									title="Pages d'entrée"
+									title={t("admin.entryPages")}
 									items={stats.top_paths}
 									renderLabel={(item) => (
 										<code className="admin-code">
@@ -450,9 +447,11 @@ const AdminPage = () => {
 			<section className="admin-section" id="admin-visits">
 				<div className="admin-section__head admin-section__head--row">
 					<div>
-						<span className="admin-eyebrow">─ Journal</span>
+						<span className="admin-eyebrow">
+							─ {t("admin.journal")}
+						</span>
 						<h2 className="admin-section__title">
-							Dernières visites
+							{t("admin.lastVisits")}
 						</h2>
 						{!visitsLoading && !visitsError && (
 							<p className="admin-section__meta">
@@ -477,14 +476,14 @@ const AdminPage = () => {
 						</StateBlock>
 					) : visitsError ? (
 						<StateBlock key="visits-error" tone="error">
-							Impossible de charger le journal.
+							{t("admin.journalError")}
 							<span className="admin-state__detail">
 								{visitsError.message}
 							</span>
 						</StateBlock>
 					) : visits.length === 0 ? (
 						<StateBlock key="visits-empty">
-							Aucune visite sur cette période.
+							{t("admin.journalEmpty")}
 						</StateBlock>
 					) : (
 						<motion.div
@@ -498,12 +497,12 @@ const AdminPage = () => {
 							<table className="admin-table">
 								<thead>
 									<tr>
-										<th>Date</th>
-										<th>Pays</th>
+										<th>{t("admin.date")}</th>
+										<th>{t("admin.country")}</th>
 										<th>IP</th>
-										<th>Appareil</th>
-										<th>Page d'entrée</th>
-										<th>Provenance</th>
+										<th>{t("admin.device")}</th>
+										<th>{t("admin.path")}</th>
+										<th>{t("admin.referrer")}</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -520,7 +519,8 @@ const AdminPage = () => {
 												<span className="admin-flag">
 													{flagEmoji(v.country_code)}
 												</span>
-												{v.country_name ?? "Inconnu"}
+												{v.country_name ??
+													t("admin.unknown")}
 												{v.city && (
 													<span className="admin-table__muted">
 														{" "}
@@ -534,7 +534,7 @@ const AdminPage = () => {
 												</code>
 												{v.is_new_visitor && (
 													<span className="admin-badge">
-														nouveau
+														{t("admin.newVisitor")}
 													</span>
 												)}
 											</td>
@@ -558,7 +558,9 @@ const AdminPage = () => {
 											<td className="admin-table__referrer">
 												{v.referrer || (
 													<span className="admin-table__muted">
-														direct
+														{t(
+															"admin.referrerDirect",
+														)}
 													</span>
 												)}
 											</td>

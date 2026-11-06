@@ -97,7 +97,8 @@
 		"order": "Ordo",
 		"symbols": "Symbola",
 		"titles": "Tituli",
-		"orders": "Ordines"
+		"orders": "Ordines",
+		"breadcrumb": "Breadcrumb"
 	},
 	"saints": {
 		"filters": {
@@ -219,6 +220,47 @@
 			"secondary": "Sanctos cognosce",
 			"contact": "Quaestio aut correctio? Scribe nobis ad"
 		}
+	},
+	"admin": {
+		"totalVisits": "Aditus Totales",
+		"uniqueVisitors": "Visitatores Singulares",
+		"today": "Hodie",
+		"countries": "Civitates",
+		"title": "Administratio",
+		"traffic": "Frequentia",
+		"trafficText": "Aditus numeratur cum situs primum oneratur, semel in sessione. Data in latere servitii augentur (civitas, explorator, instrumentum).",
+		"statsError": "Statistica onerari non possunt.",
+		"tendency": "Inclinatio",
+		"visitsPerDay": "Aditus per diem",
+		"repartition": "Distributio",
+		"whereFrom": "Unde veniunt?",
+		"devices": "Instrumenta",
+		"browsers": "Exploratores",
+		"referrers": "Origines",
+		"referrerDirect": "Aditus directus",
+		"languages": "Linguae",
+		"entryPages": "Paginae introitus",
+		"journal": "Acta",
+		"lastVisits": "Aditus recentissimi",
+		"visits_plural": "aditus",
+		"visits_one": "aditus",
+		"page": "Pagina",
+		"journalError": "Acta onerari non possunt.",
+		"journalEmpty": "Nullus aditus hoc tempore.",
+		"date": "Dies",
+		"country": "Civitas",
+		"device": "Instrumentum",
+		"browser": "Explorator",
+		"referrer": "Origo",
+		"path": "Pagina introitus",
+		"unknown": "Incognitus",
+		"new": "novus",
+		"direct": "directus"
+	},
+	"celebrationPage": {
+		"liturgy": "Liturgia",
+		"celebrationOfTheDay": "Celebratio diei",
+		"celebrationPageDescription": "Explora celebrationem diei, eius colorem liturgicum, gradum et sanctos associatos. Diversa calendaria praesto sunt ad variationes regionales et historicas explorandas."
 	},
 	"404": {
 		"text": "Pagina non inventa"

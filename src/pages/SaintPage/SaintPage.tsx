@@ -132,7 +132,7 @@ const SaintPage = () => {
 			<nav
 				className={`saint-page__breadcrumb ${saintHasNoAttributesOrPatronages ? "no-aside" : ""}
 			`}
-				aria-label="Fil d'Ariane"
+				aria-label={t("saint.breadcrumb")}
 			>
 				<RippleLink to="/saints" className="saint-page__back">
 					← {t("saint.backToList")}
