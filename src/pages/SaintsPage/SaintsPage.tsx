@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Components
 import { SaintCardSmall } from "../../components/SaintCardSmall/SaintCardSmall.tsx";
-import { SaintModal } from "../../components/SaintModal/SaintModal.tsx";
 import { Pagination } from "../../components/Pagination/Pagination.tsx";
 import { Loader } from "../../components/Loader/Loader.tsx";
 import {
@@ -16,9 +15,6 @@ import {
 // Hooks
 import { useSaints } from "../../hooks/useSaints.ts";
 import { useLanguage } from "../../hooks/useLanguage.ts";
-
-// Types
-import type { SaintApi } from "../../types/Saint.ts";
 
 // Error handling
 import { ApiError } from "../../api/client.ts";
@@ -71,7 +67,6 @@ export const SaintsPage = () => {
 	const [filters, setFilters] = useState<SaintsFiltersValue>(DEFAULT_FILTERS);
 
 	const [page, setPage] = useState(1);
-	const [selectedSaint, setSelectedSaint] = useState<SaintApi | null>(null);
 
 	const { century, sort, attributes, patronages } = filters;
 	const {
@@ -194,18 +189,6 @@ export const SaintsPage = () => {
 					</motion.section>
 				)}
 			</AnimatePresence>
-
-			{/*We use layoutId on the modal and the card, so AnimatePresence is not needed here.
-				It would cause a flicker when opening/closing the modal.*/}
-
-			{/*<AnimatePresence>*/}
-			{selectedSaint && (
-				<SaintModal
-					saint={selectedSaint}
-					onClose={() => setSelectedSaint(null)}
-				/>
-			)}
-			{/*</AnimatePresence>*/}
 
 			<Pagination
 				currentPage={page}

@@ -20,7 +20,7 @@ export function useCelebration(
 	calendarCode?: string,
 	dateParam?: string,
 	// Need fix
-	languageCode?: string,
+	languageCode = "en",
 ) {
 	const [celebration, setCelebration] = useState<Celebration | null>(null);
 	const [liturgicalSeason, setLiturgicalSeason] =

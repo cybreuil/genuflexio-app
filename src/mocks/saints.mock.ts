@@ -1,5 +1,3 @@
-import { useSyncExternalStore } from "react";
-
 export const mockSaints = [
 	{
 		id: "saint_pierre",

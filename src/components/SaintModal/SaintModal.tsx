@@ -37,7 +37,7 @@ export function SaintModal({
 	saint: SaintApi;
 	onClose: () => void;
 }) {
-	const { languageCode } = useLanguage();
+	const { languageCode, t } = useLanguage();
 
 	const { detail, loading, error } = useSaintBySlug(saint.slug, languageCode);
 
@@ -60,7 +60,7 @@ export function SaintModal({
 		saint.image_url || primaryImage(detail?.images)?.image_url || null;
 	const name = detail?.name || saint.name || saint.default_name;
 	const century = detail?.century ?? saint.century ?? null;
-	const eyebrow = saint.life_label || centuryLabel(century);
+	const eyebrow = saint.life_label || centuryLabel(century, t) || null;
 	const titleId = `saint-modal-title-${saint.id}`;
 
 	const patronages = detail?.patronages ?? [];
@@ -201,7 +201,9 @@ export function SaintModal({
 								<span />
 							</div>
 						) : error ? (
-							<p className="saint-modal__error">{error}</p>
+							<p className="saint-modal__error">
+								{error.message}
+							</p>
 						) : detail?.short_description ? (
 							<p className="saint-modal__lead">
 								{detail.short_description}

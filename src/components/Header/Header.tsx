@@ -17,7 +17,6 @@ const NAV_ITEMS: NavItem[] = [
 	{ to: "/gallery", labelKey: "nav.gallery" },
 	// { to: "/search", labelKey: "nav.search" },
 	{ to: "/about", labelKey: "nav.about" },
-	,
 ];
 
 // Scroll Actions

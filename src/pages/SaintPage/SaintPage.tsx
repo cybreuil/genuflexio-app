@@ -517,7 +517,7 @@ const SaintPage = () => {
 										</ul>
 									</motion.div>
 								))}
-							{(saint.patronages?.length ?? 0) && (
+							{(saint.patronages?.length ?? 0) > 0 && (
 								<motion.div
 									className="panel aside-column__patronages"
 									variants={landIn(-32)}
