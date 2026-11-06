@@ -31,8 +31,6 @@ export const DEFAULT_FILTERS: SaintsFiltersValue = {
 	patronages: [],
 };
 
-const CENTURIES = Array.from({ length: 21 }, (_, i) => i + 1);
-
 const getSaintSort = (century: string, t: (key: string) => string) => [
 	{ value: "random", label: t("saints.filters.sortRandom") },
 	{ value: "name_asc", label: t("saints.filters.sortNameAsc") },
@@ -48,6 +46,11 @@ const getSaintSort = (century: string, t: (key: string) => string) => [
 		disabled: century !== "all",
 	},
 ];
+
+// Nombre de siècles à afficher dans le filtre (1..aujourd'hui)
+const currentYear = new Date().getFullYear();
+const currentCentury = Math.ceil(currentYear / 100);
+const CENTURIES = Array.from({ length: currentCentury }, (_, i) => i + 1);
 
 type Props = {
 	value: SaintsFiltersValue;

@@ -188,31 +188,30 @@
 	"about": {
 		"eyebrow": "─ De nobis",
 		"title": "Calendarium, memoria, pinacotheca.",
-		"lead": "Genuflexio coniungit calendarium liturgicum cum hereditate artis quam inspiravit: celebrationem diei, vitas sanctorum et opera eximia eis dicata.",
-
+		"lead": "Genuflexio calendarium liturgicum cum patrimonio artis coniungit quod ex eo ortum est: celebrationem diei, vitas Sanctorum atque praeclara artis opera eorum honori dedicata.",
 		"manifesto": {
-			"eyebrow": "Cur hoc propositum",
-			"title": "Calendario vultus reddere",
-			"p1": "Quisque dies anni nomen, historiam, colorem habet. Per saecula pictores, sculptores atque illuminatores his nominibus vultum dederunt. Genuflexio ea denuo coniungere studet.",
-			"p2": "Neque applicatio devotionis neque catalogus artis, Genuflexio in bivio consistit: locus quietus ad celebrationem diei consulendam, vestigia sanctorum per saecula sequenda et opera ab eis inspirata contemplanda.",
-			"quote": "Non omnes qui vagantur amissi sunt.",
+			"eyebrow": "Cur hoc opus",
+			"title": "Vultus calendario reddere",
+			"p1": "Quisque anni dies nomen, historiam, colorem gerit. Per saecula pictores, sculptores atque miniatores his nominibus vultum dederunt. Genuflexio simpliciter hos nexus renovare studet.",
+			"p2": "Imprimis ad vitam catholicam comitandam excogitatum, Genuflexio est tranquillus locus in quo fides, historia atque ars conveniunt. Hic celebratio diei cognosci potest, Sanctorum per saecula vestigia sequi atque praeclara artis sacrae opera contemplari quae illi inspiraverunt.",
+			"quote": "Non omnes qui vagantur errant.",
 			"quoteAuthor": "J.R.R. Tolkien"
 		},
 
 		"values": {
-			"eyebrow": "Principia nostra",
-			"title": "Tria proposita",
+			"eyebrow": "Principia mea",
+			"title": "Tria officia",
 			"0": {
 				"title": "Diligentia",
-				"text": "Dies, gradus et colores liturgici secundum calendaria officialia statuuntur. Unumquodque calendarium documentis et fontibus comprobatur."
+				"text": "Tota calendarii ratio ex fontibus certis et comprobabilibus diligenter elaborata est. Nihilominus, si quid dubium oriatur aut rem confirmare velis, te ad dioecesis tuae paginas consulendas invito."
 			},
 			"1": {
-				"title": "Apertura",
-				"text": "Opera hic reproducta in dominio publico sunt. Data libere communicantur, et omnes ad contribuendum invitantur."
+				"title": "Apertitudo",
+				"text": "Omnia opera in hac pinacotheca exhibita ad publicum patrimonium pertinent. Propter magnam operum multitudinem, non possum affirmare omnia sine erroribus esse. Pro quibuslibet mendis aut inaccuratiis veniam praecipio."
 			},
 			"2": {
-				"title": "Sobrietas",
-				"text": "Nullae nuntiationes publicitariae, nulla vestigatio, nullus strepitus. Tantum pagina quae id praestat quod promittit, in omni velamento."
+				"title": "Simplicit as",
+				"text": "Nulla publicitas, nulla mercatura, nullus strepitus. Tantum pagina quae id praestat quod promittit, nullo privato lucro quaesito, sed ex pietate atque devotione condita."
 			}
 		},
 
@@ -220,51 +219,56 @@
 			"eyebrow": "In numeris",
 			"0": {
 				"value": "365",
-				"label": "dies, singuli cum sua celebratione"
+				"label": "dies, singuli propria celebratione"
 			},
-			"1": { "value": "500+", "label": "sancti descripti" },
-			"2": { "value": "1 000+", "label": "opera in dominio publico" },
-			"3": { "value": "3", "label": "calendaria liturgica" }
+			"1": { "value": "250+", "label": "Sancti descripti" },
+			"2": {
+				"value": "1 000+",
+				"label": "Opera ad publicum patrimonium pertinentia"
+			},
+			"3": { "value": "5", "label": "Calendaria liturgica" }
 		},
 
 		"timeline": {
-			"eyebrow": "Iter propositum",
-			"title": "Quo pergimus",
+			"eyebrow": "Propositum operis",
+			"title": "Quo progredior?",
 			"0": {
 				"status": "done",
-				"title": "Celebratio diei",
-				"text": "Calendarium liturgicum cum gradu, colore et tempore liturgico, die post diem."
+				"title": "Celebratio hodierna",
+				"text": "Calendarium liturgicum cotidianum, cum gradu celebrationis, colore liturgico atque tempore liturgico."
 			},
 			"1": {
 				"status": "done",
-				"title": "Vitae sanctorum",
-				"text": "Pinacotheca percurrenda, paginae singulis sanctis dicatae, patrocinia et attributa."
+				"title": "Vitae Sanctorum et Pinacotheca Artis Sacrae",
+				"text": "Pinacotheca perquirenda, paginae singulis Sanctis dedicatae, patrocinia atque attributa."
 			},
 			"2": {
 				"status": "current",
-				"title": "Mappa sanctorum",
-				"text": "Loci nativitatis, mortis atque operae in mappa interactiva."
+				"title": "Calendarium Traditionale Ioannis XXIII (1960)",
+				"text": "Ob huius calendarii multiplicitatem, eius elaboratio adhuc continuatur."
 			},
 			"3": {
 				"status": "next",
-				"title": "Pinacotheca artis",
-				"text": "Opera per sanctum, pictorem, aetatem vel museum percurrere."
+				"title": "Spatium usorum",
+				"text": "Nova instrumenta usoribus adscriptis destinata, inter quae vota in chartis Sanctorum, opera dilecta aliaque."
 			}
 		},
 
 		"credits": {
-			"eyebrow": "Auctores et fontes",
-			"title": "Studiose exstructum",
-			"text": "Genuflexio propositum independens est. Imagines ex museis et institutis proveniunt quae collectiones suas in dominio publico praebent. Data liturgica ex calendariis officialibus compilata sunt.",
+			"eyebrow": "Gratias et auctoritates",
+			"title": "Ad Salutem Animarum",
+			"text": "Genuflexio est opus independens, quod toto otio meo condidi, spe quoque laboris professionalis iterum inveniendi, cum studio atque devotione. Gratias ex animo ago omnibus qui me sustinuerunt atque hortati sunt, praesertim familiae Domini ob spirituale auxilium, paroeciae Sancti Georgii, atque Inès ob insignia creata. Libenter etiam GitHub meum visita, ubi alia opera mea invenire potes.",
 			"sources": "Fontes et licentiae",
-			"github": "Codex fontis"
+			"github": "GitHub",
+			"fmnd": "FMND",
+			"saintgeorges": "Sanctus Georgius"
 		},
 
 		"cta": {
-			"title": "Paratus es explorare?",
-			"primary": "Celebratio diei",
-			"secondary": "Sanctos cognosce",
-			"contact": "Quaestio aut correctio? Scribe nobis ad"
+			"title": "Paratusne es explorare?",
+			"primary": "Celebratio hodierna",
+			"secondary": "Sanctos cognoscere",
+			"contact": "Si quaestio aut emendatio tibi est, scribe nobis ad"
 		}
 	},
 	"admin": {

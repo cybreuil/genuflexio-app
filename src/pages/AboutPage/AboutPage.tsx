@@ -31,6 +31,8 @@ const TIMELINE = [0, 1, 2, 3] as const;
 
 const CONTACT_EMAIL = "contact@genuflexio.com";
 const GITHUB_URL = "https://github.com/cybreuil";
+const FMND_URL = "https://fmnd.org/";
+const SAINTGEORGES_URL = "https://www.eglisesaintgeorges.com/";
 
 const AboutPage = () => {
 	const { t } = useLanguage();
@@ -219,6 +221,22 @@ const AboutPage = () => {
 							rel="noreferrer"
 						>
 							{t("about.credits.github")} ↗
+						</a>
+						<a
+							className="about-link"
+							href={FMND_URL}
+							target="_blank"
+							rel="noreferrer"
+						>
+							{t("about.credits.fmnd")} ↗
+						</a>
+						<a
+							className="about-link"
+							href={SAINTGEORGES_URL}
+							target="_blank"
+							rel="noreferrer"
+						>
+							{t("about.credits.saintgeorges")} ↗
 						</a>
 					</div>
 				</div>

@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { FacetMap } from "../../types/Facet";
 import type { GalleryFacetKey } from "../../types/Image";
 import { FacetRow } from "../FacetRow/FacetRow";
-import { periodLabel } from "../../utils/artworkFormat";
+import { centuryLabel } from "../../utils/saintFormat";
 import { useLanguage } from "../../hooks/useLanguage";
 
 export type GallerySort =
@@ -181,7 +181,9 @@ const GalleryFilters = ({
 								allLabel={t("galleryPage.filters.all")}
 								lessLabel={t("galleryPage.filters.less")}
 								items={facets.century}
-								formatLabel={(f) => periodLabel(f.value)}
+								formatLabel={(f) =>
+									centuryLabel(Number(f.value), t) ?? f.label
+								}
 								selected={
 									value.century !== null
 										? String(value.century)

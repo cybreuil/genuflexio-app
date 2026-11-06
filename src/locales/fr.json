@@ -191,26 +191,26 @@
 		"manifesto": {
 			"eyebrow": "Pourquoi ce projet",
 			"title": "Redonner des visages au calendrier",
-			"p1": "Chaque jour de l’année porte un nom, une histoire, une couleur. Depuis des siècles, peintres, sculpteurs et enlumineurs ont donné un visage à ces noms. Genuflexio cherche à renouer ces liens.",
-			"p2": "Ni application dévotionnelle ni catalogue d’art, Genuflexio se situe à la croisée des chemins : un lieu paisible pour consulter la célébration du jour, suivre la trace des saints à travers les siècles et contempler les œuvres qu’ils ont inspirées.",
+			"p1": "Chaque jour de l’année porte un nom, une histoire, une couleur. Depuis des siècles, peintres, sculpteurs et enlumineurs ont donné un visage à ces noms. Genuflexio cherche simplement à renouer ces liens.",
+			"p2": "Pensé avant tout pour accompagner la pratique catholique, Genuflexio est un espace paisible à la croisée des chemins. C’est un lieu unique pour consulter la célébration du jour, marcher dans les pas des saints à travers les siècles et contempler les chefs-d’œuvre d'art sacré qu’ils ont inspirés.",
 			"quote": "Ce ne sont pas tous ceux qui errent qui sont perdus.",
 			"quoteAuthor": "J.R.R. Tolkien"
 		},
 
 		"values": {
-			"eyebrow": "Nos principes",
+			"eyebrow": "Mes principes",
 			"title": "Trois engagements",
 			"0": {
 				"title": "Rigueur",
-				"text": "Les dates, rangs et couleurs liturgiques suivent les calendriers officiels. Chaque calendrier est documenté et sourcé."
+				"text": "L'élaboration de la logique a été faite à partir de sources fiables et vérifiables. Toutefois, en cas de doute ou pour toute confirmation, je vous invite à consulter le site de votre diocèse."
 			},
 			"1": {
 				"title": "Ouverture",
-				"text": "Les œuvres reproduites appartiennent au domaine public. Les données sont librement partagées et chacun est invité à contribuer."
+				"text": "Les œuvres reproduites appartiennent toutes au domaine public. En raison de la taille de la galerie, je ne peux pas garantir aucunes erreurs de ma part dont je m'excuse par avance."
 			},
 			"2": {
 				"title": "Sobriété",
-				"text": "Pas de publicité, pas de traçage, pas de bruit. Simplement une page qui fait ce qu’elle promet, sur chaque écran."
+				"text": "Pas de publicité, pas de commercialisation, pas de bruit. Simplement une page qui fait ce qu’elle promet, sans intérêt personnel et par dévotion."
 			}
 		},
 
@@ -220,14 +220,14 @@
 				"value": "365",
 				"label": "jours, chacun avec sa célébration"
 			},
-			"1": { "value": "500+", "label": "saints documentés" },
+			"1": { "value": "250+", "label": "saints documentés" },
 			"2": { "value": "1 000+", "label": "œuvres du domaine public" },
-			"3": { "value": "3", "label": "calendriers liturgiques" }
+			"3": { "value": "5", "label": "calendriers liturgiques" }
 		},
 
 		"timeline": {
 			"eyebrow": "Feuille de route",
-			"title": "Où nous allons",
+			"title": "Où je vais ?",
 			"0": {
 				"status": "done",
 				"title": "Célébration du jour",
@@ -235,27 +235,29 @@
 			},
 			"1": {
 				"status": "done",
-				"title": "Vie des saints",
+				"title": "Vie des saints et Galerie d’art sacré",
 				"text": "Galerie consultable, pages détaillées, patronages et attributs."
 			},
 			"2": {
 				"status": "current",
-				"title": "Carte des saints",
-				"text": "Lieux de naissance, lieux de décès et lieux d’activité sur une carte interactive."
+				"title": "Calendrier traditionnel de Jean XXIII (1960)",
+				"text": "En raison de la complexité qu'apporte ce calendrier, il est encore en construction."
 			},
 			"3": {
 				"status": "next",
-				"title": "Galerie d’art",
-				"text": "Parcourir les œuvres par saint, peintre, période ou musée."
+				"title": "Espace utilisateur",
+				"text": "Implémentation de fonctionnalités supplémentaires pour les utilisateurs connectés. (Ex-voto sur les cartes de saints, favoris, etc.)"
 			}
 		},
 
 		"credits": {
 			"eyebrow": "Crédits",
-			"title": "Conçu avec soin",
-			"text": "Genuflexio est un projet indépendant. Les images proviennent de musées et d’institutions qui mettent leurs collections à disposition dans le domaine public. Les données liturgiques sont compilées à partir de calendriers officiels.",
+			"title": "Pour le Salut des Âmes",
+			"text": "Genuflexio est un projet indépendant, conçu sur tout mon temps libre visant une réinsertion professionnelle, avec passion et dévotion. Merci à tous ceux qui m'ont soutenu et encouragé, particulièrement à la famille Domini pour son accompagnement spirituel, la paroisse Saint-Georges, Inès pour les logos. N'hesitez pas a consulter mon github pour mes autres projets.",
 			"sources": "Sources & licences",
-			"github": "Code source"
+			"github": "Github",
+			"fmnd": "FMND",
+			"saintgeorges": "Saint-Georges"
 		},
 
 		"cta": {

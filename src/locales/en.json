@@ -183,84 +183,87 @@
 		"project": "The project",
 		"artworks": "The artworks reproduced are in the public domain."
 	},
-
 	"about": {
 		"eyebrow": "─ About",
 		"title": "A calendar, a memory, a gallery.",
-		"lead": "Genuflexio brings together the liturgical calendar and the artistic heritage it has inspired: the feast of the day, the lives of the saints, and the masterpieces devoted to them.",
-
+		"lead": "Genuflexio brings together the liturgical calendar and the artistic heritage it has inspired: the feast of the day, the lives of the saints, and the masterpieces created in their honour.",
 		"manifesto": {
 			"eyebrow": "Why this project",
-			"title": "Giving the calendar back its faces",
-			"p1": "Every day of the year carries a name, a story, a colour. For centuries, painters, sculptors and illuminators have given these names a face. Genuflexio sets out to reconnect them.",
-			"p2": "Neither a devotional app nor an art catalogue, it sits at the crossroads: a quiet place to consult the celebration of the day, follow the thread of the saints through the centuries, and contemplate the works they inspired.",
-			"quote": "Not all who wander are lost.",
+			"title": "Giving faces back to the calendar",
+			"p1": "Every day of the year bears a name, a story, a colour. For centuries, painters, sculptors and illuminators have given faces to these names. Genuflexio simply seeks to bring these connections back to life.",
+			"p2": "Created first and foremost to accompany Catholic practice, Genuflexio is a quiet space at the crossroads of faith, history and art. A place to discover the celebration of the day, walk in the footsteps of the saints across the centuries, and contemplate the masterpieces of sacred art they have inspired.",
+			"quote": "Not all those who wander are lost.",
 			"quoteAuthor": "J.R.R. Tolkien"
 		},
 
 		"values": {
-			"eyebrow": "Our principles",
+			"eyebrow": "My principles",
 			"title": "Three commitments",
 			"0": {
-				"title": "Rigour",
-				"text": "Dates, ranks and liturgical colours follow the official calendars. Each calendar is documented and sourced."
+				"title": "Accuracy",
+				"text": "The calendar logic has been carefully built using reliable and verifiable sources. Nevertheless, should you have any doubts or wish to confirm something, I encourage you to consult your local diocese."
 			},
 			"1": {
 				"title": "Openness",
-				"text": "The works reproduced are in the public domain. The data is shared freely, and everyone is welcome to contribute."
+				"text": "All artworks featured in the gallery are in the public domain. Given the size of the collection, I cannot guarantee that every detail is free of errors. I sincerely apologise in advance for any mistakes or inaccuracies."
 			},
 			"2": {
-				"title": "Restraint",
-				"text": "No ads, no tracking, no noise. Just a page that does what it says, on every screen."
+				"title": "Simplicity",
+				"text": "No advertising, no commercialisation, no noise. Simply a page that does what it promises, created without personal gain, out of devotion."
 			}
 		},
 
 		"numbers": {
-			"eyebrow": "In figures",
-			"0": { "value": "365", "label": "days, each with its celebration" },
-			"1": { "value": "500+", "label": "saints documented" },
-			"2": { "value": "1 000+", "label": "public-domain artworks" },
-			"3": { "value": "3", "label": "liturgical calendars" }
+			"eyebrow": "By the numbers",
+			"0": {
+				"value": "365",
+				"label": "days, each with its own celebration"
+			},
+			"1": { "value": "250+", "label": "saints documented" },
+			"2": { "value": "1,000+", "label": "public domain artworks" },
+			"3": { "value": "5", "label": "liturgical calendars" }
 		},
 
 		"timeline": {
 			"eyebrow": "Roadmap",
-			"title": "Where we are going",
+			"title": "Where am I headed?",
 			"0": {
 				"status": "done",
-				"title": "Celebration of the day",
-				"text": "Liturgical calendar with rank, colour and season, day after day."
+				"title": "Today's Celebration",
+				"text": "A daily liturgical calendar featuring the rank, liturgical colour and season of each celebration."
 			},
 			"1": {
 				"status": "done",
-				"title": "Lives of the saints",
-				"text": "Browsable gallery, detailed pages, patronages and attributes."
+				"title": "Lives of the Saints & Sacred Art Gallery",
+				"text": "A searchable gallery, detailed saint profiles, patronages and traditional attributes."
 			},
 			"2": {
 				"status": "current",
-				"title": "Map of the saints",
-				"text": "Birthplaces, places of death and activity on an interactive map."
+				"title": "The Traditional Calendar of John XXIII (1960)",
+				"text": "Due to the complexity of this calendar, its implementation is still a work in progress."
 			},
 			"3": {
 				"status": "next",
-				"title": "Art gallery",
-				"text": "Browse the artworks by saint, painter, period or museum."
+				"title": "User Space",
+				"text": "Additional features for registered users, including votive offerings on saint cards, favourites and more."
 			}
 		},
 
 		"credits": {
 			"eyebrow": "Credits",
-			"title": "Built with care",
-			"text": "Genuflexio is an independent project. Images come from museums and institutions that release their collections into the public domain. Liturgical data is compiled from official calendars.",
-			"sources": "Sources & licences",
-			"github": "Source code"
+			"title": "For the Salvation of Souls",
+			"text": "Genuflexio is an independent project, built entirely in my spare time, with the hope of helping me find my way back into professional life. It is a work born of passion and devotion. My heartfelt thanks to everyone who has supported and encouraged me along the way, especially the Domini family for their spiritual guidance, Saint-Georges parish, and Inès for her work on the logos. Feel free to visit my GitHub to discover my other projects.",
+			"sources": "Sources & Licences",
+			"github": "GitHub",
+			"fmnd": "FMND",
+			"saintgeorges": "Saint-Georges"
 		},
 
 		"cta": {
 			"title": "Ready to explore?",
-			"primary": "Celebration of the day",
-			"secondary": "Discover the saints",
-			"contact": "A question, a correction? Write to us at"
+			"primary": "Today's Celebration",
+			"secondary": "Discover the Saints",
+			"contact": "A question or a correction? Feel free to write to me at"
 		}
 	},
 	"admin": {
