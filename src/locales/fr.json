@@ -65,7 +65,7 @@
 		"saints": "Saints du jour",
 		"noSaint": "Aucun saint associé à cette célébration.",
 		"loadingError": "Erreur lors du chargement de la célébration.",
-		"noDescription": "Aucune description disponible pour cette célébration.",
+		"noDescription": "Aucune description particulière n'est prévue pour cette célébration. Il s'agit d'un dimanche du Temps ordinaire ou d'un jour de férie, sans commémoration ni particularité liturgique spécifique.",
 		"mainCelebration": "Célébration principale",
 		"otherCelebrations": "Autres célébrations du jour",
 		"noOtherCelebrations": "Aucune autre célébration",

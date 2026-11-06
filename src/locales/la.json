@@ -67,7 +67,7 @@
 		"saints": "Sancti die",
 		"noSaint": "Nullus sanctus cum hac celebratione associatus est.",
 		"loadingError": "Error in celebratione onerando.",
-		"noDescription": "Nulla descriptio pro hac celebratione praesto est.",
+		"noDescription": "Nulla descriptio specialis pro hac celebratione praesto est. Dies est dominica in Tempore Ordinario aut dies ferialis, sine ullo commemoratio aut proprietate liturgica specifica.",
 		"mainCelebration": "Celebratio Principalis",
 		"otherCelebrations": "Aliae celebrationes diei",
 		"noOtherCelebrations": "Nullae aliae celebrationes",

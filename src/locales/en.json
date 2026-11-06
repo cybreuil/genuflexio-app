@@ -65,7 +65,7 @@
 		"saints": "Saints of the Day",
 		"noSaint": "No saint associated with this celebration.",
 		"loadingError": "Error loading the celebration.",
-		"noDescription": "No description available for this celebration.",
+		"noDescription": "No specific description is provided for this celebration. It is a Sunday in Ordinary Time or a weekday, without any commemoration or specific liturgical feature.",
 		"mainCelebration": "Main Celebration",
 		"otherCelebrations": "Other Celebrations of the Day",
 		"noOtherCelebrations": "No Other Celebrations",

@@ -176,7 +176,8 @@ const CelebrationOfTheDay: React.FC = () => {
 					src: coverSaint.saint_image_url,
 					alt: coverSaint.saint_name,
 				}
-			: null;
+			: { src: "/altars/default.webp" };
+
 	const isLoading = isCalendarLoading || isCelebrationLoading;
 	const error = calendarError ?? celebrationError;
 
