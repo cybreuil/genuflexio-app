@@ -577,6 +577,9 @@
 	.celebration-page {
 		width: 100vw;
 	}
+	.celebration-page__sidebar-sticky {
+		margin: 0 1rem;
+	}
 
 	.celebration-cover {
 		min-height: 60svw;
