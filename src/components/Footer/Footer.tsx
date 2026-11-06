@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Logo } from "../Logo/Logo";
-import { GithubLogo } from "../../icons";
+import { DesignedLogoWithText3, GithubLogo } from "../../icons";
 import { useLanguage } from "../../hooks/useLanguage";
 import { EASINGS } from "../../styles/theme";
 import "./Footer.css";
@@ -36,9 +36,12 @@ const Footer = () => {
 						aria-label="Genuflexio"
 					>
 						<span className="footer__logo" aria-hidden="true">
-							<Logo color="currentColor" />
+							<DesignedLogoWithText3
+								title="Genuflexio"
+								width="100%"
+								fillFirstLetter="var(--color-secondary)"
+							/>
 						</span>
-						Genuflexio
 					</Link>
 					<p className="footer__tagline">{t("footer.tagline")}</p>
 				</div>

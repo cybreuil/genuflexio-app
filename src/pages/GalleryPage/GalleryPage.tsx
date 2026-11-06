@@ -273,6 +273,7 @@ const GalleryPage = () => {
 				variants={reveal}
 				initial="hidden"
 				animate="show"
+				key={languageCode}
 			>
 				<span className="gallery-header__eyebrow">
 					─ {t("galleryPage.galleryPageTitle")}

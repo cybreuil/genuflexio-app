@@ -49,8 +49,8 @@
 
 .footer__logo {
 	display: block;
-	height: 2rem;
-	aspect-ratio: 1;
+	width: 40%;
+	overflow: hidden;
 }
 
 .footer__tagline {

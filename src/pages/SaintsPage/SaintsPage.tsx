@@ -43,7 +43,7 @@ const gridGroup = {
 	exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
-const SAINTS_PER_PAGE = 15;
+const SAINTS_PER_PAGE = 20;
 
 function StateBlock({
 	tone = "neutral",
@@ -119,19 +119,16 @@ export const SaintsPage = () => {
 				variants={headerReveal}
 				initial="hidden"
 				animate="show"
+				key={languageCode}
 			>
 				<span className="saints-header__eyebrow">
-					{t("saintsPage.eyebrow")}
+					{t("saints.eyebrow")}
 				</span>
-				<h1 className="saints-header__title">
-					{t("saintsPage.title")}
-				</h1>
-				<p className="saints-header__text">
-					{t("saintsPage.description")}
-				</p>
+				<h1 className="saints-header__title">{t("saints.title")}</h1>
+				<p className="saints-header__text">{t("saints.description")}</p>
 				{totalPages > 1 && (
 					<p className="saints-header__meta">
-						{t("saintsPage.page")} {page} / {totalPages}
+						{t("saints.page")} {page} / {totalPages}
 					</p>
 				)}
 			</motion.header>
