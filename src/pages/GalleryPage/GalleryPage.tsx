@@ -232,25 +232,41 @@ const GalleryPage = () => {
 		loadImages(true);
 	}, [loadImages]);
 
-	// Infinite scroll: load the next page when the sentinel approaches.
+	// Keep the latest loader reachable from a long-lived observer.
+	const loadImagesRef = useRef(loadImages);
+	loadImagesRef.current = loadImages;
+	const hasMoreRef = useRef(hasMore);
+	hasMoreRef.current = hasMore;
+
+	// Infinite scroll. The observer is created once; `observe()` is re-armed
+	// after every page so a sentinel that never left the viewport (large
+	// screens, short pages) still triggers the next load.
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
-
-		if (!sentinel || !hasMore || loading) return;
+		if (!sentinel) return;
 
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				if (entry.isIntersecting && !inFlightRef.current) {
-					loadImages(false);
-				}
+				if (!entry.isIntersecting) return;
+				if (!hasMoreRef.current || inFlightRef.current) return;
+				loadImagesRef.current(false);
 			},
-			{ rootMargin: "300px 0px" },
+			{ rootMargin: "600px 0px" },
 		);
-
 		observer.observe(sentinel);
-
 		return () => observer.disconnect();
-	}, [hasMore, loading, loadImages]);
+	}, [loading]); // sentinel is (re)mounted when the wall replaces the loader
+
+	// Re-arm after each page: if the sentinel is still on screen, load again.
+	useEffect(() => {
+		if (loadingMore || loading || !hasMore) return;
+		const sentinel = sentinelRef.current;
+		if (!sentinel) return;
+		const rect = sentinel.getBoundingClientRect();
+		if (rect.top < window.innerHeight + 600 && !inFlightRef.current) {
+			loadImagesRef.current(false);
+		}
+	}, [loadingMore, loading, hasMore, images.length]);
 
 	// -------------------------
 	// Derived
@@ -439,21 +455,13 @@ const GalleryPage = () => {
 						</div>
 
 						<div ref={sentinelRef} className="gallery-load-more">
-							{loadingMore || hasMore ? (
+							{loadingMore ? (
 								<Loader size={56} />
-							) : (
-								// ) : hasMore ? (
-								// 	<button
-								// 		type="button"
-								// 		onClick={() => loadImages(false)}
-								// 		className="gallery-load-more__button"
-								// 	>
-								// 		Charger plus
-								// 	</button>
+							) : !hasMore ? (
 								<span className="gallery-load-more__end">
 									─ {t("galleryPage.endOfRoom")} ─
 								</span>
-							)}
+							) : null}
 						</div>
 					</motion.div>
 				)}
