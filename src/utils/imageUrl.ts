@@ -6,7 +6,7 @@ export const THUMB_WIDTHS = [400, 800] as const;
 export type ThumbWidth = (typeof THUMB_WIDTHS)[number];
 
 export function variantUrl(url: string, width: ThumbWidth): string {
-	return url.replace(/(\.[a-z0-9]+)$/i, `-${width}$1`);
+	return url.replace(/^((?:https?:\/\/[^/]+)?\/[^/]+)\//, `$1/${width}/`);
 }
 
 /** `srcset` covering every generated width. */
