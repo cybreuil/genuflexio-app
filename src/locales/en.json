@@ -309,5 +309,15 @@
 		"error": "Unable to load the gallery.",
 		"noResults": "No works match these filters.",
 		"endOfRoom": "End of the room"
+	},
+	"loginPage": {
+		"administration": "Administration",
+		"connexion": "Login",
+		"loginText": "Reserved area. PAX",
+		"email": "Email",
+		"password": "Password",
+		"connect": "Log in",
+		"error401": "Incorrect email or password.",
+		"error": "Unable to log in. Please try again."
 	}
 }

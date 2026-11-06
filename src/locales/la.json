@@ -311,5 +311,15 @@
 		"error": "Pinacotheca onerari non potest.",
 		"noResults": "Nulla opera his cribra congruunt.",
 		"endOfRoom": "Finis conclavis"
+	},
+	"loginPage": {
+		"error401": "Email aut tessera incorrecta.",
+		"error": "Inire non potest. Iterum conare.",
+		"administration": "Administratio",
+		"connexion": "Inire",
+		"loginText": "Area reservata. Intra ut tabulam moderandam accedas.",
+		"email": "Email",
+		"password": "Tessera",
+		"connect": "Inire"
 	}
 }

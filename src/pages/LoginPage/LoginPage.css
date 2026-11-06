@@ -69,11 +69,22 @@
 }
 
 .login-header__text {
+	display: flex;
+	flex-direction: column;
 	margin: 1rem 0 0;
 	font-size: 0.98rem;
 	line-height: 1.7;
 	color: var(--color-text-secondary);
 	text-wrap: pretty;
+}
+.login-header__text span {
+	font-size: 1rem;
+	font-style: italic;
+	color: var(--color-text-tertiary);
+}
+.login-header__text span:nth-child(2) {
+	align-self: end;
+	font-style: normal;
 }
 
 /* ===== Formulaire ===== */

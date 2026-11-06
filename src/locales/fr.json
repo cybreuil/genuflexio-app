@@ -309,5 +309,15 @@
 		"error": "Impossible de charger la galerie.",
 		"noResults": "Aucune œuvre ne correspond à ces filtres.",
 		"endOfRoom": "Fin de la salle"
+	},
+	"loginPage": {
+		"error401": "Email ou mot de passe incorrect.",
+		"error": "Connexion impossible. Réessayez.",
+		"administration": "Administration",
+		"connexion": "Connexion",
+		"loginText": "Espace réservé. PAX",
+		"email": "Email",
+		"password": "Mot de passe",
+		"connect": "Se connecter"
 	}
 }

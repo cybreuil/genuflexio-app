@@ -2,6 +2,7 @@ import "./LoginPage.css";
 import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLanguage } from "../../hooks/useLanguage";
 
 // Components
 import { Loader } from "../../components/Loader/Loader";
@@ -28,6 +29,7 @@ const stagger = {
 };
 
 const LoginPage = () => {
+	const { t } = useLanguage();
 	const { user, isAuthLoading, login } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -64,10 +66,10 @@ const LoginPage = () => {
 		} catch (err) {
 			setError(
 				err instanceof ApiError && err.status === 401
-					? "Email ou mot de passe incorrect."
+					? t("loginPage.error401")
 					: err instanceof Error
 						? err.message
-						: "Connexion impossible. Réessayez.",
+						: t("loginPage.error"),
 			);
 			setSubmitting(false);
 		}
@@ -100,11 +102,17 @@ const LoginPage = () => {
 				{/* ===== Formulaire ===== */}
 				<div className="login-card__body">
 					<motion.header className="login-header" variants={reveal}>
-						<span className="login-eyebrow">─ Administration</span>
-						<h1 className="login-header__title">Connexion</h1>
+						<span className="login-eyebrow">
+							─ {t("loginPage.administration")}
+						</span>
+						<h1 className="login-header__title">
+							{t("loginPage.connexion")}
+						</h1>
 						<p className="login-header__text">
-							Espace réservé. Identifiez-vous pour accéder au
-							tableau de bord.
+							<span>
+								❝ Cui multum datum est, multum quaeretur ab eo.❞
+							</span>
+							<span>— Lucas 12:48</span>
 						</p>
 					</motion.header>
 
@@ -115,7 +123,9 @@ const LoginPage = () => {
 						noValidate
 					>
 						<label className="login-field">
-							<span className="login-field__label">Email</span>
+							<span className="login-field__label">
+								{t("loginPage.email")}
+							</span>
 							<input
 								className="login-field__input"
 								type="email"
@@ -130,7 +140,7 @@ const LoginPage = () => {
 
 						<label className="login-field">
 							<span className="login-field__label">
-								Mot de passe
+								{t("loginPage.password")}
 							</span>
 							<input
 								className="login-field__input"
@@ -164,7 +174,11 @@ const LoginPage = () => {
 							className="login-submit"
 							disabled={submitting || !email || !password}
 						>
-							{submitting ? <Loader size={20} /> : "Se connecter"}
+							{submitting ? (
+								<Loader size={20} />
+							) : (
+								t("loginPage.connect")
+							)}
 						</button>
 					</motion.form>
 				</div>
