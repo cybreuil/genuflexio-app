@@ -2,11 +2,9 @@ import type { Image } from "../types/Image";
 
 /** Tranche de période : "XVe siècle" à partir de `year`, sinon depuis `date_label`. */
 export function periodOf(img: Image): string | null {
-	const year =
-		img.year ??
-		(img.date_label
-			? parseInt(img.date_label.match(/\d{3,4}/)?.[0] ?? "", 10)
-			: NaN);
+	const year = img.date_label
+		? parseInt(img.date_label.match(/\d{3,4}/)?.[0] ?? "", 10)
+		: NaN;
 	if (!year || Number.isNaN(year)) return null;
 	const century = Math.floor((year - 1) / 100) + 1;
 	return `${century}`;

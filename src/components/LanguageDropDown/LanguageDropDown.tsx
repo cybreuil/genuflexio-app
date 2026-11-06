@@ -1,5 +1,6 @@
 import type { LanguageCode } from "../../types/Language";
 import { useLanguage } from "../../hooks/useLanguage";
+import "./LanguageDropDown.css";
 
 const LanguageDropDown = () => {
 	const { setLanguageCode, languageCode } = useLanguage();
@@ -9,7 +10,7 @@ const LanguageDropDown = () => {
 	};
 
 	return (
-		<div>
+		<div className="language-dropdown" aria-label="Language selection">
 			<select onChange={onChange} value={languageCode}>
 				<option value="en">English</option>
 				<option value="fr">Français</option>

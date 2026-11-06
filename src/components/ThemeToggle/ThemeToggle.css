@@ -127,27 +127,3 @@ input:checked + .slider .slider-icon.moon {
 [data-theme="light"] .slider:hover {
 	border: 1px solid rgb(31 26 21 / 0.5);
 }
-
-/* Media queries */
-@media (max-width: 768px) {
-	.theme-switch {
-		width: 50px;
-		height: 28px;
-	}
-
-	.slider:before {
-		height: 20px;
-		width: 20px;
-		left: 4px;
-		bottom: 3px;
-	}
-
-	input:checked + .slider:before {
-		transform: translateX(22px);
-	}
-
-	.slider-icon {
-		width: 14px; /* Adjusted width for smaller screens */
-		height: 14px; /* Adjusted height for smaller screens */
-	}
-}

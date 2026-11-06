@@ -479,8 +479,8 @@ const SaintPage = () => {
 							animate="show"
 							key={`aside-${languageCode}`}
 						>
-							{attributeGroups
-								.toSorted(
+							{[...attributeGroups]
+								.sort(
 									([categoryA], [categoryB]) =>
 										categoryOrder.indexOf(categoryA) -
 										categoryOrder.indexOf(categoryB),
@@ -517,18 +517,18 @@ const SaintPage = () => {
 										</ul>
 									</motion.div>
 								))}
-							{saint.patronages?.length > 0 && (
+							{(saint.patronages?.length ?? 0) && (
 								<motion.div
 									className="panel aside-column__patronages"
 									variants={landIn(-32)}
 								>
 									<h3 className="panel__title">
-										{saint.patronages.length > 1
+										{(saint.patronages?.length ?? 0) > 1
 											? t(`saint.patronages`)
 											: t(`saint.patronage`)}
 									</h3>
 									<ul className="aside__category-list">
-										{saint.patronages.map((p) => (
+										{saint.patronages?.map((p) => (
 											<li
 												key={p.code}
 												title={p.description}

@@ -319,7 +319,7 @@ const CelebrationOfTheDay: React.FC = () => {
 							</StateBlock>
 						) : (
 							<motion.article
-								key={`article-${calendar?.code}-${activeCelebration.id}-${date}-${languageCode}`}
+								key={`article-${calendar?.code}-${activeCelebration?.id}-${date}-${languageCode}`}
 								className="celebration-article__inner"
 								variants={articleGroup}
 								initial="hidden"
@@ -379,7 +379,7 @@ const CelebrationOfTheDay: React.FC = () => {
 											className="celebration-cover__title"
 											variants={rise}
 										>
-											{activeCelebration.feast_name}
+											{activeCelebration?.feast_name}
 										</motion.h1>
 									</motion.div>
 								</header>
@@ -398,7 +398,7 @@ const CelebrationOfTheDay: React.FC = () => {
 													background: liturgicalColor,
 												}}
 											/>
-											{activeCelebration.liturgical_color_name ||
+											{activeCelebration?.liturgical_color_name ||
 												liturgicalSeason?.color_label ||
 												t("common.unknown")}
 										</dd>
@@ -406,7 +406,7 @@ const CelebrationOfTheDay: React.FC = () => {
 									<div className="celebration-fact">
 										<dt>{t("liturgical.rank")}</dt>
 										<dd>
-											{activeCelebration.rank_label ||
+											{activeCelebration?.rank_label ||
 												t("common.unknown")}
 											{/*{celebration.is_optional && (
 											<span className="celebration-fact__note">
@@ -427,13 +427,13 @@ const CelebrationOfTheDay: React.FC = () => {
 								{/* --- Body --- */}
 								<motion.div
 									className={`celebration-prose ${
-										activeCelebration.feast_description
+										activeCelebration?.feast_description
 											? ""
 											: "celebration-prose--empty"
 									}`}
 									variants={rise}
 								>
-									{activeCelebration.feast_description ? (
+									{activeCelebration?.feast_description ? (
 										<ReactMarkdown>
 											{
 												activeCelebration.feast_description

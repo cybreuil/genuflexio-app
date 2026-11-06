@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Logo } from "../Logo/Logo";
 import { DesignedLogoWithText3, GithubLogo } from "../../icons";
 import { useLanguage } from "../../hooks/useLanguage";
 import { EASINGS } from "../../styles/theme";
@@ -22,10 +21,10 @@ const Footer = () => {
 	return (
 		<motion.footer
 			className="footer"
-			// variants={reveal}
-			// initial="hidden"
-			// whileInView="show"
-			// viewport={{ once: true, amount: 0.3 }}
+			variants={reveal}
+			initial="hidden"
+			whileInView="show"
+			viewport={{ once: true, amount: 0.3 }}
 			layout="position"
 		>
 			<div className="footer__top">

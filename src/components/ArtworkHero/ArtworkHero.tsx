@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, useEffect } from "react";
+import { useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { useRandomImages } from "../../hooks/useImages";
 import type { Image } from "../../types/Image";
@@ -86,17 +86,6 @@ function ArtworkHero({
 		[0, 0.3],
 		["blur(0px)", "blur(2px)"],
 	);
-
-	// isScrolled for title cancel
-	const [isScrolled, setIsScrolled] = useState(false);
-	useEffect(() => {
-		const handleScroll = () => {
-			setIsScrolled(window.scrollY > 50);
-		};
-
-		window.addEventListener("scroll", handleScroll);
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, []);
 
 	return (
 		<section className="artwork-hero" ref={containerRef} key={languageCode}>

@@ -565,30 +565,6 @@
 		display: contents;
 	}
 
-	.celebration-block--calendar {
-		order: 1;
-		/*position: sticky;
-		top: calc(var(--header-height) + 0.5rem);*/
-		/*z-index: 5;*/
-	}
-
-	.celebration-article {
-		order: 2;
-		height: auto;
-	}
-
-	.celebration-block--secondary {
-		order: 3;
-	}
-
-	.celebration-block--season {
-		order: 4;
-	}
-
-	.celebration-block--selector {
-		order: 5;
-	}
-
 	.celebration-article__inner {
 		height: auto;
 	}
@@ -598,9 +574,8 @@
 	.celebration-page-container {
 		padding-top: calc(var(--header-height) + 1rem);
 	}
-
 	.celebration-page {
-		gap: 1rem;
+		width: 100vw;
 	}
 
 	.celebration-cover {
