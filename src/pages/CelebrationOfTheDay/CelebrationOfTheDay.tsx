@@ -26,6 +26,9 @@ import type { Celebration } from "../../types/Celebration";
 // Error handling
 import { ApiError } from "../../api/client";
 
+// Image thumbnail util
+import { variantUrl } from "../../utils/imageUrl";
+
 /* ===== Animation presets ===== */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -464,9 +467,10 @@ const CelebrationOfTheDay: React.FC = () => {
 													<span className="saint-chip__thumb">
 														{saint.saint_image_url && (
 															<img
-																src={
-																	saint.saint_image_url
-																}
+																src={variantUrl(
+																	saint.saint_image_url,
+																	400,
+																)}
 																alt=""
 																loading="lazy"
 																decoding="async"

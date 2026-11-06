@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "../../hooks/useLanguage";
+import { variantUrl } from "../../utils/imageUrl";
 
 // Components
 import { Loader } from "../../components/Loader/Loader";
@@ -91,7 +92,7 @@ const LoginPage = () => {
 				>
 					{artwork && (
 						<img
-							src={artwork.image_url}
+							src={variantUrl(artwork.image_url, 800)}
 							alt=""
 							decoding="async"
 							draggable={false}

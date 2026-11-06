@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import type { Image } from "../../types/Image";
 import { periodLabel, periodOf } from "../../utils/artworkFormat";
+import { variantUrl } from "../../utils/imageUrl";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -85,7 +86,9 @@ export function ArtworkLightbox({
 				<motion.div
 					key={`bg-${image.id}`}
 					className="lightbox__ambient"
-					style={{ backgroundImage: `url(${image.image_url})` }}
+					style={{
+						backgroundImage: `url(${variantUrl(image.image_url, 400)})`,
+					}}
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}

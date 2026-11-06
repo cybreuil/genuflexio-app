@@ -5,6 +5,7 @@ import { ArtworkHero } from "../../components/ArtworkHero/ArtworkHero";
 import { useRandomImages } from "../../hooks/useImages";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useMemo } from "react";
+import { variantUrl } from "../../utils/imageUrl";
 
 /* Reveal helpers: fade + slight rise when the section enters the viewport */
 const sectionReveal = {
@@ -125,7 +126,7 @@ const HomePage = () => {
 							>
 								{image && (
 									<img
-										src={image.image_url}
+										src={variantUrl(image.image_url, 800)}
 										alt=""
 										loading="lazy"
 										decoding="async"

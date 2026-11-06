@@ -21,6 +21,9 @@ import { useDebounced } from "../../hooks/useDebounced";
 // Error handling
 import { ApiError } from "../../api/client";
 
+// Util thumbnail
+import { variantUrl } from "../../utils/imageUrl";
+
 /* ===== Animation presets ===== */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -401,7 +404,10 @@ const GalleryPage = () => {
 												}`}
 											>
 												<img
-													src={img.image_url}
+													src={variantUrl(
+														img.image_url,
+														800,
+													)}
 													alt=""
 													// Need double check, maybe only aspectratio for thumb
 													width={

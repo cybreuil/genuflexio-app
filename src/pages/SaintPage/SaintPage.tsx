@@ -18,6 +18,8 @@ import {
 	toRoman,
 } from "../../utils/saintFormat";
 
+import { variantUrl } from "../../utils/imageUrl";
+
 import { ApiError } from "../../api/client";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -426,7 +428,10 @@ const SaintPage = () => {
 												<figure>
 													<div className="saint-artwork__frame">
 														<img
-															src={img.image_url}
+															src={variantUrl(
+																img.image_url,
+																800,
+															)}
 															alt={
 																img.alt_text ||
 																img.title

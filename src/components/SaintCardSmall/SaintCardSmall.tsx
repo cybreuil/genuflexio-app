@@ -5,6 +5,7 @@ import type { SaintApi } from "../../types/Saint.ts";
 import { centuryLabel } from "../../utils/saintFormat";
 import { TRANSITIONS } from "../../styles/theme.ts";
 import { useLanguage } from "../../hooks/useLanguage.ts";
+import { variantUrl } from "../../utils/imageUrl.ts";
 
 const cardReveal = {
 	hidden: { opacity: 0, y: 24 },
@@ -64,7 +65,7 @@ const SaintCardSmall = ({
 				{saint.image_url ? (
 					<img
 						// layoutId={`saint-img-${saint.id}`}
-						src={saint.image_url}
+						src={variantUrl(saint.image_url, 800)}
 						alt=""
 						loading={index < 3 ? "eager" : "lazy"}
 						decoding="async"

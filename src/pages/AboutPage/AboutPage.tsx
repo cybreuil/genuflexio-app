@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "../../hooks/useLanguage";
 import { useRandomImages } from "../../hooks/useImages";
 import { RippleLink } from "../../components/RippleLink/RippleLink";
+import { variantUrl } from "../../utils/imageUrl";
 
 /* ===== Animation presets ===== */
 
@@ -197,7 +198,7 @@ const AboutPage = () => {
 					{images.slice(1, 3).map((img) => (
 						<img
 							key={img.id}
-							src={img.image_url}
+							src={variantUrl(img.image_url, 800)}
 							alt=""
 							loading="lazy"
 							decoding="async"

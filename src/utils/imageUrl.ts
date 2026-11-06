@@ -2,7 +2,7 @@
  * Storage layout: `name.webp` is the original, `name-<width>.webp` a resized
  * variant. Keep the list in sync with whatever the backend generates.
  */
-export const THUMB_WIDTHS = [400, 600, 900] as const;
+export const THUMB_WIDTHS = [400, 800] as const;
 export type ThumbWidth = (typeof THUMB_WIDTHS)[number];
 
 export function variantUrl(url: string, width: ThumbWidth): string {
