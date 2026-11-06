@@ -159,7 +159,14 @@
 			"sortNameDesc": "Name Z → A",
 			"sortCenturyAsc": "Century Ascending",
 			"sortCenturyDesc": "Century Descending"
-		}
+		},
+		"eyebrow": "─ Hagiography & Tradition",
+		"title": "Meet the Saints",
+		"description": "Discover the lives of our intercessors, their miracles and patronages. Explore the stories, traditions and places that have shaped their memory through the centuries.",
+		"page": "Page",
+		"impossibleToLoad": "Unable to load the saints.",
+		"noResults": "No saints match this search.",
+		"saintsList": "List of Saints"
 	},
 
 	"credits": {

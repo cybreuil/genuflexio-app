@@ -161,7 +161,14 @@
 			"sortNameDesc": "Nomen Z → A",
 			"sortCenturyAsc": "Saeculum ascendens",
 			"sortCenturyDesc": "Saeculum descendens"
-		}
+		},
+		"eyebrow": "─ Hagiographia & Traditio",
+		"title": "Sanctos cognoscere",
+		"description": "Explora vitam intercessorum nostrorum, eorum miracula et patronatus. Narrationes, traditiones et loca quae memoriam eorum per saecula formaverunt, percurrite.",
+		"page": "Pagina",
+		"impossibleToLoad": "Sanctos onerare non potest.",
+		"noResults": "Nullus sanctus his cribra congruunt.",
+		"saintsList": "Index Sanctorum"
 	},
 
 	"credits": {

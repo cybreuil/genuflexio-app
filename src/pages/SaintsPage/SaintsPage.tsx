@@ -43,7 +43,7 @@ const gridGroup = {
 	exit: { opacity: 0, transition: { duration: 0.2 } },
 };
 
-const SAINTS_PER_PAGE = 12;
+const SAINTS_PER_PAGE = 15;
 
 function StateBlock({
 	tone = "neutral",
@@ -66,7 +66,7 @@ function StateBlock({
 }
 
 export const SaintsPage = () => {
-	const { languageCode } = useLanguage();
+	const { languageCode, t } = useLanguage();
 
 	const [filters, setFilters] = useState<SaintsFiltersValue>(DEFAULT_FILTERS);
 
@@ -120,16 +120,18 @@ export const SaintsPage = () => {
 				initial="hidden"
 				animate="show"
 			>
-				<span className="saints-header__eyebrow">─ Art & mémoire</span>
-				<h1 className="saints-header__title">Les vies des saints</h1>
+				<span className="saints-header__eyebrow">
+					{t("saintsPage.eyebrow")}
+				</span>
+				<h1 className="saints-header__title">
+					{t("saintsPage.title")}
+				</h1>
 				<p className="saints-header__text">
-					Des centaines de figures, leurs histoires et les
-					chefs-d'œuvre qu'elles ont inspirés. Parcourez la galerie,
-					siècle après siècle.
+					{t("saintsPage.description")}
 				</p>
 				{totalPages > 1 && (
 					<p className="saints-header__meta">
-						Page {page} / {totalPages}
+						{t("saintsPage.page")} {page} / {totalPages}
 					</p>
 				)}
 			</motion.header>
@@ -157,7 +159,7 @@ export const SaintsPage = () => {
 					</StateBlock>
 				) : error ? (
 					<StateBlock key="error" tone="error">
-						Impossible de charger les saints.
+						{t("saintsPage.impossibleToLoad")}
 						<span className="saints-state__detail">
 							{error instanceof ApiError && (
 								<>
@@ -170,7 +172,7 @@ export const SaintsPage = () => {
 					</StateBlock>
 				) : saintsList.length === 0 ? (
 					<StateBlock key="empty">
-						Aucun saint ne correspond à cette recherche.
+						{t("saintsPage.noResults")}
 					</StateBlock>
 				) : (
 					<motion.section
@@ -180,7 +182,7 @@ export const SaintsPage = () => {
 						initial="hidden"
 						animate="show"
 						exit="exit"
-						aria-label="Liste des saints"
+						aria-label={t("saintsPage.saintsList")}
 						// onAnimationComplete={() => setLayoutGridKey(gridKey)}
 					>
 						{saintsList.map((saint, index) => (

@@ -159,7 +159,14 @@
 			"sortNameDesc": "Nom : Z → A",
 			"sortCenturyAsc": "Siècle croissant",
 			"sortCenturyDesc": "Siècle décroissant"
-		}
+		},
+		"eyebrow": "─ Hagiographie & tradition",
+		"title": "À la rencontre des saints",
+		"description": "Partez à la découverte de la vie de nos intercesseurs, de leurs miracles et de leurs patronages. Explorez les récits, les traditions et les lieux qui ont façonné leur mémoire à travers les siècles.",
+		"page": "Page",
+		"impossibleToLoad": "Impossible de charger les saints.",
+		"noResults": "Aucun saint ne correspond à votre recherche.",
+		"saintsList": "Liste des saints"
 	},
 
 	"credits": {
