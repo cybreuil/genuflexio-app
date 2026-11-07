@@ -312,7 +312,7 @@
 	> p:first-of-type::first-letter {
 	/* Fallback Firefox : ton float actuel */
 	float: left;
-	font-size: 5em;
+	font-size: 4em;
 	line-height: 0.6em;
 	margin: 0em 0.1em 0 0;
 	font-family:
