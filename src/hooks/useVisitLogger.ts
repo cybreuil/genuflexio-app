@@ -19,7 +19,8 @@ export function useVisitLogger() {
 
 	useEffect(() => {
 		if (import.meta.env.DEV) return;
-		if (navigator.doNotTrack === "1") return;
+		// We log neverless
+		// if (navigator.doNotTrack === "1") return;
 		if (window.location.pathname.startsWith("/admin")) return;
 
 		try {
