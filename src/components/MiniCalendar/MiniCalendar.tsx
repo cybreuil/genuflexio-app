@@ -125,18 +125,23 @@ const MiniCalendar = () => {
 			?.focus();
 	}, [selected]);
 
+	// For now we disable
+	// const openPicker = () => {
+	// 	const input = nativeInputRef.current;
+	// 	if (window.matchMedia("(max-width: 720px)").matches && input) {
+	// 		input.value = selected;
+	// 		try {
+	// 			input.showPicker();
+	// 		} catch {
+	// 			input.focus();
+	// 			input.click();
+	// 		}
+	// 		return;
+	// 	}
+	// 	setModalOpen(true);
+	// };
+
 	const openPicker = () => {
-		const input = nativeInputRef.current;
-		if (window.matchMedia("(max-width: 720px)").matches && input) {
-			input.value = selected;
-			try {
-				input.showPicker();
-			} catch {
-				input.focus();
-				input.click();
-			}
-			return;
-		}
 		setModalOpen(true);
 	};
 
