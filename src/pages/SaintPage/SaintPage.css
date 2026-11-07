@@ -232,21 +232,31 @@
 	margin-top: 0;
 }
 
+/* Lettrine sur le premier paragraphe */
+/*FIREFOX*/
 .saint-prose__markdown > p:first-of-type::first-letter {
-	color: var(--color-secondary);
+	/* Fallback Firefox : ton float actuel */
+	float: left;
+	font-size: 4em;
+	line-height: 0.6em;
+	margin: 0em 0.1em 0 0;
 	font-family:
 		Royal Initialen,
 		Source Serif,
 		serif;
-	float: left;
-	margin: 0.1em 0.12em 0 0;
-	font-size: 4em;
+	color: var(--color-secondary);
 	font-weight: 400;
-	line-height: 0.8;
 }
 
-.saint-prose__markdown p {
-	/*margin: 0 0 1.1em;*/
+/*WEBKIT IPHONES MAC*/
+@supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+	.saint-prose__markdown > p:first-of-type::first-letter {
+		float: none;
+		font-size: inherit;
+		line-height: inherit;
+		-webkit-initial-letter: 3;
+		initial-letter: 3;
+	}
 }
 
 .saint-prose__markdown h1 {
