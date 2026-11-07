@@ -38,6 +38,8 @@ export function useVisitLogger() {
 			screen_width: window.innerWidth,
 			theme,
 		});
+
+		console.log("Visit recorded");
 		// Volontairement sans dépendances : un seul tir au montage.
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
