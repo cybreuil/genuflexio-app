@@ -306,7 +306,7 @@ const SaintPage = () => {
 								)}
 								{saint.slug === "saint-mary-magdalene" && (
 									<p className="ex-voto">
-										Merci de m'avoir guidée
+										Merci de m'avoir guidée I.D.
 									</p>
 								)}
 							</motion.div>
