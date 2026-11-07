@@ -292,7 +292,7 @@
 	.artwork-hero {
 		--hero-gap: 8px;
 		--hero-tilt: -2deg;
-		--tile-w: 300px;
+		/*--tile-w: 300px;*/
 
 		min-height: 560px;
 	}
