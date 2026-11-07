@@ -57,7 +57,7 @@ const Footer = () => {
 							<Link to="/saints">{t("nav.saints")}</Link>
 						</li>
 						<li>
-							<Link to="/search">{t("nav.search")}</Link>
+							<Link to="/gallery">{t("nav.gallery")}</Link>
 						</li>
 					</ul>
 				</nav>
