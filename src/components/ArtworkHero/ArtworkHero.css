@@ -17,6 +17,12 @@
 	isolation: isolate;
 	background: var(--hero-bg);
 	color: #fff;
+
+	/* Largeur de tuile fixée en CSS : la période du marquee devient
+	   calculable sans layout, donc stable dès la première frame (WebKit). */
+	/*Le calcul avec le svh pour trouver l'ancienne size precisement passe*/
+	/*--tile-w: calc((120svh - var(--hero-gap)) / 2 * 3 / 4);*/
+	--tile-w: 330px;
 }
 
 /* ===== Backdrop ===== */
@@ -77,7 +83,11 @@
 	}
 
 	to {
-		transform: translate3d(calc(-50% - var(--hero-gap) / 2), 0, 0);
+		transform: translate3d(
+			calc(-1 * var(--per-row) * (var(--tile-w) + var(--hero-gap))),
+			0,
+			0
+		);
 	}
 }
 
@@ -86,7 +96,8 @@
 .artwork-hero__tile {
 	flex: none;
 	height: 100%;
-	aspect-ratio: 3 / 4;
+	width: var(--tile-w);
+	/*aspect-ratio: 3 / 4;*/
 	margin: 0;
 	overflow: hidden;
 	border-radius: 6px;
@@ -281,6 +292,7 @@
 	.artwork-hero {
 		--hero-gap: 8px;
 		--hero-tilt: -2deg;
+		--tile-w: 300px;
 
 		min-height: 560px;
 	}

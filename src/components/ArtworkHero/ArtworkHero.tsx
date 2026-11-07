@@ -12,7 +12,7 @@ import {
 } from "../../icons";
 
 const ROWS = 2;
-const TILES_PER_ROW = 10;
+const TILES_PER_ROW = 8;
 
 interface ArtworkHeroProps {
 	languageCode?: string;
@@ -49,6 +49,8 @@ function ArtworkTile({ image }: { image: Image }) {
 		>
 			<img
 				src={image.image_url}
+				width={image.width ?? undefined}
+				height={image.height ?? undefined}
 				alt=""
 				draggable={false}
 				decoding="async"
@@ -92,7 +94,15 @@ function ArtworkHero({
 			{rows.length > 0 && (
 				<div className="artwork-hero__backdrop" aria-hidden="true">
 					{rows.map((row, rowIndex) => (
-						<div key={rowIndex} className="artwork-hero__row">
+						<div
+							key={rowIndex}
+							className="artwork-hero__row"
+							style={
+								{
+									"--per-row": row.length,
+								} as React.CSSProperties
+							}
+						>
 							{/* The row is rendered twice so the marquee loops seamlessly. */}
 							<div className="artwork-hero__track">
 								{[...row, ...row].map((image, index) => (
