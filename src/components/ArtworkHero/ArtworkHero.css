@@ -21,8 +21,8 @@
 	/* Largeur de tuile fixée en CSS : la période du marquee devient
 	   calculable sans layout, donc stable dès la première frame (WebKit). */
 	/*Le calcul avec le svh pour trouver l'ancienne size precisement passe*/
-	/*--tile-w: calc((120svh - var(--hero-gap)) / 2 * 3 / 4);*/
-	--tile-w: 330px;
+	--tile-w: calc((120svh - var(--hero-gap)) / 2 * 3 / 4);
+	/*--tile-w: 330px;*/
 }
 
 /* ===== Backdrop ===== */

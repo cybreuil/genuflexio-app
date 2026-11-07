@@ -300,7 +300,7 @@ const SaintPage = () => {
 								)}
 								{saint.slug === "saint-lawrence" && (
 									<p className="ex-voto">
-										Reconnaissance à saint Laurent — 26
+										Reconnaissance à saint Laurent — 24
 										décembre 2025
 									</p>
 								)}
