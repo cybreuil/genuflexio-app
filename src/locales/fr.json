@@ -301,7 +301,13 @@
 		"path": "Page d'entrée",
 		"unknown": "Inconnu",
 		"new": "nouveau",
-		"direct": "direct"
+		"direct": "direct",
+		"newVisitor": "Nouveau visiteur",
+		"days7": "7 jours",
+		"days30": "30 jours",
+		"days90": "90 jours",
+		"all": "Tout",
+		"noData": "Aucune donnée."
 	},
 	"404": {
 		"text": "Page introuvable"

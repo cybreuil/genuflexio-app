@@ -32,13 +32,6 @@ const stagger = {
 	show: { transition: { staggerChildren: 0.08 } },
 };
 
-const RANGES: { value: VisitsRange; label: string }[] = [
-	{ value: "7d", label: "t" },
-	{ value: "30d", label: "30 jours" },
-	{ value: "90d", label: "90 jours" },
-	{ value: "all", label: "Tout" },
-];
-
 const VISITS_PER_PAGE = 25;
 
 /* ===== Helpers ===== */
@@ -209,6 +202,13 @@ const AdminPage = () => {
 	const [range, setRange] = useState<VisitsRange>("30d");
 	const [page, setPage] = useState(1);
 	const [reloadKey, setReloadKey] = useState(0);
+
+	const RANGES: { value: VisitsRange; label: string }[] = [
+		{ value: "7d", label: t("admin.days7") },
+		{ value: "30d", label: t("admin.days30") },
+		{ value: "90d", label: t("admin.days90") },
+		{ value: "all", label: t("admin.all") },
+	];
 
 	const {
 		stats,
@@ -408,14 +408,17 @@ const AdminPage = () => {
 											</>
 										);
 									}}
+									empty={t("admin.noData")}
 								/>
 								<RankedList
 									title={t("admin.devices")}
 									items={stats.top_devices}
+									empty={t("admin.noData")}
 								/>
 								<RankedList
 									title={t("admin.browsers")}
 									items={stats.top_browsers}
+									empty={t("admin.noData")}
 								/>
 								<RankedList
 									title={t("admin.referrers")}
@@ -423,10 +426,12 @@ const AdminPage = () => {
 									renderLabel={(item) =>
 										item.label || t("admin.referrerDirect")
 									}
+									empty={t("admin.noData")}
 								/>
 								<RankedList
 									title={t("admin.languages")}
 									items={stats.top_languages}
+									empty={t("admin.noData")}
 								/>
 								<RankedList
 									title={t("admin.entryPages")}
@@ -436,6 +441,7 @@ const AdminPage = () => {
 											{item.label}
 										</code>
 									)}
+									empty={t("admin.noData")}
 								/>
 							</motion.div>
 						</motion.section>

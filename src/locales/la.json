@@ -305,7 +305,13 @@
 		"path": "Pagina introitus",
 		"unknown": "Incognitus",
 		"new": "novus",
-		"direct": "directus"
+		"direct": "directus",
+		"newVisitor": "Novus visitator",
+		"days7": "7 dies",
+		"days30": "30 dies",
+		"days90": "90 dies",
+		"all": "Omnia",
+		"noData": "Nulla data"
 	},
 	"celebrationPage": {
 		"liturgy": "Liturgia",
