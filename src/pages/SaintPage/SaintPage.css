@@ -235,7 +235,7 @@
 .saint-prose__markdown > p:first-of-type::first-letter {
 	color: var(--color-secondary);
 	font-family:
-		Morris Less,
+		Royal Initialen,
 		Source Serif,
 		serif;
 	float: left;
