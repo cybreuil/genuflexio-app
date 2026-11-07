@@ -304,6 +304,11 @@ const SaintPage = () => {
 										décembre 2025
 									</p>
 								)}
+								{saint.slug === "saint-mary-magdalene" && (
+									<p className="ex-voto">
+										Merci de m'avoir guidée
+									</p>
+								)}
 							</motion.div>
 
 							{/* ===== Patronages & attributs ===== */}
