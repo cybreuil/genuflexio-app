@@ -79,7 +79,7 @@ const Footer = () => {
 							</a>
 						</li>
 						<li>
-							<a href="mailto:cybreuil@gmail.com">
+							<a href="mailto:contact@genuflexio.com">
 								{t("nav.contact")}
 							</a>
 						</li>

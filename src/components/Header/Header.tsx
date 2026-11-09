@@ -289,7 +289,7 @@ const Header = () => {
 							>
 								GitHub
 							</a>
-							<a href="mailto:cybreuil@gmail.com">
+							<a href="mailto:contact@genuflexio.com">
 								{t("nav.contact")}
 							</a>
 							<div className="header-menu__tools">
