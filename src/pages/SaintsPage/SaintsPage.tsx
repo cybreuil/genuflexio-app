@@ -151,7 +151,7 @@ export const SaintsPage = () => {
 					</StateBlock>
 				) : error ? (
 					<StateBlock key="error" tone="error">
-						{t("saintsPage.impossibleToLoad")}
+						{t("saints.impossibleToLoad")}
 						<span className="saints-state__detail">
 							{error instanceof ApiError && (
 								<>
