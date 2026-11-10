@@ -105,8 +105,7 @@ const NotFoundPage = () => {
 				animate={{ y: 0, opacity: 1 }}
 				transition={{ ...TRANSITIONS.slow, delay: 1.1 }}
 			>
-				This page has ascended to a higher realm... or perhaps it never
-				existed. Let's guide you back to blessed ground.
+				{t("404.description")}
 			</motion.p>
 
 			{/* Boutons de navigation */}

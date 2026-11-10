@@ -310,7 +310,8 @@
 		"noData": "Aucune donnée."
 	},
 	"404": {
-		"text": "Page introuvable"
+		"text": "Page introuvable",
+		"description": "Cette page n'existe pas. Elle a peut-être été déplacée ou supprimée. Veuillez vérifier l'URL et réessayer."
 	},
 	"celebrationPage": {
 		"liturgy": "Liturgie",

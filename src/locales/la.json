@@ -319,7 +319,8 @@
 		"celebrationPageDescription": "Explora celebrationem diei, eius colorem liturgicum, gradum et sanctos associatos. Diversa calendaria praesto sunt ad variationes regionales et historicas explorandas."
 	},
 	"404": {
-		"text": "Pagina non inventa"
+		"text": "Pagina non inventa",
+		"description": "Haec pagina non existit. Fortasse translata aut deletum est. Quaeso URL verifica et iterum conare."
 	},
 	"galleryPage": {
 		"gallery": "Pinacotheca",

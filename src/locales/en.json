@@ -316,7 +316,8 @@
 	},
 
 	"404": {
-		"text": "Page not Found"
+		"text": "Page not Found",
+		"description": "This page does not exist. It may have been moved or deleted. Please check the URL and try again."
 	},
 	"galleryPage": {
 		"gallery": "Gallery",
