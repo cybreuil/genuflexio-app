@@ -367,7 +367,6 @@ const AdminPage = () => {
 						>
 							<SectionHead
 								eyebrow={`─ ${t("admin.tendency")}`}
-
 								title={t("admin.visitsPerDay")}
 							/>
 							<div className="admin-card admin-card--wide">
@@ -504,7 +503,8 @@ const AdminPage = () => {
 								<thead>
 									<tr>
 										<th>{t("admin.date")}</th>
-										<th>{t("admin.country")}</th>
+										{/*Countries WIP*/}
+										{/*<th>{t("admin.country")}</th>*/}
 										<th>IP</th>
 										<th>{t("admin.device")}</th>
 										<th>{t("admin.path")}</th>
@@ -521,7 +521,7 @@ const AdminPage = () => {
 													)}
 												</time>
 											</td>
-											<td className="admin-table__nowrap">
+											{/*<td className="admin-table__nowrap">
 												<span className="admin-flag">
 													{flagEmoji(v.country_code)}
 												</span>
@@ -533,7 +533,7 @@ const AdminPage = () => {
 														· {v.city}
 													</span>
 												)}
-											</td>
+												</td>*/}
 											<td className="admin-table__nowrap">
 												<code className="admin-code">
 													{v.ip}
