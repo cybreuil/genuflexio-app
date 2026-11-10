@@ -507,6 +507,7 @@ const AdminPage = () => {
 										{/*<th>{t("admin.country")}</th>*/}
 										<th>IP</th>
 										<th>{t("admin.device")}</th>
+										<th>{t("admin.theme")}</th>
 										<th>{t("admin.path")}</th>
 										<th>{t("admin.referrer")}</th>
 									</tr>
@@ -534,6 +535,7 @@ const AdminPage = () => {
 													</span>
 												)}
 												</td>*/}
+
 											<td className="admin-table__nowrap">
 												<code className="admin-code">
 													{v.ip}
@@ -544,6 +546,7 @@ const AdminPage = () => {
 													</span>
 												)}
 											</td>
+
 											<td className="admin-table__nowrap">
 												{v.device}
 												{(v.browser || v.os) && (
@@ -555,6 +558,11 @@ const AdminPage = () => {
 															.join(" / ")}
 													</span>
 												)}
+											</td>
+											<td>
+												<code className="admin-code">
+													{v.theme}
+												</code>
 											</td>
 											<td>
 												<code className="admin-code">

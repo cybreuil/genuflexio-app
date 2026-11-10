@@ -30,6 +30,7 @@ export type Visit = {
 	country_name: string | null;
 	city: string | null;
 	device: DeviceType;
+	theme: string | null;
 	browser: string | null;
 	os: string | null;
 	path: string;
