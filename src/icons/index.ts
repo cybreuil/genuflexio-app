@@ -11,3 +11,4 @@ export * from "./DesignedLogo";
 export * from "./DesignedLogoWithText";
 export * from "./DesignedLogoWithText2";
 export * from "./DesignedLogoWithText3";
+export * from "./LogoutLogo";

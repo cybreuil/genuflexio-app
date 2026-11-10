@@ -122,7 +122,7 @@
 }
 .header__brand:hover,
 .header__brand:focus-visible {
-	color: var(--color-secondary);
+	color: var(--color-secondary-dark);
 }
 
 .header__logo {
@@ -195,6 +195,15 @@
 	display: flex;
 	align-items: center;
 	gap: 0.75rem;
+}
+.header__tools .logout-logo {
+	opacity: 0.72;
+	cursor: pointer;
+	transition: opacity 200ms ease;
+}
+.header__tools .logout-logo:hover,
+.header__tools .logout-logo:focus-visible {
+	opacity: 1;
 }
 
 .header .theme-toggle-wrapper,
@@ -319,6 +328,15 @@
 	align-items: center;
 	gap: 0.75rem;
 	margin-left: auto;
+}
+.header-menu__logout-logo {
+	opacity: 0.72;
+	cursor: pointer;
+	transition: opacity 200ms ease;
+}
+.header-menu__logout-logo:hover,
+.header-menu__logout-logo:focus-visible {
+	opacity: 1;
 }
 
 /* Verrou du scroll pendant que le menu est ouvert (posé sur body par Header.tsx) */

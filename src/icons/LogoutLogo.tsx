@@ -1,0 +1,34 @@
+import React from "react";
+import type { IconProps } from "../types/IconProps";
+
+const LogoutLogo = React.forwardRef<SVGSVGElement, IconProps>(
+	function ResetLogo(
+		{
+			title = null,
+			width = 24,
+			height = 24,
+			fill = "currentColor",
+			...props
+		},
+		ref,
+	) {
+		const aria = title ? { role: "img" } : { "aria-hidden": true };
+
+		return (
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 24 24"
+				height={height}
+				width={width}
+				fill={fill}
+				{...aria}
+				{...props}
+				ref={ref}
+			>
+				<path d="M5,21q-0.83,0-1.41-0.59T3,19V5Q3,4.17 3.59,3.59T5,3h7V5H5V19h7v2H5Zm11-4l-1.38-1.45L17.18,13H9V11h8.18L14.63,8.45L16,7l5,5l-5,5Z" />
+			</svg>
+		);
+	},
+);
+
+export { LogoutLogo };

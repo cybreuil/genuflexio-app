@@ -9,6 +9,8 @@ import { LanguageDropDown } from "../LanguageDropDown/LanguageDropDown";
 import type { NavItem } from "../../types/NavItem";
 import { useLanguage } from "../../hooks/useLanguage";
 import { DesignedLogo } from "../../icons";
+import { useAuth } from "../../hooks/useAuth";
+import { LogoutLogo } from "../../icons/LogoutLogo";
 
 const NAV_ITEMS: NavItem[] = [
 	// { to: "/", labelKey: "nav.home", end: true },
@@ -62,6 +64,12 @@ const menuFooter = {
 
 const Header = () => {
 	const { t } = useLanguage();
+
+	const { user, logout } = useAuth();
+	const isAdmin = user?.role === "admin";
+	const navItems = isAdmin
+		? [...NAV_ITEMS, { to: "/admin", labelKey: "nav.administration" }]
+		: NAV_ITEMS;
 
 	const { pathname } = useLocation();
 	const isHomePage = pathname === "/";
@@ -205,7 +213,7 @@ const Header = () => {
 					</Link>
 
 					<nav className="header__nav" aria-label={t("nav.main")}>
-						{NAV_ITEMS.map(({ to, labelKey, end }) => (
+						{navItems.map(({ to, labelKey, end }) => (
 							<NavLink
 								key={to}
 								to={to}
@@ -236,6 +244,12 @@ const Header = () => {
 					</nav>
 					<div className="header__tools">
 						<div className="header__tools-desktop">
+							{isAdmin && (
+								<LogoutLogo
+									className="logout-logo"
+									onClick={logout}
+								/>
+							)}
 							<LanguageDropDown />
 							<ThemeToggle />
 						</div>
@@ -262,7 +276,7 @@ const Header = () => {
 							className="header-menu__nav"
 							variants={menuList}
 						>
-							{NAV_ITEMS.map(({ to, labelKey, end }, index) => (
+							{navItems.map(({ to, labelKey, end }, index) => (
 								<motion.div key={to} variants={menuItem}>
 									<NavLink
 										to={to}
@@ -296,6 +310,12 @@ const Header = () => {
 								<LanguageDropDown />
 								<ThemeToggle />
 							</div>
+							{isAdmin && (
+								<LogoutLogo
+									className="header-menu__logout-logo"
+									onClick={logout}
+								/>
+							)}
 						</motion.div>
 					</motion.div>
 				)}
