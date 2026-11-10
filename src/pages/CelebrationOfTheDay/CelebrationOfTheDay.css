@@ -113,6 +113,7 @@
 	transition:
 		background var(--transition-normal),
 		border-color var(--transition-normal);
+	touch-action: pan-y;
 }
 
 /* ===== Cover ===== */

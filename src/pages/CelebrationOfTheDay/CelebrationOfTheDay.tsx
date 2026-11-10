@@ -1,6 +1,6 @@
 import "./CelebrationOfTheDay.css";
 import { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type PanInfo } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 
 // Components
@@ -20,6 +20,7 @@ import { useLanguage } from "../../hooks/useLanguage";
 import { useTheme } from "../../hooks/useTheme";
 import { useSelectedDate } from "../../hooks/useSelectedDate";
 
+import { addDays, formatYMD, parseYMD } from "../../utils/date";
 // Types
 import type { Celebration } from "../../types/Celebration";
 
@@ -100,7 +101,7 @@ function StateBlock({
 }
 
 const CelebrationOfTheDay: React.FC = () => {
-	const { date, hasDateParam } = useSelectedDate();
+	const { date, hasDateParam, select } = useSelectedDate();
 	const showIntro = !hasDateParam;
 
 	const { languageCode, t } = useLanguage();
@@ -183,6 +184,25 @@ const CelebrationOfTheDay: React.FC = () => {
 
 	const isLoading = isCalendarLoading || isCelebrationLoading;
 	const error = calendarError ?? celebrationError;
+
+	const handleSwipe = (event: PointerEvent, info: PanInfo) => {
+		// Touch uniquement
+		if (event.pointerType !== "touch") return;
+
+		const { offset } = info;
+
+		// Ignore les mouvements verticaux
+		if (Math.abs(offset.y) > Math.abs(offset.x)) return;
+
+		// Distance minimale
+		if (Math.abs(offset.x) < 70) return;
+
+		const direction = offset.x < 0 ? 1 : -1;
+
+		const nextDate = formatYMD(addDays(parseYMD(date), direction));
+
+		select(nextDate);
+	};
 
 	return (
 		<div className="celebration-page-container">
@@ -337,6 +357,7 @@ const CelebrationOfTheDay: React.FC = () => {
 											effectiveLiturgicalColorForFirstLetter,
 									} as React.CSSProperties
 								}
+								onPanEnd={handleSwipe}
 							>
 								{/* --- Cover --- */}
 								<header
