@@ -237,17 +237,19 @@
 	color: var(--color-text-primary);
 }
 
-.home-cta__button {
+.home-cta .home-cta__button {
 	padding: 0.9rem 2rem;
 	border-radius: 999px;
 	background: var(--color-secondary);
 	color: var(--color-on-secondary);
 	font-weight: 600;
 	font-size: 1rem;
-	transition: transform 200ms ease;
+	transition:
+		transform 200ms ease,
+		background 200ms ease;
 }
 
-.home-cta__button:hover {
+.home-cta .home-cta__button:hover {
 	background: var(--color-secondary-light);
 	transform: translateY(-2px);
 }
