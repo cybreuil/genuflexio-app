@@ -85,20 +85,17 @@ const LoginPage = () => {
 				animate="show"
 			>
 				{/* ===== Œuvre décorative ===== */}
-				<motion.figure
-					className="login-card__artwork"
-					variants={reveal}
-					aria-hidden="true"
-				>
+				<figure className="login-card__artwork" aria-hidden="true">
 					{artwork && (
-						<img
+						<motion.img
 							src={variantUrl(artwork.image_url, 800)}
 							alt=""
 							decoding="async"
 							draggable={false}
+							variants={reveal}
 						/>
 					)}
-				</motion.figure>
+				</figure>
 
 				{/* ===== Formulaire ===== */}
 				<div className="login-card__body">
