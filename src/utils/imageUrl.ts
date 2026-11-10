@@ -1,15 +1,17 @@
 /**
- * Storage layout: `name.webp` is the original, `name-<width>.webp` a resized
- * variant. Keep the list in sync with whatever the backend generates.
+ * Storage layout:
+ * `/images/saints/name.webp`            original
+ * `/images/saints/400/name.webp`        resized variant
+ * `/images/feats/400/assumption.webp`   resized variant
+ *
+ * Keep THUMB_WIDTHS in sync with the backend.
  */
 export const THUMB_WIDTHS = [400, 800] as const;
 export type ThumbWidth = (typeof THUMB_WIDTHS)[number];
 
 export function variantUrl(url: string, width: ThumbWidth): string {
-	return url.replace(/^((?:https?:\/\/[^/]+)?\/[^/]+)\//, `$1/${width}/`);
-}
-
-/** `srcset` covering every generated width. */
-export function thumbSrcSet(url: string): string {
-	return THUMB_WIDTHS.map((w) => `${variantUrl(url, w)} ${w}w`).join(", ");
+	return url.replace(
+		/^(https?:\/\/[^/]+)?(\/images\/.+)\/([^/]+)$/,
+		`$1$2/${width}/$3`,
+	);
 }
