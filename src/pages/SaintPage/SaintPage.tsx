@@ -351,7 +351,13 @@ const SaintPage = () => {
 													className="saint-meta__group"
 												>
 													<span className="saint-meta__category">
-														{category}
+														{attrs.length > 1
+															? t(
+																	`saint.${category}s`,
+																)
+															: t(
+																	`saint.${category}`,
+																)}
 													</span>
 													<ul className="saint-meta__tags">
 														{attrs.map((a) => (
