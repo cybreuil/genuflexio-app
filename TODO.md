@@ -1,27 +1,32 @@
 passer header burger height en flex 1 pour optimisation ?
 pour le moment hauteur est fixe
+-- done
 
 Need sql check
+-- done
 
 Flou derriere header pour smooth transition scroll (blur)
+-- done
 
 Need fix entry animation size header
+-- done
 
 Complexité enorme sql avec durée des fetes octave neuvaine etc... transfert solennité dimanche au lundi etc, difficulté de faire un truc propre et rapide, à revoir
+-- basically done
 
 Passer toute la logique onclick et layout dans smallcard : Citation :
 (Option B — Tout dans les composants\*\*
 
 Le `layoutId` du conteneur passe dans `SaintCardSmall`, le `onClick` aussi. La carte est un `motion.div` avec tout dedans. La page ne fait que rendre et passer un callback.)
 
----
+--- done
 
 flou bas et haut modale + padding bas // BLUR
 animation delayed apparition carte
 animation title carte
 scroll to top on route change
 
----
+--- done
 
 Might be a good idea to only use portal on body and not on dedicated div, to simplify the code.
 
@@ -54,14 +59,19 @@ should i keep languages on front hardcoded or api to fetch list ? might be bette
 ## Need to translate the aria label
 
 add switch on secondary celebration on click with just a state change + fix days left season
+-- done
 
 - fix sticky
 -   - fix image sliding (overflow ?) on celebration card
+      -- done
 
 - should fix dot layout since changing page means scrolling to top and dot animation bugs
+- -- done
 
 we need fix exit for backdrop modal
+-- done
 
 FIX john henry newman gif photo not converted !
+-- done
 
 ajouter des variations sur attributs de couleur en fonction de officiel ou traditionnel
