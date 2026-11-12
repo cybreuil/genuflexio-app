@@ -251,9 +251,9 @@
 		},
 		"inspirations": {
 			"eyebrow": "Inspirations",
-			"title": "A few sources of inspiration",
-			"p1": "The idea for this project was born from a personal journey, out of devotion and love for God. It is also inspired by the work of many others who have contributed to the preservation and dissemination of the liturgical calendar, the lives of the saints, and sacred art. I would like to express my gratitude to the following sources of inspiration:",
-			"p2": "I would also like to thank the many artists, both past and present, whose works have inspired me and enriched this project. Their dedication to their craft and their ability to capture the beauty of the divine in their art is a constant source of inspiration."
+			"title": "How did this project come to life?",
+			"p1": "Starting from the recitation of ther Divine Office from a pernal breviary, i was eager to find digital tools to facilite my daily practice. This is when i discovered Divinum Officium who influenced me a lot. As a backend enjoyer i was astonished by the level of work Laszlo Kiss put into his project solo. That's where i get the idea to try to build the bridge between practice and art, following the footsteps of saint isidre of sevilla and his encyclopedia.",
+			"p2": "Many websites already gives the liturgical calendar, and i wanted to modernize inb a more minimalistic aesthetic what i already saw, from Gcatholic to aelf as a french citizen myself. I highly encourage you to check these websites, they are a great source of information and inspiration."
 		},
 
 		"credits": {
