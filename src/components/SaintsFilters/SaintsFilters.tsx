@@ -110,9 +110,9 @@ const SaintsFilters = ({
 			onSubmit={(e) => e.preventDefault()}
 		>
 			<div className="saints-filters__bar">
-				<motion.label
+				<label
 					className="saints-filters__field saints-filters__field--grow"
-					layout="x"
+					// layout="x"
 				>
 					<span className="saints-filters__label">
 						{t("saints.filters.search")}
@@ -126,9 +126,12 @@ const SaintsFilters = ({
 						}
 						autoComplete="off"
 					/>
-				</motion.label>
+				</label>
 
-				<motion.label className="saints-filters__field" layout="x">
+				<label
+					className="saints-filters__field"
+					// layout="x"
+				>
 					<span className="saints-filters__label">
 						{t("saints.filters.century")}
 					</span>
@@ -156,9 +159,12 @@ const SaintsFilters = ({
 							</option>
 						))}
 					</select>
-				</motion.label>
+				</label>
 
-				<motion.label className="saints-filters__field" layout="x">
+				<label
+					className="saints-filters__field"
+					// layout="x"
+				>
 					<span className="saints-filters__label">
 						{t("saints.filters.sort")}
 					</span>
@@ -181,10 +187,13 @@ const SaintsFilters = ({
 							</option>
 						))}
 					</select>
-				</motion.label>
+				</label>
 
 				{hasFacets && (
-					<motion.div className="saints-filters__field" layout="x">
+					<div
+						className="saints-filters__field"
+						// layout="x"
+					>
 						<span className="saints-filters__label" aria-hidden>
 							&nbsp;
 						</span>
@@ -201,29 +210,29 @@ const SaintsFilters = ({
 								</span>
 							)}
 						</button>
-					</motion.div>
+					</div>
 				)}
 
 				<div className="saints-filters__end">
 					{typeof resultCount === "number" ? (
-						<motion.span
+						<span
 							className="saints-filters__count"
 							aria-live="polite"
-							layout="x"
+							// layout="x"
 						>
 							{resultCount}{" "}
 							{resultCount > 1
 								? t("saints.filters.results")
 								: t("saints.filters.result")}
-						</motion.span>
+						</span>
 					) : (
-						<motion.span
+						<span
 							className="saints-filters__count"
 							aria-live="polite"
-							layout="x"
+							// layout="x"
 						>
 							loading ...
-						</motion.span>
+						</span>
 					)}
 					<AnimatePresence mode="popLayout">
 						{isDirty && (
@@ -233,15 +242,15 @@ const SaintsFilters = ({
 								onClick={() => onChange(DEFAULT_FILTERS)}
 								initial={{
 									opacity: 0,
-									scale: 0.5,
+									x: 20,
 								}}
 								animate={{
 									opacity: 1,
-									scale: 1,
+									x: 0,
 									transition: { duration: 0.6 },
 								}}
-								exit={{ opacity: 0, scale: 0.5 }}
-								layout="x"
+								exit={{ opacity: 0, x: 20 }}
+								// layout="x"
 							>
 								{t("saints.filters.reset")}
 							</motion.button>
