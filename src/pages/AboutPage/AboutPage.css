@@ -340,6 +340,21 @@
 	color: var(--color-text-tertiary);
 }
 
+/* ===== Inspirations ===== */
+.about-inspirations {
+	width: min(1100px, 100% - 3rem);
+	margin: 0 auto;
+	padding: clamp(2rem, 5vh, 4rem) 0;
+}
+.about-inspirations__list {
+	display: flex;
+	flex-direction: row;
+	gap: 1.5rem;
+	justify-content: center;
+	list-style: none;
+	margin: 0 0 1.1em;
+}
+
 /* ===== Crédits ===== */
 
 .about-credits {

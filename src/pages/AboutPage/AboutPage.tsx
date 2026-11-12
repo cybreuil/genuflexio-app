@@ -192,6 +192,97 @@ const AboutPage = () => {
 				</motion.ol>
 			</section>
 
+			{/*Inspirations & */}
+			<section className="about-inspirations">
+				<motion.div className="about-inspirations__head" {...inView}>
+					<span className="about-eyebrow">
+						{t("about.inspirations.eyebrow")}
+					</span>
+					<h2 className="about-section__title">
+						{t("about.inspirations.title")}
+					</h2>
+				</motion.div>
+				<motion.div
+					className="about-inspirations__text"
+					variants={stagger}
+					initial="hidden"
+					whileInView="show"
+					viewport={{ once: true, amount: 0.3 }}
+				>
+					<motion.p
+						className="about-prose"
+						variants={reveal}
+						transition={{ delay: 0.1 }}
+					>
+						{t("about.inspirations.p1")}
+					</motion.p>
+					<motion.ul
+						className="about-inspirations__list"
+						variants={stagger}
+					>
+						<motion.li
+							key={1}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://gcatholic.org/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Gcatholic
+							</a>
+						</motion.li>
+						<motion.li
+							key={2}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://www.divinumofficium.com/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Divinum Officium
+							</a>
+						</motion.li>
+						<motion.li
+							key={3}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://gcatholic.org/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								AELF
+							</a>
+						</motion.li>
+						<motion.li
+							key={4}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://www.barroux.org/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Abbaye du Barroux
+							</a>
+						</motion.li>
+					</motion.ul>
+					<motion.p
+						className="about-prose"
+						variants={reveal}
+						transition={{ delay: 0.1 }}
+					>
+						{t("about.inspirations.p2")}
+					</motion.p>
+				</motion.div>
+			</section>
+
 			{/* ===== Crédits ===== */}
 			<motion.section className="about-credits" {...inView}>
 				<div className="about-credits__mosaic" aria-hidden="true">
