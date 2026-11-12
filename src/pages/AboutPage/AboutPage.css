@@ -513,6 +513,11 @@
 	.about-credits__mosaic {
 		max-width: 360px;
 	}
+	.about-inspirations__list {
+		flex-direction: column;
+		gap: 1rem;
+		align-items: center;
+	}
 }
 
 @media (max-width: 600px) {
