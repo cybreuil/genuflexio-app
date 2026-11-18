@@ -163,9 +163,7 @@ export const SaintsPage = () => {
 						</span>
 					</StateBlock>
 				) : saintsList.length === 0 ? (
-					<StateBlock key="empty">
-						{t("saintsPage.noResults")}
-					</StateBlock>
+					<StateBlock key="empty">{t("saints.noResults")}</StateBlock>
 				) : (
 					<motion.section
 						key={gridKey}
