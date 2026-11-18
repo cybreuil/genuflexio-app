@@ -139,9 +139,9 @@
 }
 
 @media (max-width: 480px) {
-	.footer__top {
+	/*.footer__top {
 		grid-template-columns: 1fr;
-	}
+	}*/
 
 	.footer__bottom {
 		flex-direction: column;
