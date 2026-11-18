@@ -38,7 +38,7 @@ const SAINTGEORGES_URL = "https://www.eglisesaintgeorges.com/";
 const AboutPage = () => {
 	const { t } = useLanguage();
 	// 3 œuvres décoratives : une pour le manifeste, deux pour la mosaïque crédits
-	const { images } = useRandomImages(3);
+	const { images } = useRandomImages(5);
 
 	return (
 		<div className="about-page">
@@ -209,6 +209,16 @@ const AboutPage = () => {
 					whileInView="show"
 					viewport={{ once: true, amount: 0.3 }}
 				>
+					{images[1] && (
+						<img
+							key={images[1].id}
+							src={variantUrl(images[1].image_url, 800)}
+							alt=""
+							loading="lazy"
+							decoding="async"
+							draggable={false}
+						/>
+					)}
 					<motion.p
 						className="about-prose"
 						variants={reveal}
@@ -273,6 +283,7 @@ const AboutPage = () => {
 							</a>
 						</motion.li>
 					</motion.ul>
+
 					<motion.p
 						className="about-prose"
 						variants={reveal}
@@ -280,13 +291,114 @@ const AboutPage = () => {
 					>
 						{t("about.inspirations.p2")}
 					</motion.p>
+
+					<motion.ul
+						className="about-inspirations__list"
+						variants={stagger}
+					>
+						<motion.li
+							key={1}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://www.albin-michel.fr/la-fleur-des-saints-9782226316196"
+								target="_blank"
+								rel="noreferrer"
+							>
+								La Fleur des Saints
+							</a>
+						</motion.li>
+						<motion.li
+							key={2}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://archive.org/details/livesofsaintswith00butl"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Lives of the Saints
+							</a>
+						</motion.li>
+						<motion.li
+							key={3}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://archive.org/details/lespetitsbolland04guuoft"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Les Petits Bollandistes
+							</a>
+						</motion.li>
+						<motion.li
+							key={4}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://editions-voxgallia.fr/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								La vie des Saints
+							</a>
+						</motion.li>
+					</motion.ul>
+					{images[2] && (
+						<img
+							key={images[2].id}
+							src={variantUrl(images[2].image_url, 800)}
+							alt=""
+							loading="lazy"
+							decoding="async"
+							draggable={false}
+						/>
+					)}
+					<motion.p
+						className="about-prose"
+						variants={reveal}
+						transition={{ delay: 0.1 }}
+					>
+						{t("about.inspirations.p3")}
+					</motion.p>
+					<motion.ul
+						className="about-inspirations__list"
+						variants={stagger}
+					>
+						<motion.li
+							key={1}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://commons.wikimedia.org"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Wikimedia Commons
+							</a>
+						</motion.li>
+					</motion.ul>
+
+					<motion.p
+						className="about-prose"
+						variants={reveal}
+						transition={{ delay: 0.1 }}
+					>
+						{t("about.inspirations.p4")}
+					</motion.p>
 				</motion.div>
 			</section>
 
 			{/* ===== Crédits ===== */}
 			<motion.section className="about-credits" {...inView}>
 				<div className="about-credits__mosaic" aria-hidden="true">
-					{images.slice(1, 3).map((img) => (
+					{images.slice(3, 5).map((img) => (
 						<img
 							key={img.id}
 							src={variantUrl(img.image_url, 800)}
