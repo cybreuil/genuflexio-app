@@ -207,7 +207,7 @@ const AboutPage = () => {
 					variants={stagger}
 					initial="hidden"
 					whileInView="show"
-					viewport={{ once: true, amount: 0.3 }}
+					viewport={{ once: true, amount: 0.1 }}
 				>
 					{images[1] && (
 						<img
