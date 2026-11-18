@@ -254,6 +254,14 @@
 				"text": "Nova instrumenta usoribus adscriptis destinata, inter quae vota in chartis Sanctorum, opera dilecta aliaque."
 			}
 		},
+		"inspirations": {
+			"eyebrow": "Origo, Inspirationes et Fontes",
+			"title": "Quomodo hoc opus ortum est?",
+			"p1": "Omnia ab Officio Divino recitando, proprio breviario adhibito, initium ceperunt. Instrumenta digitalia quaerebam quibus cotidianam meam precandi consuetudinem alere atque faciliorem reddere possem; ita tandem ad Divinum Officium perveni. Statim me movit operis amplitudo atque diligentia, praesertim cum magna ex parte unius hominis, Laszlo Kiss, labore effectum esset. Cum praesertim rerum quae post scaenam interretialem geruntur studio teneor, eius diligentiam et operis curam vere admiratus sum. Tum Genuflexionis consilium paulatim formam accipere coepit: pontem quodammodo construere inter usum liturgicum et artem sacram, inter traditionem alte radicatam et aetatis nostrae interretialem novitatem, spiritum secutus, quodam modo, encyclopaedicum sancti Isidori Hispalensis.",
+			"p2": "Multa iam exstant diaria liturgica interretialia, sed hanc rem notam recentiore atque simpliciore forma repraesentare volui. Inter exempla quae mihi proposui numerantur GCatholic et pagina AELF; gratias eis ago ob copiam rerum notitiarumque quas omnibus praebent. Vos quoque ea invisere libenter hortor. Genuflexio vix nasci potuisset sine inspiratione atque fundamentis quae haec opera iam exstantia praebuerunt.",
+			"p3": "Quod ad sanctorum vitas atque notitias biographicas attinet, dolendum est me ad materiam intellegentia artificiali generatam, ex articulis a Sancta Sede editis ductam, confugere debuisse, propter ingentem rerum tractandarum copiam atque temporis inopiam ad omnia manu conficienda. Nihilominus cum nonnullis editoribus (inter quos Albin Michel et Vox Gallia) nunc colloquor, sperans fore ut tandem materia tota ab hominibus conscripta praebeatur; id ab initio maluissem, si condiciones licentiarum id permisissent. Nonnulli eorum libri hic indicantur. Si quae menda aut errores ex hac ratione orti sunt, veniam peto; vos autem ad alias quoque fontes consulendas hortor, si notitias allatas confirmare velitis. Butleri opus Lives of the Saints neque Guérini opera tamquam fontes principales adhibui, cum hodie aliquatenus obsoleta sint. Nihilominus ad ulteriorem cognitionem utiles manent atque opera eorum in dominio publico sunt.",
+			"p4": "Paene omnes imagines ex Wikimedia Commons sumptae sunt. Singulorum imaginum iura auctorum examinavi; omnes enim aut in dominio publico esse aut licentia ShareAlike praeditas esse debent. Attamen, ob ingentem imaginum numerum quas manu tractavi, errores nonnulli me fugere potuerunt. Si iura auctoris cuiusdam imaginis possidetis eamque contra condiciones licentiae adhibitam esse putatis, quaeso me certiorem facite, ut eam quam primum removere possim."
+		},
 
 		"credits": {
 			"eyebrow": "Gratias et auctoritates",
