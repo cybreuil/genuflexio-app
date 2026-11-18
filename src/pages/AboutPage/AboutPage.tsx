@@ -23,7 +23,7 @@ const inView = {
 	variants: reveal,
 	initial: "hidden",
 	whileInView: "show",
-	viewport: { once: true, amount: 0.3 },
+	viewport: { once: true, amount: 0.25 },
 } as const;
 
 const VALUES = [0, 1, 2] as const;
