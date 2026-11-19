@@ -236,19 +236,6 @@ const AboutPage = () => {
 							variants={reveal}
 						>
 							<a
-								href="https://gcatholic.org/"
-								target="_blank"
-								rel="noreferrer"
-							>
-								Gcatholic
-							</a>
-						</motion.li>
-						<motion.li
-							key={2}
-							className="about-inspirations__list-item"
-							variants={reveal}
-						>
-							<a
 								href="https://www.divinumofficium.com/"
 								target="_blank"
 								rel="noreferrer"
@@ -257,12 +244,25 @@ const AboutPage = () => {
 							</a>
 						</motion.li>
 						<motion.li
-							key={3}
+							key={2}
 							className="about-inspirations__list-item"
 							variants={reveal}
 						>
 							<a
 								href="https://gcatholic.org/"
+								target="_blank"
+								rel="noreferrer"
+							>
+								Gcatholic
+							</a>
+						</motion.li>
+						<motion.li
+							key={3}
+							className="about-inspirations__list-item"
+							variants={reveal}
+						>
+							<a
+								href="https://www.aelf.org/"
 								target="_blank"
 								rel="noreferrer"
 							>
