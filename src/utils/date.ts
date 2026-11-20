@@ -59,9 +59,17 @@ export function addMonths(d: Date, n: number): Date {
 }
 
 // 6 × 7 grid, weeks start on Monday (liturgical convention, matches MiniCalendar).
+// export function getMonthGrid(month: Date): Date[] {
+// 	const first = startOfMonth(month);
+// 	const shift = (first.getDay() + 6) % 7; // Monday = 0
+// 	const gridStart = addDays(first, -shift);
+// 	return Array.from({ length: 42 }, (_, i) => addDays(gridStart, i));
+// }
+
+// 6 × 7 grid, weeks start on Sunday (liturgical convention corrected)
 export function getMonthGrid(month: Date): Date[] {
 	const first = startOfMonth(month);
-	const shift = (first.getDay() + 6) % 7; // Monday = 0
+	const shift = first.getDay(); // Sunday = 0
 	const gridStart = addDays(first, -shift);
 	return Array.from({ length: 42 }, (_, i) => addDays(gridStart, i));
 }

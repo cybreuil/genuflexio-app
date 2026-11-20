@@ -28,8 +28,8 @@ const gridVariants = {
 	exit: (dir: number) => ({ opacity: 0, x: dir * -32 }),
 };
 
-// Any Monday; used only to render localized weekday headers.
-const A_MONDAY = new Date(2024, 0, 1);
+// Any Sunday; used only to render localized weekday headers.
+const A_SUNDAY = new Date(2024, 0, 7);
 
 const FOCUSABLE = 'button:not([disabled]):not([tabindex="-1"]), [tabindex="0"]';
 
@@ -108,7 +108,7 @@ const FullCalendarModal = ({ open, date, onClose, onSelect }: Props) => {
 	const weekdays = useMemo(
 		() =>
 			Array.from({ length: 7 }, (_, i) =>
-				formats.weekday.format(addDays(A_MONDAY, i)),
+				formats.weekday.format(addDays(A_SUNDAY, i)),
 			),
 		[formats],
 	);

@@ -89,6 +89,10 @@
 	text-transform: uppercase;
 }
 
+.calendar-modal__weekdays span:first-child {
+	color: var(--color-secondary-dark);
+}
+
 /* Fixed height so month changes never resize the dialog */
 .calendar-modal__stage {
 	position: relative;
